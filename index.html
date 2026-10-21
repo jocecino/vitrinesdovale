@@ -137,7 +137,7 @@ const $=id=>document.getElementById(id);
 const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const brl=n=>'R$ '+Number(n).toFixed(2).replace('.',',');
 const num=s=>String(s).replace(/\./g,'').replace(',','.');
-const API='COLE_AQUI_A_URL_DO_APP_DA_WEB';
+const API='https://script.google.com/macros/s/AKfycbwSRneWbjdetaGS9_4kz4ODyQAkFxZxPgMAqGeEAq2Llf3Q5PrREtLbCc6TktQ80vWVGQ/exec';
 const run=(fn,...a)=>fetch(API,{method:'POST',body:JSON.stringify({fn:fn,args:a})}).then(r=>r.json()).then(j=>{if(!j.ok)throw new Error(j.erro);return j.dados});
 function say(id,t,err){$(id).innerHTML=t?'<div class="msg'+(err?' err':'')+'">'+esc(t)+'</div>':''}
 function show(v){document.querySelectorAll('.v').forEach(e=>e.classList.toggle('on',e.id===v));scrollTo(0,0)}
