@@ -1,0 +1,1 @@
+{"rewrites":[{"source":"/p/:id","destination":"/api/s?t=p&id=:id"},{"source":"/l/:id","destination":"/api/s?t=l&id=:id"}]}
