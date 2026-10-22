@@ -210,7 +210,7 @@ input,select,textarea{font:inherit;padding:12px;border:1px solid var(--line);bor
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <script>
 /* ===== SUPABASE: cole aqui os dados do seu projeto (Project Settings > API) ===== */
-const SUPA_URL='https://kxyqozqnlhfszokboata.supabase.co/rest/v1/',SUPA_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt4eXFvenFubGhmc3pva2JvYXRhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI2Mzg2MzUsImV4cCI6MjEwODIxNDYzNX0.Wjm-ctswX5KEBZ-vy9i-ez3IYic8Wo6No0wMoqgreeU';
+const SUPA_URL='https://kxyqozqnlhfszokboata.supabase.co',SUPA_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt4eXFvenFubGhmc3pva2JvYXRhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI2Mzg2MzUsImV4cCI6MjEwODIxNDYzNX0.Wjm-ctswX5KEBZ-vy9i-ez3IYic8Wo6No0wMoqgreeU';
 const sb=window.supabase.createClient(SUPA_URL,SUPA_KEY);
 const EM='@lojas.vitrinesdovale.app';
 const nt=x=>{let d=String(x||'').replace(/\D/g,'');if(d.length<=11)d='55'+d;return d};
@@ -258,7 +258,7 @@ const T={
  responderPergunta:(a,id,x)=>rpc('responder_pergunta',{p_id:id,p_texto:x}),
  ocultarPergunta:(a,id)=>rpc('ocultar_pergunta',{p_id:id}),
  lojaRelatorio:(a,d)=>rpc('relatorio',{p_dias:d,p_loja:null}),
- async adminListar(s){const r=await sb.auth.signInWithPassword({email:s.email,password:s.senha});if(r.error)throw new Error('E-mail ou senha incorretos.');try{return await rpc('admin_listar')}catch(e){await sb.auth.signOut();throw e}},
+ async adminListar(s){const r=await sb.auth.signInWithPassword({email:s.email,password:s.senha});if(r.error){const m=String(r.error.message||'');throw new Error(/invalid login/i.test(m)?'E-mail ou senha incorretos.':'Não foi possível entrar: '+m)}try{return await rpc('admin_listar')}catch(e){await sb.auth.signOut();throw e}},
  adminDecidir:(s,id,ac,m)=>rpc('admin_decidir',{p_id:id,p_acao:ac,p_motivo:m||''}),
  adminResetSenha:(s,id)=>rpc('admin_reset_senha',{p_id:id}),
  async adminRelatorio(s,d,l){const r=await rpc('relatorio',{p_dias:d,p_loja:l||null});if(!l)r.plataforma=await rpc('admin_plataforma');return r},
