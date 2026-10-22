@@ -5,7 +5,7 @@
 <title>ValeShop Sobradinho</title>
 <meta name="description" content="Compre no comércio de Sobradinho e fale direto com a loja pelo WhatsApp.">
 <meta property="og:title" content="ValeShop Sobradinho"><meta property="og:description" content="Compre no comércio de Sobradinho e fale direto com a loja pelo WhatsApp.">
-<meta property="og:image" content="https://jocecino-vitrinesdovale-1pk9.vercel.app/icon-512.png"><meta property="og:type" content="website">
+<meta property="og:image" content="https://valeshop-sobradinho.vercel.app/icon-512.png"><meta property="og:type" content="website">
 <link rel="manifest" href="/manifest.webmanifest"><link rel="apple-touch-icon" href="/icon-192.png">
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;800&display=swap">
@@ -487,7 +487,7 @@ const ini=n=>esc(String(n||'?').trim().charAt(0).toUpperCase());
 const vb=l=>l&&l.verificada?' <span class="vf" title="Loja verificada">✔</span>':'';
 const lg=l=>l.logo?'<img src="'+esc(l.logo)+'" alt="">':ini(l.nome);
 const thumb=p=>(p.fotos&&p.fotos[0])?'<img loading="lazy" src="'+esc(p.fotos[0])+'" alt="">':(ICO[p.categoria]||'🛍️');
-const SITE='https://jocecino-vitrinesdovale-1pk9.vercel.app/';
+const SITE='https://valeshop-sobradinho.vercel.app/';
 const fl=p=>!!(p.oferta&&p.oferta.ate>Date.now());
 const pe=p=>fl(p)?Number(p.oferta.preco):Number(p.preco);
 const po=p=>fl(p)?Number(p.preco):(Number(p.precoOriginal)>Number(p.preco)?Number(p.precoOriginal):0);
