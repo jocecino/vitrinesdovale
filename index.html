@@ -247,7 +247,7 @@ body{padding-bottom:calc(84px + env(safe-area-inset-bottom,0px))}
  <p class="hint" style="text-align:center;margin:6px 14px 20px"><a href="#/termos">Termos de uso</a> · <a href="#/privacidade">Política de privacidade</a><br><button class="lk" id="inst" onclick="instalar()">Instalar o app no celular</button></p>
 </main>
 <main id="lojas" class="v"><h2>Todas as lojas</h2><div id="ll"></div></main>
-<main id="loja" class="v"></main><main id="prod" class="v"></main><main id="cart" class="v"></main><main id="co" class="v"></main><main id="ped" class="v"></main><main id="doc" class="v"></main><main id="av" class="v"></main>
+<main id="loja" class="v"></main><main id="prod" class="v"></main><main id="cart" class="v"></main><main id="co" class="v"></main><main id="ped" class="v"></main><main id="doc" class="v"></main><main id="av" class="v"></main><main id="ns" class="v"></main>
 
 <main id="pnl" class="v">
  <div id="login"><h2>Minha loja</h2><div id="logMsg"></div>
@@ -256,7 +256,7 @@ body{padding-bottom:calc(84px + env(safe-area-inset-bottom,0px))}
    <label>Senha<input name="senha" type="password" required></label>
    <button class="btn">Entrar</button>
   </form>
-  <p class="msg">Ainda não tem loja? <button class="lk" onclick="cadV(1)">Cadastre sua loja</button><br>Esqueceu a senha? <button class="lk" onclick="esqueci()">Pedir nova senha pelo WhatsApp</button></p>
+  <p class="msg">Ainda não tem loja? <button class="lk" onclick="cadV(1)">Cadastre sua loja</button><br>Esqueceu a senha? <button class="lk" onclick="esqueci()">Pedir nova senha</button></p>
   <a class="lnk" href="#/admin">Sou administrador</a>
  </div>
  <div id="cadv" style="display:none"><div class="top"><button onclick="cadV(0)" aria-label="Voltar">←</button>Cadastre sua loja</div><div id="cadMsg"></div>
@@ -272,7 +272,8 @@ body{padding-bottom:calc(84px + env(safe-area-inset-bottom,0px))}
    <label>Instagram<input name="instagram" placeholder="@sualoja"></label>
    <label>Logo da loja (obrigatório)<input name="arq" type="file" accept="image/*" required></label>
    <div><div class="h3" style="margin-top:0">Dias e horários de funcionamento</div><div id="dc"></div></div>
-   <label>Crie uma senha (mín. 6 caracteres)<input name="senha" type="password" minlength="6" required></label>
+   <label>Crie uma senha (mín. 6 caracteres)<input name="senha" type="password" minlength="6" autocomplete="new-password" required></label>
+   <label>Confirme a senha<input name="senha2" type="password" minlength="6" autocomplete="new-password" required></label>
    <label class="ck"><input type="checkbox" name="aceite" required><span>Li e aceito os <a href="#/termos">Termos de uso</a> e a <a href="#/privacidade">Política de privacidade</a>.</span></label>
    <button class="btn" id="cadBtn">Enviar cadastro</button>
   </form>
@@ -311,7 +312,7 @@ body{padding-bottom:calc(84px + env(safe-area-inset-bottom,0px))}
    <label style="margin-top:12px">Chave PIX<input id="pix" placeholder="CPF, telefone, e-mail ou chave aleatória"></label>
    <button class="btn" style="margin-top:14px" onclick="salvarLoja()">Salvar</button><div id="plMsg"></div>
    <div class="h3">Alterar senha</div>
-   <form style="padding:0" onsubmit="return novaSenha(event)"><label>Nova senha (mín. 6)<input name="n" type="password" minlength="6" required></label><button class="btn">Alterar senha</button></form><div id="spMsg"></div>
+   <form style="padding:0" onsubmit="return novaSenha(event)"><label>Nova senha (mín. 6)<input name="n" type="password" minlength="6" autocomplete="new-password" required></label><label>Confirme a nova senha<input name="n2" type="password" minlength="6" autocomplete="new-password" required></label><button class="btn">Alterar senha</button></form><div id="spMsg"></div>
   </div></div>
   <p style="margin:12px 14px 20px"><button class="btn s" onclick="sair()">Sair</button></p>
  </div>
@@ -380,6 +381,7 @@ const T={
   if(!d.senha||String(d.senha).length<6)throw new Error('A senha deve ter pelo menos 6 caracteres.');
   if(!d.logo)throw new Error('Envie a logo da loja.');
   const em=nt(d.whatsapp)+EM;let uid;const s=await sb.auth.signUp({email:em,password:d.senha});
+  if(s.error&&!/already|registered|exists/i.test(String(s.error.message)))throw new Error(/password/i.test(s.error.message)?'Senha não aceita. Use pelo menos 6 caracteres, de preferência com letras e números.':/rate|too many|limit|429/i.test(s.error.message+s.error.status)?'Muitas tentativas seguidas. Aguarde alguns minutos e tente de novo.':'Não foi possível criar o acesso: '+s.error.message);
   if(s.error||!s.data.session){const r=await sb.auth.signInWithPassword({email:em,password:d.senha});if(r.error)throw new Error('Este WhatsApp já está cadastrado. Entre com a senha dele ou peça uma nova à administração.');uid=r.data.user.id}else uid=s.data.user.id;
   const ex=(await sb.from('lojas').select('id,status').eq('owner_id',uid).maybeSingle()).data;
   if(ex&&ex.status!=='recusada'){await sb.auth.signOut();throw new Error('Este WhatsApp já está cadastrado.')}
@@ -407,6 +409,11 @@ const T={
  avalVis:(a,id,v)=>rpc('avaliacao_visibilidade',{p_id:id,p_visivel:v}),
  adminOfertas:()=>rpc('admin_ofertas'),
  adminOfertaAprovar:(s,id,ac,min)=>rpc('admin_oferta_aprovar',{p_id:id,p_acao:ac,p_minutos:min==null?null:min}),
+ senhaSolicitar:(tel,d)=>rpc('senha_solicitar',{p_tel:tel,p_dev:d}),
+ senhaRedefinir:(tk,n)=>rpc('senha_redefinir',{p_token:tk,p_nova:n}),
+ adminSenhaPedidos:s=>rpc('admin_senha_pedidos'),
+ adminSenhaLink:(s,id)=>rpc('admin_senha_link',{p_id:id}),
+ adminSenhaFechar:(s,id)=>rpc('admin_senha_fechar',{p_id:id}),
  clientePorTel:(tel,d)=>rpc('cliente_por_tel',{p_tel:tel,p_dev:d}),
  adminAvaliacoes:()=>rpc('admin_avaliacoes'),
  adminVerificar:(s,id,on)=>rpc('admin_verificar',{p_id:id,p_on:on}),
@@ -439,9 +446,13 @@ let D=ld('vv_cat',{lojas:[],produtos:[],achadinhos:[]}),loading=true,cat='Tudo',
 let C=ld('vv_cart',{l:null,i:[]}),FV=ld('vv_fv',{p:[],l:[]}),NT=ld('vv_nt',null);
 const $=id=>document.getElementById(id);
 const ADM_WPP='5574988079171';
-function esqueci(){const i=document.querySelector('#login input[name=whatsapp]'),tel=i?i.value.trim():'';
- const t='Olá! Esqueci a senha da minha loja na *Vitrines do Vale* e preciso de uma senha nova.\n\n'+(tel?'WhatsApp cadastrado: '+tel+'\n':'')+'Nome da loja: \n\nObrigado!';
- window.open('https://wa.me/'+ADM_WPP+'?text='+encodeURIComponent(t),'_blank','noopener')}
+async function esqueci(){const i=document.querySelector('#login input[name=whatsapp]'),tel=i?i.value.trim():'';
+ if(tel.replace(/\D/g,'').length<10){say('logMsg','Digite o WhatsApp da loja no campo acima e toque de novo em "Esqueci a senha".',1);return}
+ try{await run('senhaSolicitar',tel,dev)}catch(x){say('logMsg',esc(x.message),1);return}
+ const t='Olá! Pedi uma nova senha da minha loja na *Vitrines do Vale*.\n\nWhatsApp cadastrado: '+tel+'\n\nObrigado!';
+ const w=await dlg({msg:'Pedido enviado! A administração vai te mandar um link no WhatsApp para criar a nova senha.\n\nQuer avisar agora pelo WhatsApp para agilizar?',ok:'Avisar no WhatsApp',no:'Agora não'});
+ say('logMsg','✓ Pedido registrado. Aguarde o link da administração no seu WhatsApp.');
+ if(w)window.open('https://wa.me/'+ADM_WPP+'?text='+encodeURIComponent(t),'_blank','noopener')}
 function dlg(o){return new Promise(res=>{const m=document.createElement('div');m.className='mdl';
  m.innerHTML='<div class="mbx" role="dialog" aria-modal="true"><p>'+esc(o.msg).replace(/\n/g,'<br>')+'</p>'+(o.input?'<input id="mdi" value="'+esc(o.val||'')+'" placeholder="'+esc(o.ph||'')+'">':'')+'<div class="mbt">'+(o.cancel===false?'':'<button class="btn s r" id="mdc">'+esc(o.no||'Cancelar')+'</button>')+'<button class="btn s" id="mdo">'+esc(o.ok||'OK')+'</button></div></div>';
  document.body.appendChild(m);const i=m.querySelector('#mdi'),done=v=>{m.remove();res(v)};
@@ -521,7 +532,7 @@ function show(v,tab){document.querySelectorAll('.v').forEach(e=>e.classList.togg
  document.querySelectorAll('.bar button').forEach(b=>b.classList.toggle('on',b.dataset.t===(tab||v)));
  $('hd').style.display=v==='home'?'':'none';if(!KS)scrollTo(0,0);KS=0}
 function route(){const r=location.hash.replace(/^#\/?/,'').split('/'),a=r[0]||'home',id=decodeURIComponent(r[1]||'');
- const m={home:()=>{home();show('home')},lojas:()=>{home();show('lojas')},loja:()=>verLoja(id),produto:()=>abrir(id),carrinho:viewCart,checkout:checkout,nota:()=>NT?nota(NT):go(''),pedidos:viewPed,minha:()=>show('pnl'),admin:()=>show('adm','pnl'),termos:()=>doc('t'),privacidade:()=>doc('p'),avaliar:()=>viewAv(id)};
+ const m={home:()=>{home();show('home')},lojas:()=>{home();show('lojas')},loja:()=>verLoja(id),produto:()=>abrir(id),carrinho:viewCart,checkout:checkout,nota:()=>NT?nota(NT):go(''),pedidos:viewPed,minha:()=>show('pnl'),admin:()=>show('adm','pnl'),termos:()=>doc('t'),privacidade:()=>doc('p'),avaliar:()=>viewAv(id),'nova-senha':()=>viewNs(id)};
  if(!KS&&location.hash!==LK){LK=location.hash;const ty={home:['home'],lojas:['lojas'],loja:['loja',id],produto:['produto',id],checkout:['checkout',C.l]}[a];if(ty)tr(ty[0],ty[1])}
  (m[a]||m.home)()}
 addEventListener('hashchange',route);
@@ -640,6 +651,9 @@ function nota(r){const ent=r.tipo==='retirada',fr=ent?'Retirada':r.freteCombinar
  '<a class="buy no-print" style="margin-top:10px;background:var(--navy);color:var(--head)" target="_blank" rel="noopener" href="'+wa(esc(r.lojaWpp),tx)+'" onclick="tr(\'zap_loja\',\''+r.lojaId+'\',\'pedido\')">Enviar pedido para a loja no WhatsApp</a><button class="btn no-print" style="margin-top:10px" onclick="print()">Salvar nota em PDF / imprimir</button><button class="btn s no-print" style="margin:10px 0 0;width:100%" onclick="go(\'pedidos\')">Acompanhar meus pedidos</button></div>';
  show('co','cart')}
 let AVS=null;
+function viewNs(tk){$('ns').innerHTML='<div class="top"><button onclick="go(\'\')" aria-label="Início">←</button>Criar nova senha</div><div class="info"><form style="padding:0" onsubmit="return nsEnv(event,\''+esc(tk)+'\')"><label>Nova senha (mín. 6 caracteres)<input name="n" type="password" minlength="6" autocomplete="new-password" required></label><label>Confirme a nova senha<input name="n2" type="password" minlength="6" autocomplete="new-password" required></label><button class="btn">Salvar nova senha</button></form><div id="nsMsg"></div></div>';show('ns','pnl')}
+function nsEnv(e,tk){e.preventDefault();const fd=new FormData(e.target),n=fd.get('n');if(n!==fd.get('n2')){say('nsMsg','As senhas não são iguais.',1);return false}
+ run('senhaRedefinir',tk,n).then(()=>{e.target.style.display='none';say('nsMsg','✓ Senha alterada! Agora entre em <a href="#/minha">Minha loja</a> com o seu WhatsApp e a nova senha.')}).catch(x=>say('nsMsg',esc(x.message),1));return false}
 async function viewAv(n){const L=ld('vv_ped',[]),loc=L.find(x=>String(x.n)===String(n));AVS={n:n,t:loc?loc.t:'',it:(loc&&loc.it||[]).filter(i=>i.id),cl:loc?loc.cl:'',nota:{},foto:{}};
  $('av').innerHTML='<div class="top"><button onclick="history.back()" aria-label="Voltar">←</button>Avaliar pedido nº '+esc(n)+'</div><div class="info" id="avb"></div>';show('av','ped');avDraw()}
 function avDraw(){const a=AVS,b=$('avb');if(!b)return;
@@ -673,7 +687,7 @@ function pvw(i){const s=i.nextElementSibling,v=num(i.value);s.textContent=i.valu
 let NOK=null,NT_;
 function chkNome(){const i=$('cnome'),o=$('nmChk'),v=i.value.trim();clearTimeout(NT_);NOK=null;i.classList.remove('ok','bad');o.className='chk';o.textContent='';if(v.length<2)return;o.textContent='Verificando…';
  NT_=setTimeout(()=>run('nomeLivre',v).then(r=>{if(i.value.trim()!==v)return;NOK=r;i.classList.add(r?'ok':'bad');o.className='chk '+(r?'ok':'bad');o.textContent=r?'✓ Nome disponível':'✗ Já existe uma loja com este nome. Escolha outro.'}).catch(()=>{o.textContent=''}),400)}
-async function cadastrar(e){e.preventDefault();if(NOK===false){say('cadMsg','Já existe uma loja com este nome. Escolha outro nome.',1);return false}const f=e.target,fd=new FormData(f),d=Object.fromEntries(fd);delete d.arq;d.horario=dRead('dc2');d.aceite=!!d.aceite;$('cadBtn').disabled=true;say('cadMsg','Enviando…');
+async function cadastrar(e){e.preventDefault();if(NOK===false){say('cadMsg','Já existe uma loja com este nome. Escolha outro nome.',1);return false}const f=e.target,fd=new FormData(f),d=Object.fromEntries(fd);if(d.senha!==d.senha2){say('cadMsg','As senhas não são iguais. Digite de novo.',1);return false}delete d.senha2;delete d.arq;d.horario=dRead('dc2');d.aceite=!!d.aceite;$('cadBtn').disabled=true;say('cadMsg','Enviando…');
  try{d.logo=await reduzir(fd.get('arq'),360,.75);if(!d.logo)throw new Error('Envie a logo da loja.');await run('cadastrarLoja',d);f.reset();NOK=null;$('cnome').classList.remove('ok','bad');$('nmChk').textContent='';say('cadMsg','Cadastro enviado! Ele agora está em análise pela administração. Você recebe a resposta no WhatsApp informado.');scrollTo(0,0)}catch(x){say('cadMsg',esc(x.message),1)}
  $('cadBtn').disabled=false;return false}
 function entrar(e){e.preventDefault();const d=Object.fromEntries(new FormData(e.target));say('logMsg','');
@@ -693,7 +707,7 @@ async function trocarCapa(inp){const f=inp.files[0];if(!f)return;say('cpMsg','En
 function salvarLoja(){const t={};document.querySelectorAll('#tx input').forEach(i=>{const v=num(i.value);if(i.value.trim()!==''&&!isNaN(v))t[i.dataset.b]=Number(v)});
  const g=[...document.querySelectorAll('#pg input:checked')].map(i=>i.value).join(',');say('plMsg','Salvando…');
  run('salvarLoja',A,{horario:dRead('dl2'),taxas:JSON.stringify(t),pagamentos:g,pix:$('pix').value,retirada:$('ret').checked}).then(()=>{say('plMsg','Salvo!');carregar()}).catch(x=>say('plMsg',esc(x.message),1))}
-function novaSenha(e){e.preventDefault();const n=new FormData(e.target).get('n');run('alterarSenha',A,n).then(()=>{A.senha=n;e.target.reset();say('spMsg','Senha alterada!')}).catch(x=>say('spMsg',esc(x.message),1));return false}
+function novaSenha(e){e.preventDefault();const fd=new FormData(e.target),n=fd.get('n');if(n!==fd.get('n2')){say('spMsg','As senhas não são iguais.',1);return false}run('alterarSenha',A,n).then(()=>{A.senha=n;e.target.reset();say('spMsg','Senha alterada!')}).catch(x=>say('spMsg',esc(x.message),1));return false}
 function sair(){A=null;ML=null;LASTN=-1;document.title='Vitrines do Vale';sb.auth.signOut();$('painel').style.display='none';$('login').style.display='block'}
 let MP=[];
 function listar(){run('meusProdutos',A).then(ps=>{MP=ps;$('meus').innerHTML=ps.length?ps.map(p=>'<div class="item'+(p.ativo?'':' off')+'"><div class="th">'+thumb(p)+'</div><div class="g"><b>'+esc(p.titulo)+'</b><small>'+brl(p.preco)+' · estoque: '+(p.estoque==null?'—':p.estoque)+(p.variacoes&&p.variacoes.length?' ('+p.variacoes.map(v=>esc(v.t)+':'+v.e).join(' ')+')':'')+(p.ativo?'':' · pausado')+(p.oferta&&p.oferta.ate>Date.now()?' · ⚡ oferta ativa':p.ofSt==='pendente'?' · ⏳ oferta aguardando aprovação':p.ofSt==='recusada'?' · oferta não aprovada':'')+'</small></div><button class="btn s" onclick="est(\''+p.id+'\')">Estoque</button><button class="btn s" onclick="ofe(\''+p.id+'\')">⚡ Oferta</button><button class="btn s" onclick="alt(\''+p.id+'\')">'+(p.ativo?'Pausar':'Reativar')+'</button></div>').join(''):'<p class="msg">Você ainda não adicionou produtos.</p>'})}
@@ -777,10 +791,14 @@ function csv(k){if(!LR)return;const q=v=>'"'+String(v==null?'':v).replace(/"/g,'
  const b=new Blob(['\ufeff'+L.map(r=>r.map(q).join(';')).join('\n')],{type:'text/csv;charset=utf-8'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='vitrines-'+k+'-'+LR.dias+'dias.csv';document.body.appendChild(a);a.click();a.remove()}
 function admEntrar(e){e.preventDefault();const f=new FormData(e.target);S={email:String(f.get('e')).trim(),senha:f.get('s')};say('aMsg0','');
  run('adminListar',S).then(l=>{AD=l;admAbrir()}).catch(x=>{S=null;say('aMsg0',esc(x.message),1)});return false}
-function ofBadge(){run('adminOfertas',S).then(L=>{$('ago').innerHTML='Aprovações'+(L.length?' <span class="nb">'+L.length+'</span>':'')}).catch(()=>{})}
-function aprovL(){$('ao').innerHTML='<p class="msg">Carregando…</p>';Promise.all([run('adminOfertas',S),run('adminAvaliacoes',S)]).then(([of,av])=>{ofBadge();
- $('ao').innerHTML='<h2>⚡ Ofertas relâmpago pendentes</h2>'+(of.length?of.map(o=>'<div class="item" style="display:block">'+(o.foto?'<img src="'+esc(o.foto)+'" alt="" style="width:56px;height:56px;border-radius:10px;object-fit:cover;float:right">':'')+'<b>'+esc(o.titulo)+'</b><small>'+esc(o.loja)+'</small><small>Preço normal '+brl(o.preco)+' → oferta <b>'+brl(o.pedido)+'</b> por '+o.horas+' h</small><div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;align-items:flex-end"><label style="margin:0">Duração da oferta (máx. 2 dias)<span style="display:flex;gap:6px;align-items:center"><input id="oh_'+o.id+'" type="number" min="0" max="48" inputmode="numeric" value="'+Math.floor(o.horas)+'" style="width:70px"> h <input id="om_'+o.id+'" type="number" min="0" max="59" inputmode="numeric" value="0" style="width:70px"> min</span></label><button class="btn s" onclick="ofDec(\''+o.id+'\',\'aprovar\')">Aprovar</button><button class="btn s r" onclick="ofDec(\''+o.id+'\',\'recusar\')">Recusar</button></div></div>').join(''):'<p class="msg">Nenhum pedido de oferta aguardando.</p>')+
+function ofBadge(){Promise.all([run('adminOfertas',S),run('adminSenhaPedidos',S)]).then(([a,b])=>{const n=a.length+b.length;$('ago').innerHTML='Aprovações'+(n?' <span class="nb">'+n+'</span>':'')}).catch(()=>{})}
+function aprovL(){$('ao').innerHTML='<p class="msg">Carregando…</p>';Promise.all([run('adminOfertas',S),run('adminAvaliacoes',S),run('adminSenhaPedidos',S)]).then(([of,av,sp])=>{ofBadge();
+ $('ao').innerHTML='<h2>🔑 Pedidos de nova senha</h2>'+(sp.length?sp.map(o=>'<div class="item" style="display:block"><b>'+esc(o.loja)+'</b><small>'+esc(o.responsavel||'')+' · '+esc(o.whatsapp)+' · pedido em '+esc(o.data)+(o.status==='link'?' · link já enviado':'')+'</small><div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap"><button class="btn s" onclick="spLink(\''+o.id+'\')">Enviar link</button><button class="btn s" onclick="spDef(\''+o.id+'\',\''+o.loja_id+'\')">Definir senha</button><button class="btn s r" onclick="spFechar(\''+o.id+'\')">Dispensar</button></div></div>').join(''):'<p class="msg">Nenhum pedido de nova senha.</p>')+'<h2>⚡ Ofertas relâmpago pendentes</h2>'+(of.length?of.map(o=>'<div class="item" style="display:block">'+(o.foto?'<img src="'+esc(o.foto)+'" alt="" style="width:56px;height:56px;border-radius:10px;object-fit:cover;float:right">':'')+'<b>'+esc(o.titulo)+'</b><small>'+esc(o.loja)+'</small><small>Preço normal '+brl(o.preco)+' → oferta <b>'+brl(o.pedido)+'</b> por '+o.horas+' h</small><div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;align-items:flex-end"><label style="margin:0">Duração da oferta (máx. 2 dias)<span style="display:flex;gap:6px;align-items:center"><input id="oh_'+o.id+'" type="number" min="0" max="48" inputmode="numeric" value="'+Math.floor(o.horas)+'" style="width:70px"> h <input id="om_'+o.id+'" type="number" min="0" max="59" inputmode="numeric" value="0" style="width:70px"> min</span></label><button class="btn s" onclick="ofDec(\''+o.id+'\',\'aprovar\')">Aprovar</button><button class="btn s r" onclick="ofDec(\''+o.id+'\',\'recusar\')">Recusar</button></div></div>').join(''):'<p class="msg">Nenhum pedido de oferta aguardando.</p>')+
  '<h2>⭐ Avaliações recentes</h2>'+(av.length?av.map(a=>'<div class="item" style="display:block'+(a.visivel?'':';opacity:.6')+'"><div class="rs"><span>'+strs(a.nota,16)+' <b>'+esc(a.nome||'Cliente')+'</b></span><small>'+esc(a.data)+'</small></div><small>'+esc(a.produto)+' · '+esc(a.loja||'')+'</small>'+(a.texto?'<p style="margin:6px 0">'+esc(a.texto)+'</p>':'')+(a.foto?'<img src="'+esc(a.foto)+'" alt="" style="max-width:120px;border-radius:10px;display:block;margin:6px 0">':'')+'<button class="btn s'+(a.visivel?' r':'')+'" onclick="admAvVis(\''+a.id+'\','+(!a.visivel)+')">'+(a.visivel?'Ocultar':'Mostrar de novo')+'</button></div>').join(''):'<p class="msg">Ainda sem avaliações.</p>')}).catch(x=>{$('ao').innerHTML='<p class="msg err">'+esc(x.message)+'</p>'})}
+function spLink(id){run('adminSenhaLink',S,id).then(r=>{const t='Olá'+(r.responsavel?', '+r.responsavel:'')+'! Para criar a nova senha da loja *'+r.nome+'* na Vitrines do Vale, abra este link (vale por 24 horas) e digite a nova senha duas vezes:\n'+SITE+'#/nova-senha/'+r.token;window.open(wa(r.whatsapp,t),'_blank','noopener');aprovL()}).catch(x=>toast(x.message))}
+async function spDef(id,lid){const p=await askTxtP('Nova senha para a loja (mínimo 6 caracteres).\nDeixe em branco para o sistema gerar uma.');if(p===null)return;if(p.trim()&&p.trim().length<6)return toast('A senha deve ter pelo menos 6 caracteres.');
+ run('adminResetSenha',S,lid,p.trim()).then(r=>{const t='Olá'+(r.responsavel?', '+r.responsavel:'')+'! Sua nova senha na Vitrines do Vale é *'+r.temp+'*. Acesse '+SITE+', entre em *Minha loja* com o seu WhatsApp e essa senha. Depois, se quiser, troque em Loja > Alterar senha.';return run('adminSenhaFechar',S,id).then(()=>{window.open(wa(r.whatsapp,t),'_blank','noopener');toast('Senha definida: '+r.temp);aprovL()})}).catch(x=>toast(x.message))}
+function spFechar(id){run('adminSenhaFechar',S,id).then(()=>aprovL()).catch(x=>toast(x.message))}
 function ofDec(id,ac){let m=null;if(ac==='aprovar'){m=(parseInt(($('oh_'+id)||{}).value,10)||0)*60+(parseInt(($('om_'+id)||{}).value,10)||0);if(m<1||m>2880)return toast('Duração de 1 minuto a 48 horas.')}run('adminOfertaAprovar',S,id,ac,m).then(()=>{toast(ac==='aprovar'?'Oferta aprovada!':'Oferta recusada');aprovL();carregar()}).catch(x=>toast(x.message))}
 function admAvVis(id,v){run('avalVis',S,id,v).then(()=>{aprovL();carregar()}).catch(x=>toast(x.message))}
 function verif(id,on){run('adminVerificar',S,id,on).then(()=>run('adminListar',S)).then(l=>{AD=l;admRender();carregar();toast(on?'Selo concedido':'Selo removido')}).catch(x=>toast(x.message))}
