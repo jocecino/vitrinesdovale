@@ -210,7 +210,7 @@ input,select,textarea{font:inherit;padding:12px;border:1px solid var(--line);bor
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <script>
 /* ===== SUPABASE: cole aqui os dados do seu projeto (Project Settings > API) ===== */
-const SUPA_URL='COLE_AQUI_A_URL_DO_SUPABASE',SUPA_KEY='COLE_AQUI_A_CHAVE_ANON_PUBLIC';
+const SUPA_URL='https://kxyqozqnlhfszokboata.supabase.co/rest/v1/',SUPA_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt4eXFvenFubGhmc3pva2JvYXRhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI2Mzg2MzUsImV4cCI6MjEwODIxNDYzNX0.Wjm-ctswX5KEBZ-vy9i-ez3IYic8Wo6No0wMoqgreeU';
 const sb=window.supabase.createClient(SUPA_URL,SUPA_KEY);
 const EM='@lojas.vitrinesdovale.app';
 const nt=x=>{let d=String(x||'').replace(/\D/g,'');if(d.length<=11)d='55'+d;return d};
