@@ -10,7 +10,7 @@ async function rpc(f, body) {
 }
 module.exports = async (req, res) => {
   const t = req.query.t === 'p' ? 'p' : 'l', id = String(req.query.id || '');
-  let title = 'Vitrines do Vale', desc = 'Compre no comércio de Sobradinho e fale direto com a loja pelo WhatsApp.';
+  let title = 'ValeShop Sobradinho', desc = 'Compre no comércio de Sobradinho e fale direto com a loja pelo WhatsApp.';
   let img = 'https://' + req.headers.host + '/icon-512.png';
   try {
     if (UUID.test(id)) {
@@ -24,7 +24,7 @@ module.exports = async (req, res) => {
         }
       } else {
         const l = await rpc('get_loja', { p_id: id });
-        if (l && l.id) { title = l.nome + ' - Vitrines do Vale'; desc = (l.categoria || 'Loja') + ' em ' + (l.bairro || 'Sobradinho') + '. Veja os produtos e peça pelo WhatsApp.'; img = l.logo || img; }
+        if (l && l.id) { title = l.nome + ' - ValeShop Sobradinho'; desc = (l.categoria || 'Loja') + ' em ' + (l.bairro || 'Sobradinho') + '. Veja os produtos e peça pelo WhatsApp.'; img = l.logo || img; }
       }
     }
   } catch (e) {}
