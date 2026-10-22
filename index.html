@@ -250,7 +250,7 @@ body{padding-bottom:calc(84px + env(safe-area-inset-bottom,0px))}
    <label>Senha<input name="senha" type="password" required></label>
    <button class="btn">Entrar</button>
   </form>
-  <p class="msg">Ainda não tem loja? <button class="lk" onclick="cadV(1)">Cadastre sua loja</button><br>Esqueceu a senha? Peça uma senha nova à administração: e-mail <a class="lk" href="mailto:jocecino@hotmail.com?subject=Esqueci%20a%20senha%20da%20minha%20loja">jocecino@hotmail.com</a> ou Instagram @vitrines_do_vale. Informe o nome da loja e o WhatsApp cadastrado.</p>
+  <p class="msg">Ainda não tem loja? <button class="lk" onclick="cadV(1)">Cadastre sua loja</button><br>Esqueceu a senha? <button class="lk" onclick="esqueci()">Pedir nova senha pelo WhatsApp</button></p>
   <a class="lnk" href="#/admin">Sou administrador</a>
  </div>
  <div id="cadv" style="display:none"><div class="top"><button onclick="cadV(0)" aria-label="Voltar">←</button>Cadastre sua loja</div><div id="cadMsg"></div>
@@ -359,6 +359,8 @@ const lojaOut=l=>({id:l.id,nome:l.nome,logo:l.logo||'',capa:l.capa||'',status:l.
 const ofx=p=>p.oferta_ate&&new Date(p.oferta_ate)>new Date()&&Number(p.oferta_preco)>0?{preco:Number(p.oferta_preco),ate:new Date(p.oferta_ate).getTime()}:null;
 const T={
  getCatalogo:()=>rpc('get_catalogo'),
+ listarProdutos:(pg,c,q,l)=>rpc('listar_produtos',{p_pg:pg,p_cat:c||'',p_q:q||'',p_loja:l||null}),
+ produtosPorIds:ids=>rpc('produtos_por_ids',{p_ids:ids}),
  getProduto:async id=>(await rpc('get_produto',{p_id:id}))||{},
  criarPedido:p=>rpc('criar_pedido',{p:p}),
  consultarPedidos:l=>rpc('consultar_pedidos',{p_lista:l}),
@@ -429,6 +431,10 @@ const sv=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
 let D=ld('vv_cat',{lojas:[],produtos:[],achadinhos:[]}),loading=true,cat='Tudo',A=null,S=null,AD=[],AF='pendente',CK={},KS=0,IP=null,SB='pp';
 let C=ld('vv_cart',{l:null,i:[]}),FV=ld('vv_fv',{p:[],l:[]}),NT=ld('vv_nt',null);
 const $=id=>document.getElementById(id);
+const ADM_WPP='5574988079171';
+function esqueci(){const i=document.querySelector('#login input[name=whatsapp]'),tel=i?i.value.trim():'';
+ const t='Olá! Esqueci a senha da minha loja na *Vitrines do Vale* e preciso de uma senha nova.\n\n'+(tel?'WhatsApp cadastrado: '+tel+'\n':'')+'Nome da loja: \n\nObrigado!';
+ window.open('https://wa.me/'+ADM_WPP+'?text='+encodeURIComponent(t),'_blank','noopener')}
 function dlg(o){return new Promise(res=>{const m=document.createElement('div');m.className='mdl';
  m.innerHTML='<div class="mbx" role="dialog" aria-modal="true"><p>'+esc(o.msg).replace(/\n/g,'<br>')+'</p>'+(o.input?'<input id="mdi" value="'+esc(o.val||'')+'" placeholder="'+esc(o.ph||'')+'">':'')+'<div class="mbt">'+(o.cancel===false?'':'<button class="btn s r" id="mdc">'+esc(o.no||'Cancelar')+'</button>')+'<button class="btn s" id="mdo">'+esc(o.ok||'OK')+'</button></div></div>';
  document.body.appendChild(m);const i=m.querySelector('#mdi'),done=v=>{m.remove();res(v)};
@@ -445,6 +451,20 @@ const say=(id,t,e)=>{$(id).innerHTML=t?'<div class="msg'+(e?' err':'')+'">'+t+'<
 let TT;function toast(t){const e=$('toast');e.textContent=t;e.style.display='block';clearTimeout(TT);TT=setTimeout(()=>e.style.display='none',2200)}
 const LJ=id=>D.lojas.find(l=>l.id===id)||{};
 const PD=id=>D.produtos.find(p=>p.id===id);
+let FQ={k:'',pg:0,total:null,busy:false},FT,HC=0;const SLP={},TRY={};
+function mergeP(L){(L||[]).forEach(p=>{const i=D.produtos.findIndex(x=>x.id===p.id);if(i>-1)D.produtos[i]=Object.assign({},D.produtos[i],p);else D.produtos.push(p)})}
+function ensureIds(ids){const falta=[...new Set(ids)].filter(i=>i&&!PD(i));if(!falta.length)return Promise.resolve();return run('produtosPorIds',falta.slice(0,60)).then(mergeP).catch(()=>{})}
+const qEf=()=>{const q=nrm($('q').value).trim();return q.length>=3?q:''};
+function fetchMais(){if(FQ.busy)return;FQ.busy=true;const k=FQ.k;
+ run('listarProdutos',FQ.pg+1,cat==='Favoritos'?'Tudo':cat,qEf()).then(r=>{if(FQ.k!==k)return;mergeP(r.itens);FQ.pg++;FQ.total=r.total;KS=1;home()}).catch(()=>{}).finally(()=>{FQ.busy=false})}
+function filtroSrv(){const k=cat+'|'+qEf();if(k===FQ.k)return;FQ={k:k,pg:0,total:null,busy:false};clearTimeout(FT);
+ if(cat==='Favoritos')return;
+ if(cat==='Tudo'&&!qEf()){FQ.pg=2;FQ.total=D.total==null?null:D.total;return}
+ FT=setTimeout(fetchMais,qEf()?400:0)}
+const temMais=()=>cat!=='Favoritos'&&FQ.total!=null&&FQ.pg*24<FQ.total;
+function maisProd(){PN++;KS=1;if(HC<PN*24&&temMais()&&!FQ.busy)fetchMais();else home()}
+function fetchLoja(id){const st=SLP[id]=SLP[id]||{pg:0,total:null,busy:false};if(st.busy)return;st.busy=true;
+ run('listarProdutos',st.pg+1,'','',id).then(r=>{mergeP(r.itens);st.pg++;st.total=r.total;if(location.hash==='#/loja/'+id){KS=1;verLoja(id)}}).catch(()=>{}).finally(()=>{st.busy=false})}
 const ini=n=>esc(String(n||'?').trim().charAt(0).toUpperCase());
 const vb=l=>l&&l.verificada?' <span class="vf" title="Loja verificada">✔</span>':'';
 const lg=l=>l.logo?'<img src="'+esc(l.logo)+'" alt="">':ini(l.nome);
@@ -510,21 +530,21 @@ function card(p){const o=pct(p),f=FV.p.indexOf(p.id)>-1;
  return '<div class="card" role="button" tabindex="0" onclick="clk(\''+p.id+'\')"><div class="ph">'+thumb(p)+'<button class="hr" aria-label="Favoritar" onclick="event.stopPropagation();fav(\'p\',\''+p.id+'\')">'+(f?'♥':'♡')+'</button></div><div class="ct">'+flTag(p)+'<div class="nm">'+esc(p.titulo)+'</div>'+(po(p)?'<div class="old">'+brl(po(p))+'</div>':'')+'<div class="pr">'+brs(pe(p))+(o?'<span class="off">'+o+'% OFF</span>':'')+'</div>'+(p.estoque===0?'<div class="off" style="background:var(--red);margin:3px 0">Esgotado</div>':'')+'<small>'+esc(LJ(p.lojaId).nome)+'</small></div></div>'}
 function home(){
  $('cats').innerHTML=['Tudo','Favoritos',...CATS].map(c=>'<button class="'+(c===cat?'on':'')+'" onclick="cat=\''+c+'\';PN=1;home();tr(\'categoria\',\'\',\''+c+'\')">'+(c==='Favoritos'?'♥ ':'')+c+'</button>').join('');
- const fv=cat==='Favoritos',q=nrm($('q').value);
+ const fv=cat==='Favoritos',q=nrm($('q').value);filtroSrv();
  $('achs').innerHTML=(D.achadinhos||[]).length&&!fv?'<h2>Achadinhos do Jocecino</h2><div class="row">'+D.achadinhos.map(a=>'<a class="rl" target="_blank" rel="noopener" href="'+esc(a.url)+'"'+(a.capa?' style="background-image:url(\''+esc(a.capa)+'\')"':'')+'><span>▶ '+esc(a.titulo)+'</span></a>').join('')+'</div>':'';
  const fp=D.produtos.filter(p=>fl(p));$('fls').innerHTML=fp.length&&!fv?'<h2>⚡ Ofertas relâmpago</h2><div class="row">'+fp.map(card).join('')+'</div>':'';
  const ls=D.lojas.filter(l=>!fv||FV.l.indexOf(l.id)>-1);
  $('lj').innerHTML=ls.length?ls.map(l=>'<button class="av" onclick="go(\'loja/'+l.id+'\')"><i>'+lg(l)+'</i><span>'+esc(l.nome)+vb(l)+'</span></button>').join(''):'<p class="hint">'+(fv?'Toque no ♡ de uma loja ou produto para guardar aqui.':loading?'Carregando…':'As lojas aparecem aqui assim que forem aprovadas.')+'</p>';
  const ps=D.produtos.filter(p=>(cat==='Tudo'||fv||p.categoria===cat)&&(!fv||FV.p.indexOf(p.id)>-1)&&nrm(p.titulo+' '+LJ(p.lojaId).nome+' '+p.categoria).includes(q));
  $('gt').textContent=fv?'Meus favoritos':'Novidades';
- $('grid').innerHTML=ps.length?ps.slice(0,PN*24).map(card).join(''):'<p class="empty">'+(loading?'Carregando vitrine…':'Nenhum produto por aqui ainda.')+'</p>';$('mais').innerHTML=ps.length>PN*24?'<button class="btn" onclick="PN++;KS=1;home()">Ver mais produtos ('+(ps.length-PN*24)+')</button>':'';
+ $('grid').innerHTML=ps.length?ps.slice(0,PN*24).map(card).join(''):'<p class="empty">'+(loading?'Carregando vitrine…':'Nenhum produto por aqui ainda.')+'</p>';HC=ps.length;$('mais').innerHTML=ps.length>PN*24||temMais()?'<button class="btn" onclick="maisProd()">'+(FQ.busy?'Carregando…':'Ver mais produtos')+'</button>':'';
  $('ll').innerHTML=D.lojas.map(l=>'<button class="item" style="width:calc(100% - 28px)" onclick="go(\'loja/'+l.id+'\')"><div class="av"><i>'+lg(l)+'</i></div><div class="g" style="text-align:left"><b>'+esc(l.nome)+vb(l)+'</b><small>'+esc(l.categoria)+' · '+esc(l.bairro)+'</small><small>'+stTxt(l)+'</small></div></button>').join('')||'<p class="msg">Nenhuma loja aprovada ainda.</p>'}
 function verLoja(id){const l=D.lojas.find(x=>x.id===id);if(!l){$('loja').innerHTML='<div class="top"><button onclick="history.back()">←</button>Loja</div>'+wait();return show('loja','lojas')}
- const ps=D.produtos.filter(p=>p.lojaId===id),f=FV.l.indexOf(id)>-1;
- $('loja').innerHTML='<div class="top"><button onclick="history.back()" aria-label="Voltar">←</button><span class="sp">'+esc(l.nome)+'</span><button onclick="shr(\'l\',\''+id+'\',\''+esc(String(l.nome).replace(/['"\\]/g,''))+'\')" aria-label="Compartilhar">⤴</button><button onclick="fav(\'l\',\''+id+'\')" aria-label="Favoritar">'+(f?'♥':'♡')+'</button></div>'+(l.capa?'<div class="capa" style="background-image:url(\''+esc(l.capa)+'\')"></div>':'')+'<div class="info"><div class="box" style="margin-top:0"><div class="av"><i>'+lg(l)+'</i></div><div><b>'+esc(l.nome)+vb(l)+'</b><small>'+esc(l.endereco)+' · '+esc(l.bairro)+', '+esc(l.cidade)+'</small><small>'+stTxt(l)+(l.instagram?' · '+esc(l.instagram):'')+'</small></div></div><a class="buy" target="_blank" rel="noopener" href="'+wa(esc(l.whatsapp))+'" onclick="tr(\'zap_loja\',\''+id+'\',\'loja\')">Falar direto com a loja</a></div><h2>Produtos</h2><div class="grid">'+(ps.map(card).join('')||'<p class="empty">Esta loja ainda não tem produtos.</p>')+'</div>';
+ const ps=D.produtos.filter(p=>p.lojaId===id),f=FV.l.indexOf(id)>-1,sl=SLP[id],maisL=sl&&sl.total!=null&&sl.pg*24<sl.total;if(!sl)fetchLoja(id);
+ $('loja').innerHTML='<div class="top"><button onclick="history.back()" aria-label="Voltar">←</button><span class="sp">'+esc(l.nome)+'</span><button onclick="shr(\'l\',\''+id+'\',\''+esc(String(l.nome).replace(/['"\\]/g,''))+'\')" aria-label="Compartilhar">⤴</button><button onclick="fav(\'l\',\''+id+'\')" aria-label="Favoritar">'+(f?'♥':'♡')+'</button></div>'+(l.capa?'<div class="capa" style="background-image:url(\''+esc(l.capa)+'\')"></div>':'')+'<div class="info"><div class="box" style="margin-top:0"><div class="av"><i>'+lg(l)+'</i></div><div><b>'+esc(l.nome)+vb(l)+'</b><small>'+esc(l.endereco)+' · '+esc(l.bairro)+', '+esc(l.cidade)+'</small><small>'+stTxt(l)+(l.instagram?' · '+esc(l.instagram):'')+'</small></div></div><a class="buy" target="_blank" rel="noopener" href="'+wa(esc(l.whatsapp))+'" onclick="tr(\'zap_loja\',\''+id+'\',\'loja\')">Falar direto com a loja</a></div><h2>Produtos</h2><div class="grid">'+(ps.map(card).join('')||'<p class="empty">'+(!sl||sl.busy?'Carregando…':'Esta loja ainda não tem produtos.')+'</p>')+'</div>'+(maisL?'<div style="text-align:center;padding:0 14px 14px"><button class="btn" onclick="fetchLoja(\''+id+'\')">Ver mais produtos</button></div>':'');
  show('loja','lojas')}
 const tch=vs=>vs.map(v=>'<button class="chip sz'+(CK.t===v.t?' on':'')+(v.e<1?' no':'')+'" '+(v.e<1?'disabled':'onclick="tm(\''+esc(v.t)+'\')"')+'>'+esc(v.t)+'</button>').join('');
-function abrir(id){const p0=PD(id);if(!p0){$('prod').innerHTML='<div class="top"><button onclick="history.back()">←</button>Produto</div>'+wait();return show('prod','home')}
+function abrir(id){const p0=PD(id);if(!p0&&!loading&&!TRY[id]){TRY[id]=1;ensureIds([id]).then(()=>{KS=1;route()})}if(!p0){$('prod').innerHTML='<div class="top"><button onclick="history.back()">←</button>Produto</div>'+wait();return show('prod','home')}
  const p=Object.assign({},p0,DET[id]||{});if(!DET[id])dt(id);
  const l=LJ(p.lojaId),o=pct(p),g=pgs(l),fs=p.fotos||[],f=FV.p.indexOf(id)>-1,vs=p.variacoes||[];
  if(CK.id!==id)CK={id:id,q:1,b:'',t:'',pg:''};CK.p=p;CK.l=l;if(g.length===1&&!CK.pg)CK.pg=g[0];
@@ -776,7 +796,7 @@ async function decidir(id,acao){let motivo='';
   return run('adminListar',S)}).then(l=>{AD=l;admRender();carregar()}).catch(x=>say('aMsg',esc(x.message),1))}
 
 /* ---------- Início, instalação ---------- */
-function carregar(){loading=true;return run('getCatalogo').then(d=>{D=d;sv('vv_cat',d)}).catch(()=>{if(!D.lojas.length)$('grid').innerHTML='<p class="empty" style="color:var(--red)">Não foi possível carregar a vitrine. Tente de novo em instantes.</p>'}).finally(()=>{loading=false;if(/^#\/(loja|produto|carrinho|checkout|home|lojas)?\/?/.test(location.hash||'#/')){KS=1;route()}})}
+function carregar(){loading=true;return run('getCatalogo').then(d=>{D=d;sv('vv_cat',d);FQ.k='';return ensureIds([...FV.p,...C.i.map(i=>i.id)])}).catch(()=>{if(!D.lojas.length)$('grid').innerHTML='<p class="empty" style="color:var(--red)">Não foi possível carregar a vitrine. Tente de novo em instantes.</p>'}).finally(()=>{loading=false;if(/^#\/(loja|produto|carrinho|checkout|home|lojas)?\/?/.test(location.hash||'#/')){KS=1;route()}})}
 addEventListener('beforeinstallprompt',e=>{e.preventDefault();IP=e});
 function instalar(){tr('instalar');if(IP){IP.prompt();IP=null}else dlg({msg:'No iPhone: toque em Compartilhar e depois em "Adicionar à Tela de Início".\nNo Android: menu do navegador > "Instalar app".',cancel:false})}
 if('serviceWorker' in navigator)addEventListener('load',()=>navigator.serviceWorker.register('/sw.js').catch(()=>{}));
