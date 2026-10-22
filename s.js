@@ -1,6 +1,6 @@
 // Página de compartilhamento: gera a pré-visualização (logo, nome, preço) e leva o cliente ao app.
 // Cole aqui os mesmos dados do Supabase usados no index.html (a chave "anon public" pode ficar no código).
-const SUPA_URL = 'https://kxyqozqnlhfszokboata.supabase.co/rest/v1/';
+const SUPA_URL = 'https://kxyqozqnlhfszokboata.supabase.co';
 const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt4eXFvenFubGhmc3pva2JvYXRhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI2Mzg2MzUsImV4cCI6MjEwODIxNDYzNX0.Wjm-ctswX5KEBZ-vy9i-ez3IYic8Wo6No0wMoqgreeU';
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
