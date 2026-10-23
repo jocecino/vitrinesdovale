@@ -557,7 +557,7 @@ function maisProd(){PN++;KS=1;if(HC<PN*24&&temMais()&&!FQ.busy)fetchMais();else 
 function fetchLoja(id){const st=SLP[id]=SLP[id]||{pg:0,total:null,busy:false};if(st.busy)return;st.busy=true;
  run('listarProdutos',st.pg+1,'','',id).then(r=>{mergeP(r.itens);st.pg++;st.total=r.total;if(location.hash==='#/loja/'+id){KS=1;verLoja(id)}}).catch(()=>{}).finally(()=>{st.busy=false})}
 const ini=n=>esc(String(n||'?').trim().charAt(0).toUpperCase());
-const vb=l=>l&&l.verificada?' <span class="vf" title="Loja verificada">✔</span>':'';
+const vb=l=>'';
 const lg=l=>l.logo?'<img src="'+esc(l.logo)+'" alt="">':ini(l.nome);
 const thumb=p=>(p.fotos&&p.fotos[0])?'<img loading="lazy" src="'+esc(p.fotos[0])+'" alt="">':(ICO[p.categoria]||'🛍️');
 const SITE='https://valeshop-sobradinho.vercel.app/';
