@@ -255,6 +255,7 @@ body{padding-bottom:calc(84px + env(safe-area-inset-bottom,0px))}
 .bb small{display:block;font-size:11px;opacity:.65;margin-top:2px;color:inherit}
 .bb.me{align-self:flex-end;background:#3483fa;color:#fff;border-bottom-right-radius:4px}
 .bb.you{align-self:flex-start;background:var(--card);color:var(--ink);border:1px solid var(--line);border-bottom-left-radius:4px}
+.bb.blk{background:#7a2b2b;color:#fff}.bb .bkn{display:block;font-size:12px;font-style:normal;margin-top:4px;opacity:.9}.bb .tk{letter-spacing:-4px;opacity:.8;margin-left:4px;font-size:13px;font-weight:700}.bb .tk.rd{color:#7fe3ff;opacity:1}
 .bb.sys{align-self:center;background:#fff3b0;color:#5a4500;font-size:13px;text-align:center;max-width:92%}
 #chat form{display:flex;gap:8px;padding:8px 12px;border-top:1px solid var(--line);background:var(--card)}
 #chat form input{flex:1;min-width:0;width:auto}#chat form .btn{width:auto;flex:none;padding:0 20px}#chat .chn{text-align:center;margin:0;padding:0 12px calc(8px + env(safe-area-inset-bottom));font-size:12px;color:var(--mute);background:var(--card)}
@@ -813,12 +814,13 @@ function chatAbrir(mode,num,tel,loja){chatFechar();let tit='Pedido nº '+num;
  if(mode==='loja'){const p=(PL||[]).find(x=>String(x.numero)===String(num));if(p)tit+=' · '+p.cliente}
  else{const o=OL.find(x=>String(x.n)===String(num))||ld('vv_ped',[]).find(x=>String(x.n)===String(num));if(!tel&&o)tel=o.t;if(!loja&&o)loja=o.lj;if(loja)tit+=' · '+loja}
  const z=document.createElement('div');z.id='chat';
- z.innerHTML='<div class="chh"><button class="chx" onclick="chatFechar()" aria-label="Voltar">←</button><b>'+esc(tit)+'</b></div><div class="chm" id="chm"><p class="hint" style="text-align:center">Carregando…</p></div><form id="chf" onsubmit="return chatEnv(event)"><input name="t" maxlength="500" autocomplete="off" placeholder="Escreva sua mensagem" required><button class="btn">Enviar</button></form><p class="chn">🔒 Telefone e links não são permitidos no chat.</p>';
+ z.innerHTML='<div class="chh"><button class="chx" onclick="chatFechar()" aria-label="Voltar">←</button><b>'+esc(tit)+'</b></div><div class="chm" id="chm"><p class="hint" style="text-align:center">Carregando…</p></div><form id="chf" onsubmit="return chatEnv(event)"><input name="t" maxlength="500" autocomplete="off" placeholder="Escreva sua mensagem" required><button class="btn">Enviar</button></form><p class="chn">🔒 Telefone e links não são entregues no chat.</p>';
  document.body.appendChild(z);document.body.style.overflow='hidden';
  CH={mode:mode,num:num,tel:tel||'',last:0};chatPull(true);CH.tm=setInterval(()=>{if(!document.hidden)chatPull()},5000)}
 function chatPull(first){const c=CH;if(!c)return;(c.mode==='loja'?run('chatListarLoja',A,c.num,c.last):run('chatListarCli',c.num,c.tel,c.last)).then(r=>{if(CH!==c)return;const m=$('chm');if(!m)return;if(first)m.innerHTML='';
   const bt=first||m.scrollHeight-m.scrollTop-m.clientHeight<80;
-  r.msgs.forEach(x=>{c.last=Math.max(c.last,x.id);const me=(c.mode==='loja'?'loja':'cliente')===x.de;m.insertAdjacentHTML('beforeend','<div class="bb '+(x.de==='sistema'?'sys':me?'me':'you')+'">'+esc(x.t).replace(/\n/g,'<br>')+'<small>'+esc(x.h)+'</small></div>')});
+  r.msgs.forEach(x=>{c.last=Math.max(c.last,x.id);const me=(c.mode==='loja'?'loja':'cliente')===x.de;m.insertAdjacentHTML('beforeend','<div class="bb '+(x.de==='sistema'?'sys':x.b?'me blk':me?'me':'you')+'" data-id="'+x.id+'">'+esc(x.t).replace(/\n/g,'<br>')+(x.b?'<em class="bkn">🚫 Bloqueada: telefone, links e @ não são entregues no chat.</em>':'')+'<small>'+esc(x.h)+(me&&!x.b?' <span class="tk">✓</span>':'')+'</small></div>')});
+  (r.vistas||[]).forEach(id=>{const e=m.querySelector('.bb[data-id="'+id+'"] .tk');if(e&&e.textContent!=='✓✓'){e.textContent='✓✓';e.classList.add('rd')}});
   if(first&&!r.msgs.length)m.innerHTML='<p class="hint" style="text-align:center">Nenhuma mensagem ainda. Escreva abaixo.</p>';
   if(!r.aberto&&!$('chc'))m.insertAdjacentHTML('beforeend','<p class="hint" id="chc" style="text-align:center">Este chat está fechado.</p>');
   const f=$('chf');if(f)f.style.display=r.aberto?'flex':'none';if(bt)m.scrollTop=m.scrollHeight}).catch(x=>{if(first&&$('chm'))$('chm').innerHTML='<p class="msg err">'+esc(x.message)+'</p>'})}
