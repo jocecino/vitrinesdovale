@@ -145,6 +145,10 @@ input.bad{border-color:var(--red);box-shadow:0 0 0 3px #c0392b30}
 .pgopt{display:flex;flex-wrap:wrap;gap:8px}.pgopt button{padding:9px 14px;border:2px solid var(--line);border-radius:20px;background:var(--card);font-weight:700;font-size:14px}.pgopt button.on{border-color:var(--gold);background:var(--navy);color:var(--head)}
 .soc{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:0 0 10px;font-size:14px;color:var(--mute)}.soc b{color:var(--ink)}
 .rv{border-top:1px solid var(--line);padding:12px 0}.rv img{max-width:140px;border-radius:10px;margin-top:8px;display:block}.rv p{margin:6px 0 0;line-height:1.4}
+.crp{position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.82);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:16px;color:#fff}
+.crp h3{margin:0;font-size:17px}.crp p{margin:0;font-size:13px;opacity:.8;text-align:center}
+.crp canvas{width:min(78vw,300px);height:min(78vw,300px);border-radius:50%;background:#fff;touch-action:none;cursor:grab;box-shadow:0 0 0 3px #fff,0 0 0 9999px rgba(0,0,0,.45)}
+.crp input[type=range]{width:min(78vw,300px)}.crp .rw{display:flex;gap:10px;width:min(78vw,300px)}.crp .rw .btn{flex:1}
 .lgp{width:84px;height:84px;border-radius:50%;object-fit:cover;border:2px solid var(--gold);background:var(--card);display:flex;align-items:center;justify-content:center;font-weight:800;overflow:hidden}
 .wab{display:inline-block;background:#1f9d55;color:#fff;border-radius:12px;padding:10px 14px;font-weight:800;font-size:14px;text-decoration:none}
 
@@ -284,7 +288,7 @@ body{padding-bottom:calc(84px + env(safe-area-inset-bottom,0px))}
    <label>Rua e número<input name="endereco" placeholder="Rua, número, ponto de referência" required></label>
    <label>Categoria<select name="categoria" class="csel"></select></label>
    <label>Instagram<input name="instagram" placeholder="@sualoja"></label>
-   <label>Logo da loja (obrigatório)<input name="arq" type="file" accept="image/*" required></label>
+   <label>Logo da loja (obrigatório)<input name="arq" type="file" accept="image/*" required onchange="logoEsc(this)"></label><div id="lgCad" style="margin:-4px 0 4px"></div>
    <div><div class="h3" style="margin-top:0">Dias e horários de funcionamento</div><div id="dc"></div></div>
    <label>Crie uma senha (mín. 6 caracteres)<input name="senha" type="password" minlength="6" autocomplete="new-password" required></label>
    <label>Confirme a senha<input name="senha2" type="password" minlength="6" autocomplete="new-password" required></label>
@@ -770,7 +774,7 @@ let NOK=null,NT_;
 function chkNome(){const i=$('cnome'),o=$('nmChk'),v=i.value.trim();clearTimeout(NT_);NOK=null;i.classList.remove('ok','bad');o.className='chk';o.textContent='';if(v.length<2)return;o.textContent='Verificando…';
  NT_=setTimeout(()=>run('nomeLivre',v).then(r=>{if(i.value.trim()!==v)return;NOK=r;i.classList.add(r?'ok':'bad');o.className='chk '+(r?'ok':'bad');o.textContent=r?'✓ Nome disponível':'✗ Já existe uma loja com este nome. Escolha outro.'}).catch(()=>{o.textContent=''}),400)}
 async function cadastrar(e){e.preventDefault();if(NOK===false){say('cadMsg','Já existe uma loja com este nome. Escolha outro nome.',1);return false}const f=e.target,fd=new FormData(f),d=Object.fromEntries(fd);if(d.senha!==d.senha2){say('cadMsg','As senhas não são iguais. Digite de novo.',1);return false}delete d.senha2;delete d.arq;d.horario=dRead('dc2');d.aceite=!!d.aceite;$('cadBtn').disabled=true;say('cadMsg','Enviando…');
- try{d.logo=await reduzir(fd.get('arq'),360,.75);if(!d.logo)throw new Error('Envie a logo da loja.');await run('cadastrarLoja',d);f.reset();NOK=null;$('cnome').classList.remove('ok','bad');$('nmChk').textContent='';say('cadMsg','Cadastro enviado! Ele agora está em análise pela administração. Você recebe a resposta no WhatsApp informado.');scrollTo(0,0)}catch(x){say('cadMsg',esc(x.message),1)}
+ try{d.logo=LOGOC;if(!d.logo)throw new Error('Envie a logo da loja.');await run('cadastrarLoja',d);f.reset();LOGOC='';$('lgCad').innerHTML='';NOK=null;$('cnome').classList.remove('ok','bad');$('nmChk').textContent='';say('cadMsg','Cadastro enviado! Ele agora está em análise pela administração. Você recebe a resposta no WhatsApp informado.');scrollTo(0,0)}catch(x){say('cadMsg',esc(x.message),1)}
  $('cadBtn').disabled=false;return false}
 function entrar(e){e.preventDefault();const d=Object.fromEntries(new FormData(e.target));say('logMsg','');
  run('login',d).then(l=>abrirLoja(l,d)).catch(x=>say('logMsg',esc(x.message),1));return false}
@@ -782,8 +786,8 @@ function abrirLoja(l,d){try{A=d||{whatsapp:l.whatsapp};$('lojaNome').textContent
 function logoPrev(u,n){$('lgPrev').innerHTML=u?'<img src="'+esc(u)+'" alt="" style="width:100%;height:100%;object-fit:cover">':esc(ini(n||''))}
 let CURLOGO='',CURCAPA='';
 function capaPrev(u){$('capaPrev').innerHTML=u?'<img src="'+esc(u)+'" alt="">':'📷 Adicionar foto de capa'}
-async function trocarLogoArq(inp){const f=inp.files[0];if(!f)return;say('lgMsg','Enviando nova logo…');
- try{const du=await reduzir(f,360,.75);if(!du)throw new Error('Escolha uma imagem.');const u=await run('trocarLogo',A,du);const old=CURLOGO;CURLOGO=u;logoPrev(u);say('lgMsg','Logo atualizada!');delSt('logos',old);carregar()}catch(x){say('lgMsg',esc(x.message),1)}inp.value=''}
+async function trocarLogoArq(inp){const f=inp.files[0];if(!f)return;const du=await recortar(f);inp.value='';if(!du)return;say('lgMsg','Enviando nova logo…');
+ try{if(!du)throw new Error('Escolha uma imagem.');const u=await run('trocarLogo',A,du);const old=CURLOGO;CURLOGO=u;logoPrev(u);say('lgMsg','Logo atualizada!');delSt('logos',old);carregar()}catch(x){say('lgMsg',esc(x.message),1)}inp.value=''}
 async function trocarCapa(inp){const f=inp.files[0];if(!f)return;say('cpMsg','Enviando capa…');
  try{const du=await reduzir(f,900,.68);if(!du)throw new Error('Escolha uma imagem.');const u=await run('trocarCapa',A,du);const old=CURCAPA;CURCAPA=u;capaPrev(u);say('cpMsg','Capa atualizada!');delSt('logos',old);carregar()}catch(x){say('cpMsg',esc(x.message),1)}inp.value=''}
 function salvarLoja(){const t={};document.querySelectorAll('#tx input').forEach(i=>{const v=num(i.value);if(i.value.trim()!==''&&!isNaN(v))t[i.dataset.b]=Number(v)});
@@ -815,6 +819,22 @@ function zoomF(i){if(!ZF.length)return;const z=document.createElement('div');z.i
  s.onscroll=()=>{const n=Math.round(s.scrollLeft/s.clientWidth)+1,c=$('zc');if(c)c.textContent=n+' / '+ZF.length}}
 function zoomX(){const z=$('zf');if(z)z.remove();document.body.style.overflow=''}
 document.addEventListener('keydown',e=>{if(e.key==='Escape')zoomX()});
+function recortar(file){return new Promise(ok=>{if(!file||!file.size)return ok('');const fr=new FileReader();fr.onerror=()=>ok('');fr.onload=()=>{const im=new Image();im.onerror=()=>ok('');im.onload=()=>{
+ const W=600,m=document.createElement('div');m.className='crp';m.innerHTML='<h3>Ajuste a logo</h3><p>Arraste para posicionar e use o zoom. O que aparece no círculo é o que ficará na vitrine.</p><canvas id="crc" width="'+W+'" height="'+W+'"></canvas><input id="crz" type="range" min="1" max="4" step="0.01" value="1" aria-label="Zoom"><div class="rw"><button class="btn r" id="crn" type="button">Cancelar</button><button class="btn" id="cry" type="button">Usar esta foto</button></div>';document.body.appendChild(m);
+ const cv=m.querySelector('#crc'),cx=cv.getContext('2d'),z=m.querySelector('#crz'),base=Math.max(W/im.width,W/im.height);let k=1,ox=0,oy=0;
+ const lim=()=>{const w=im.width*base*k,h=im.height*base*k,mx=(w-W)/2,my=(h-W)/2;ox=Math.max(-mx,Math.min(mx,ox));oy=Math.max(-my,Math.min(my,oy))};
+ const draw=()=>{lim();cx.fillStyle='#fff';cx.fillRect(0,0,W,W);const w=im.width*base*k,h=im.height*base*k;cx.drawImage(im,W/2+ox-w/2,W/2+oy-h/2,w,h)};draw();
+ const P=new Map();let d0=0,k0=1;
+ cv.onpointerdown=e=>{cv.setPointerCapture(e.pointerId);P.set(e.pointerId,[e.clientX,e.clientY]);if(P.size===2){const a=[...P.values()];d0=Math.hypot(a[0][0]-a[1][0],a[0][1]-a[1][1]);k0=k}};
+ cv.onpointermove=e=>{if(!P.has(e.pointerId))return;const p=P.get(e.pointerId),r=W/cv.getBoundingClientRect().width;if(P.size===1){ox+=(e.clientX-p[0])*r;oy+=(e.clientY-p[1])*r}P.set(e.pointerId,[e.clientX,e.clientY]);if(P.size===2&&d0){const a=[...P.values()];k=Math.max(1,Math.min(4,k0*Math.hypot(a[0][0]-a[1][0],a[0][1]-a[1][1])/d0));z.value=k}draw()};
+ cv.onpointerup=cv.onpointercancel=e=>{P.delete(e.pointerId);d0=0};
+ cv.onwheel=e=>{e.preventDefault();k=Math.max(1,Math.min(4,k-e.deltaY/500));z.value=k;draw()};
+ z.oninput=()=>{k=+z.value;draw()};
+ m.querySelector('#crn').onclick=()=>{m.remove();ok('')};
+ m.querySelector('#cry').onclick=()=>{const o=document.createElement('canvas');o.width=o.height=360;o.getContext('2d').drawImage(cv,0,0,360,360);m.remove();ok(o.toDataURL('image/jpeg',.8))};
+ };im.src=fr.result};fr.readAsDataURL(file)})}
+async function logoEsc(inp){const f=inp.files[0];LOGOC='';const pv=$('lgCad');if(pv)pv.innerHTML='';if(!f)return;const du=await recortar(f);if(!du){inp.value='';return}LOGOC=du;if(pv)pv.innerHTML='<img src="'+du+'" alt="" style="width:84px;height:84px;border-radius:50%;object-fit:cover;border:2px solid var(--gold)"><small class="hint" style="display:block">Toque no campo acima para trocar a foto</small>'}
+let LOGOC='';
 function reduzir(file,m,q){return new Promise(ok=>{if(!file||!file.size)return ok('');const r=new FileReader();r.onload=()=>{const i=new Image();i.onload=()=>{const k=Math.min(1,(m||900)/Math.max(i.width,i.height)),c=document.createElement('canvas');c.width=i.width*k;c.height=i.height*k;c.getContext('2d').drawImage(i,0,0,c.width,c.height);ok(c.toDataURL('image/jpeg',q||.7))};i.src=r.result};r.readAsDataURL(file)})}
 async function novoProd(e){e.preventDefault();const f=e.target,fd=new FormData(f);$('addBtn').disabled=true;say('pnlMsg','Enviando…');
  try{const fs=[];for(const x of fd.getAll('arq').slice(0,4)){const u=await reduzir(x,800,.68);if(u)fs.push(u)}
