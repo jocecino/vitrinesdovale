@@ -95,6 +95,7 @@ input,select,textarea{font:inherit;padding:12px;border:1px solid var(--line);bor
 #ldx{position:fixed;inset:0;z-index:9999;display:none;align-items:center;justify-content:center;background:rgba(10,15,30,.45);-webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px)}#ldx .ldc{background:#1f2831;color:#fff;padding:18px 26px;border-radius:16px;display:flex;align-items:center;gap:12px;font-size:15px;box-shadow:0 8px 30px rgba(0,0,0,.4)}.ldsp{width:22px;height:22px;border:3px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:ldr .8s linear infinite}@keyframes ldr{to{transform:rotate(360deg)}}
 #co,#fco{min-width:0;max-width:100%;overflow-x:hidden}.co-sec{min-width:0;overflow:hidden;padding:12px}.co-seg input{width:1px;height:1px;left:0;top:0}.co-seg label{overflow:hidden}
 #co{font-size:14px}#co .co-sec h3{font-size:15px;margin-bottom:8px}#co label{font-size:13px}#co input,#co select,#co textarea{font-size:15px;padding:10px 12px}#co .co-seg label{font-size:14px;padding:7px 4px}#co .co-seg label small{font-size:12px}#co .co-it .g{font-size:13px}#co .co-ad b{font-size:13px}#co .co-pg label{padding:10px 0;font-size:14px}#co .co-pg .pi{width:36px;height:36px;font-size:18px}#co .hint{font-size:12px}#co .co-bar .tt b{font-size:19px}#co .co-bar .btn{padding:12px;font-size:15px}
+.fgrp{display:block;margin:0 0 12px}.pfg{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:8px}.pft,.pfa{position:relative;aspect-ratio:1;border-radius:10px;overflow:hidden;border:1px solid var(--line);background:var(--card)}.pft img{width:100%;height:100%;object-fit:cover;display:block}.pfa{display:grid;place-items:center;border-style:dashed;font-size:26px;color:var(--blue);padding:0}.pfa small{font-size:11px;display:block;margin:0}.pfx{position:absolute;top:3px;right:3px;width:24px;height:24px;border-radius:50%;background:rgba(0,0,0,.65);color:#fff;font-size:12px;line-height:1;padding:0;display:grid;place-items:center}.pfc{position:absolute;left:3px;top:3px;background:var(--blue);color:#fff;font-size:10px;font-weight:700;padding:2px 6px;border-radius:8px}.pfm{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:space-between;padding:3px}.pfm button{width:26px;height:24px;border-radius:8px;background:rgba(0,0,0,.65);color:#fff;font-size:11px;padding:0}.pfm button:disabled{opacity:.25}
 #toast{position:fixed;left:50%;bottom:calc(92px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--navy);color:var(--head);padding:10px 16px;border-radius:20px;z-index:20;display:none;font-weight:600}
 @media print{header,.bar,.no-print,.top,#toast{display:none!important}body{background:#fff;color:#000;padding:0}.nota{padding:0}}
 .fl{display:inline-block;background:#e8541d;color:#fff;font-size:11px;font-weight:800;padding:2px 6px;border-radius:4px;margin-bottom:5px}
@@ -321,7 +322,7 @@ body{padding-bottom:calc(84px + env(safe-area-inset-bottom,0px))}
   <div class="seg"><button id="sgpp" class="on" onclick="sub('pp')">Produtos</button><button id="sgpd" onclick="sub('pd')">Pedidos</button><button id="sgpq" onclick="sub('pq')">Perguntas</button><button id="sgrl" onclick="sub('rl')">Resultados</button><button id="sgpl" onclick="sub('pl')">Loja</button></div>
   <div id="pp">
    <form onsubmit="return novoProd(event)">
-    <label>Fotos do produto (até 4)<input name="arq" type="file" accept="image/*" multiple></label>
+    <div class="fgrp"><b>Fotos do produto (até 4)</b><input id="pfIn" type="file" accept="image/*" multiple hidden onchange="pfAdd(this)"><div id="pfG" class="pfg"></div><small class="hint" style="margin:6px 0 0">A primeira foto é a capa. Use ◀ ▶ para mudar a ordem e ✕ para remover.</small></div>
     <label>Título<input name="titulo" required></label>
     <label>Preço (R$)<input name="preco" inputmode="decimal" required oninput="pvw(this)"><small class="hint" style="margin:0"></small></label>
     <label>Preço antigo, se estiver em promoção<input name="precoOriginal" inputmode="decimal" oninput="pvw(this)"><small class="hint" style="margin:0"></small></label>
@@ -848,7 +849,7 @@ async function cadastrar(e){e.preventDefault();if(NOK===false){say('cadMsg','Já
  $('cadBtn').disabled=false;return false}
 function entrar(e){e.preventDefault();const d=Object.fromEntries(new FormData(e.target));say('logMsg','');
  run('login',d).then(l=>abrirLoja(l,d)).catch(x=>say('logMsg',esc(x.message),1));return false}
-function abrirLoja(l,d){try{A=d||{whatsapp:l.whatsapp};$('lojaNome').textContent=l.nome;$('login').style.display='none';$('painel').style.display='block';sub('pp');
+function abrirLoja(l,d){try{A=d||{whatsapp:l.whatsapp};PF=[];pfDraw();$('lojaNome').textContent=l.nome;$('login').style.display='none';$('painel').style.display='block';sub('pp');
   say('pnlMsg',l.status==='ativa'?'':l.status==='recusada'?'Seu cadastro não foi aprovado. Motivo: '+esc(l.motivo)+'. Corrija e cadastre de novo.':l.status==='suspensa'||l.status==='banida'?'Sua loja está suspensa. Fale com a administração.':'Sua loja está em análise. Os produtos aparecem na vitrine depois da aprovação.',l.status!=='pendente'&&l.status!=='ativa');
   $('dl').innerHTML=dEd('dl2',J(l.horario));const t=J(l.taxas);
   $('tx').innerHTML=BAIRROS.map(b=>'<div class="tx"><span>'+b+'</span><input data-b="'+esc(b)+'" inputmode="decimal" placeholder="Não entrega" value="'+(t[b]==null?'':String(t[b]).replace('.',','))+'"></div>').join('');
@@ -905,15 +906,19 @@ function recortar(file){return new Promise(ok=>{if(!file||!file.size)return ok('
  m.querySelector('#cry').onclick=()=>{const o=document.createElement('canvas');o.width=o.height=360;o.getContext('2d').drawImage(cv,0,0,360,360);m.remove();ok(o.toDataURL('image/jpeg',.8))};
  };im.src=fr.result};fr.readAsDataURL(file)})}
 async function logoEsc(inp){const f=inp.files[0];LOGOC='';const pv=$('lgCad');if(pv)pv.innerHTML='';if(!f)return;const du=await recortar(f);if(!du){inp.value='';return}LOGOC=du;if(pv)pv.innerHTML='<img src="'+du+'" alt="" style="width:84px;height:84px;border-radius:50%;object-fit:cover;border:2px solid var(--gold)"><small class="hint" style="display:block">Toque no campo acima para trocar a foto</small>'}
-let LOGOC='';
+let LOGOC='',PF=[];
+async function pfAdd(inp){const L=[...inp.files];inp.value='';const livre=4-PF.length;if(L.length>livre)toast('Máximo de 4 fotos.');for(const f of L.slice(0,Math.max(0,livre))){const u=await reduzir(f,800,.68);if(u)PF.push(u)}pfDraw()}
+function pfDraw(){const g=$('pfG');if(!g)return;g.innerHTML=PF.map((u,i)=>'<div class="pft"><img src="'+u+'" alt=""><button type="button" class="pfx" onclick="pfDel('+i+')" aria-label="Remover foto">✕</button>'+(i===0?'<span class="pfc">Capa</span>':'')+'<div class="pfm"><button type="button" onclick="pfMov('+i+',-1)"'+(i===0?' disabled':'')+' aria-label="Mover para antes">◀</button><button type="button" onclick="pfMov('+i+',1)"'+(i===PF.length-1?' disabled':'')+' aria-label="Mover para depois">▶</button></div></div>').join('')+(PF.length<4?'<button type="button" class="pfa" onclick="$(\'pfIn\').click()">＋<small>Adicionar</small></button>':'')}
+function pfDel(i){PF.splice(i,1);pfDraw()}
+function pfMov(i,d){const j=i+d;if(j<0||j>=PF.length)return;[PF[i],PF[j]]=[PF[j],PF[i]];pfDraw()}
 function reduzir(file,m,q){return new Promise(ok=>{if(!file||!file.size)return ok('');const r=new FileReader();r.onload=()=>{const i=new Image();i.onload=()=>{const k=Math.min(1,(m||900)/Math.max(i.width,i.height)),c=document.createElement('canvas');c.width=i.width*k;c.height=i.height*k;c.getContext('2d').drawImage(i,0,0,c.width,c.height);ok(c.toDataURL('image/jpeg',q||.7))};i.src=r.result};r.readAsDataURL(file)})}
 async function novoProd(e){e.preventDefault();const f=e.target,fd=new FormData(f);$('addBtn').disabled=true;say('pnlMsg','Enviando…');
- try{const fs=[];for(const x of fd.getAll('arq').slice(0,4)){const u=await reduzir(x,800,.68);if(u)fs.push(u)}
+ try{const fs=PF.slice(0,4);
   const g=$('tam').style.display==='block',vs=g?lerTam('tg'):[];
   if(g&&!vs.some(v=>v.e>0))throw new Error('Informe a quantidade de pelo menos um tamanho.');
   const p={titulo:fd.get('titulo'),preco:num(fd.get('preco')),precoOriginal:num(fd.get('precoOriginal')),categoria:fd.get('categoria'),descricao:fd.get('descricao'),estoque:g?vs.reduce((a,v)=>a+v.e,0):fd.get('estoque'),variacoes:vs,marca:fd.get('marca'),cor:fd.get('cor'),fotos:fs};
   if(!(Number(p.preco)>0))throw new Error('Preço inválido.');
-  await run('addProduto',A,p);f.reset();catChg();document.querySelectorAll('#pp small.hint').forEach(s=>s.textContent='');say('pnlMsg','Produto adicionado!');listar();carregar()}catch(x){say('pnlMsg',esc(x.message),1)}
+  await run('addProduto',A,p);f.reset();PF=[];pfDraw();catChg();document.querySelectorAll('#pp small.hint').forEach(s=>s.textContent='');say('pnlMsg','Produto adicionado!');listar();carregar()}catch(x){say('pnlMsg',esc(x.message),1)}
  $('addBtn').disabled=false;return false}
 let PL=[],LASTN=-1,LASTC=-1;
 function ding(){try{navigator.vibrate&&navigator.vibrate([200,100,200]);const c=new(window.AudioContext||window.webkitAudioContext)(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=880;g.gain.setValueAtTime(.25,c.currentTime);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+.7);o.start();o.stop(c.currentTime+.7)}catch(e){}}
