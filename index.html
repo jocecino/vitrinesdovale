@@ -765,7 +765,7 @@ function ctaCriar(e){e.preventDefault();const d=Object.fromEntries(new FormData(
  if(d.senha!==d.senha2){say('ctm','As senhas não são iguais. Digite de novo.',1);return false}
  say('ctm','Criando sua conta…');
  run('contaCriar',d).then(p=>{CU=p;ctaLocal();ctaDraw();pedCarregar();toast('Conta criada!')}).catch(x=>say('ctm',esc(x.message),1));return false}
-function ctaSair(){run('contaSair').then(()=>{CU=null;OL=[];ctaDraw();pedCarregar();cliBadge()})}
+function ctaSair(){run('contaSair').then(()=>{CU=null;OL=[];try{localStorage.removeItem('vv_ped');localStorage.removeItem('vv_cli');localStorage.removeItem('vv_nt');localStorage.removeItem('vv_q')}catch(e){}ctaDraw();pedCarregar();cliBadge()})}
 let RS=null;
 async function entrarEmail(cli,tipo,id,senha){const j=await edgeEmail({acao:'login',tipo:tipo,id:id,senha:senha});const s=await cli.auth.setSession({access_token:j.access_token,refresh_token:j.refresh_token});if(s.error||!s.data.user)throw new Error('Não foi possível entrar. Tente de novo.');return{data:{user:s.data.user},error:null}}
 async function edgeEmail(b){let r;try{r=await fetch(SUPA_URL+'/functions/v1/email',{method:'POST',headers:{'Content-Type':'application/json',apikey:SUPA_KEY,Authorization:'Bearer '+SUPA_KEY},body:JSON.stringify(Object.assign({dev:dev},b))})}catch(e){throw new Error('Sem conexão com o servidor.')}
@@ -803,6 +803,7 @@ function ctaDados(){const c=CU||{};$('ctd').innerHTML='<form style="padding:0;ma
 function ctaSalvar(e){e.preventDefault();const d=Object.fromEntries(new FormData(e.target));
  run('contaSalvar',d).then(p=>{CU=p;ctaLocal();ctaDraw();toast('Dados salvos!')}).catch(x=>say('ctm',esc(x.message),1));return false}
 function pedCarregar(){const L=ld('vv_ped',[]);
+ if(!CU){if($('pdl'))$('pdl').innerHTML='<p class="msg">🔒 Entre na sua conta (ou crie uma) para ver e acompanhar seus pedidos.</p>';return}
  Promise.all([CU?run('contaPedidos').catch(()=>[]):[],L.length?run('consultarPedidos',L.map(x=>({n:x.n,t:x.t}))).catch(()=>null):[]]).then(([a,l])=>{
   if(!$('pdl'))return;if(l===null&&!a.length){$('pdl').innerHTML='<p class="msg err">Não foi possível consultar agora.</p>';return}
   const m={};
@@ -814,7 +815,7 @@ function pedCarregar(){const L=ld('vv_ped',[]);
   OL=Object.values(m).sort((p,q)=>q.n-p.n);
   $('pdl').innerHTML=OL.length?OL.map(x=>'<div class="item"><div class="g"><b>Pedido nº '+x.n+'</b> · '+esc(x.lj)+'<small>'+esc(x.d)+' · '+brl(x.tot)+'</small></div><span class="st '+x.s+'">'+(x.s==='entregue'?(x.rc?'Entregue ✔':'Confirme o recebimento'):ST[x.s]||'—')+'</span><div style="width:100%;display:flex;gap:8px;flex-wrap:wrap"><button class="btn s" onclick="chatAbrir(\'c\',\''+x.n+'\')">💬 Conversar'+(x.cn>0?'<i class="cn">'+x.cn+'</i>':'')+'</button>'+(x.s==='entregue'&&!x.rc?'<button class="btn s" onclick="recOk(\''+x.n+'\',\''+esc(x.t)+'\',true)">✅ Recebi meu pedido</button>'+(x.pb?'':'<button class="btn s r" onclick="recOk(\''+x.n+'\',\''+esc(x.t)+'\',false)">Tive um problema</button>'):'')+(x.s==='entregue'?'<button class="btn s" onclick="go(\'avaliar/'+x.n+'\')">Avaliar</button>':'')+'</div>'+(x.s==='entregue'&&!x.rc?'<small class="hint" style="width:100%">'+(x.pb?'Você informou um problema: converse com a loja pelo chat.':'Se você não responder em 24 horas após a entrega, o recebimento é confirmado automaticamente.')+'</small>':'')+'</div>').join(''):''})}
 function recOk(n,t,ok){run('confirmarRec',n,t,ok).then(()=>{toast(ok?'Recebimento confirmado. Obrigado!':'Avisamos a loja. Converse pelo chat.');pedCarregar();cliBadge()}).catch(x=>toast(x.message))}
-async function cliBadge(){try{const L=ld('vv_ped',[]);let n=0;const r=CU?await run('contaPedidos'):L.length?await run('consultarPedidos',L.slice(0,20).map(x=>({n:x.n,t:x.t}))):[];r.forEach(o=>{n+=+o.chat_novas||0;if(o.status==='entregue'&&!o.recebido&&!o.problema)n++});const b=$('bp');if(b){b.textContent=n;b.style.display=n?'block':'none'}}catch(e){}}
+async function cliBadge(){try{if(!CU){const b=$('bp');if(b)b.style.display='none';return}const L=ld('vv_ped',[]);let n=0;const r=CU?await run('contaPedidos'):L.length?await run('consultarPedidos',L.slice(0,20).map(x=>({n:x.n,t:x.t}))):[];r.forEach(o=>{n+=+o.chat_novas||0;if(o.status==='entregue'&&!o.recebido&&!o.problema)n++});const b=$('bp');if(b){b.textContent=n;b.style.display=n?'block':'none'}}catch(e){}}
 async function restaurarCli(){try{const s=(await sbc.auth.getSession()).data.session;if(s){CU=await rpcC('cliente_perfil');ctaLocal();hdUser();avisoSenha(1)}}catch(e){}cliBadge()}
 setInterval(()=>{if(!document.hidden&&!CH)cliBadge()},60000);
 
