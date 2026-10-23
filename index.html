@@ -273,7 +273,7 @@ body{padding-bottom:calc(84px + env(safe-area-inset-bottom,0px))}
   <button class="a4" onclick="go('pedidos')"><i><svg class="ic"><use href="#i-user"/></svg></i>Minha conta</button>
   <button class="a5" onclick="go('minha')"><i><svg class="ic"><use href="#i-box"/></svg></i>Lojista</button>
  </div>
- <div id="achs"></div><div id="fls"></div>
+ <div id="fls"></div>
  <h2>Lojas</h2><div class="row" id="lj"></div>
  <h2 id="gt">Novidades</h2><div class="grid" id="grid"></div><div id="mais" style="text-align:center;padding:0 14px 14px"></div>
  <p class="hint" style="text-align:center;margin:6px 14px 20px"><a href="#/termos">Termos de uso</a> · <a href="#/privacidade">Política de privacidade</a><br><button class="lk" id="inst" onclick="instalar()">Instalar o app no celular</button></p>
@@ -503,7 +503,7 @@ const PG={pix:'PIX',dinheiro:'Dinheiro na entrega',cartao:'Cartão na entrega'};
 const ST={novo:'Aguardando confirmação',confirmado:'Confirmado',saiu:'Saiu para entrega',entregue:'Entregue',cancelado:'Cancelado',expirado:'Não confirmado pela loja'};
 const ld=(k,d)=>{try{return JSON.parse(localStorage.getItem(k))||d}catch(e){return d}};
 const sv=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
-let D=ld('vv_cat',{lojas:[],produtos:[],achadinhos:[]}),loading=true,cat='Tudo',A=null,S=null,AD=[],AF='pendente',CK={},KS=0,IP=null,SB='pp';
+let D=ld('vv_cat',{lojas:[],produtos:[]}),loading=true,cat='Tudo',A=null,S=null,AD=[],AF='pendente',CK={},KS=0,IP=null,SB='pp';
 let C=ld('vv_cart',{l:null,i:[]}),FV=ld('vv_fv',{p:[],l:[]}),NT=ld('vv_nt',null);
 const $=id=>document.getElementById(id);
 const ADM_WPP='5574988079171';
@@ -604,7 +604,6 @@ function card(p){const o=pct(p),f=FV.p.indexOf(p.id)>-1;
 function home(){
  $('cats').innerHTML=['Tudo','Favoritos',...CATS].map(c=>'<button class="'+(c===cat?'on':'')+'" onclick="cat=\''+c+'\';PN=1;home();tr(\'categoria\',\'\',\''+c+'\')">'+(c==='Favoritos'?'♥ ':'')+c+'</button>').join('');
  const fv=cat==='Favoritos',q=nrm($('q').value);filtroSrv();
- $('achs').innerHTML=(D.achadinhos||[]).length&&!fv?'<h2>Achadinhos do Jocecino</h2><div class="row">'+D.achadinhos.map(a=>'<a class="rl" target="_blank" rel="noopener" href="'+esc(a.url)+'"'+(a.capa?' style="background-image:url(\''+esc(a.capa)+'\')"':'')+'><span>▶ '+esc(a.titulo)+'</span></a>').join('')+'</div>':'';
  const fp=D.produtos.filter(p=>fl(p));$('fls').innerHTML=fp.length&&!fv?'<h2>⚡ Ofertas relâmpago</h2><div class="row">'+fp.map(card).join('')+'</div>':'';
  const ls=D.lojas.filter(l=>!fv||FV.l.indexOf(l.id)>-1);
  $('lj').innerHTML=ls.length?ls.map(l=>'<button class="av" onclick="go(\'loja/'+l.id+'\')"><i>'+lg(l)+'</i><span>'+esc(l.nome)+vb(l)+'</span></button>').join(''):'<p class="hint">'+(fv?'Toque no ♡ de uma loja ou produto para guardar aqui.':loading?'Carregando…':'As lojas aparecem aqui assim que forem aprovadas.')+'</p>';
