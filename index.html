@@ -296,13 +296,13 @@ body{padding-bottom:calc(84px + env(safe-area-inset-bottom,0px))}
    <label>Nome da loja<input name="nome" id="cnome" required maxlength="80" autocomplete="off" oninput="chkNome()"><small id="nmChk" class="chk"></small></label>
    <label>Nome do responsável<input name="responsavel" required></label>
    <label>Sobrenome do responsável<input name="sobrenome" required></label>
-   <label>WhatsApp (com DDD)<input name="whatsapp" type="tel" inputmode="numeric" placeholder="74 99999-9999" required onchange="lcChk(this)"></label><div id="lcBox" class="msg" style="display:none;margin:0"></div>
+   <label>WhatsApp (com DDD)<input name="whatsapp" type="tel" inputmode="numeric" placeholder="74 99999-9999" required></label>
    <label>Cidade<select name="cidade" id="cid"></select></label>
    <label>Bairro<select name="bairro" id="bsel" required></select></label>
    <label>Rua e número<input name="endereco" placeholder="Rua, número, ponto de referência" required></label>
    <label>Categoria<select name="categoria" class="csel"></select></label>
    <label>Instagram<input name="instagram" placeholder="@sualoja"></label>
-   <label>E-mail principal<small class="hint" style="display:block;font-weight:400;margin:2px 0 6px">Seu e-mail principal é usado para recuperar a senha. Digite com atenção.</small><input name="email" type="email" required autocomplete="email" maxlength="120" oninput="emReset(this)" onchange="emChk(this,'loja');lcChk(this)"></label><small class="evm hint" style="display:block;margin:-6px 0 4px"></small>
+   <label>E-mail principal<small class="hint" style="display:block;font-weight:400;margin:2px 0 6px">Seu e-mail principal é usado para recuperar a senha. Digite com atenção.</small><input name="email" type="email" required autocomplete="email" maxlength="120" oninput="emReset(this)" onchange="emChk(this,'loja')"></label><small class="evm hint" style="display:block;margin:-6px 0 4px"></small>
    <label>Logo da loja (obrigatório)<input name="arq" type="file" accept="image/*" required onchange="logoEsc(this)"></label><div id="lgCad" style="margin:-4px 0 4px"></div>
    <div><div class="h3" style="margin-top:0">Dias e horários de funcionamento</div><div id="dc"></div></div>
    <label>Crie uma senha (mín. 6 caracteres)<input name="senha" type="password" minlength="6" autocomplete="new-password" required></label>
@@ -484,7 +484,6 @@ const T={
  lojaRelatorio:(a,d)=>rpc('relatorio',{p_dias:d,p_loja:null}),
  async adminListar(s){const r=await sb.auth.signInWithPassword({email:s.email,password:s.senha});if(r.error){const m=String(r.error.message||'');throw new Error(/invalid login/i.test(m)?'E-mail ou senha incorretos.':'Não foi possível entrar: '+m)}try{return await rpc('admin_listar')}catch(e){await sb.auth.signOut();throw e}},
  adminLojaLimite:(s,id,n)=>rpc('admin_loja_limite',{p_id:id,p_limite:n}),
- clienteExiste:(t,e)=>rpc('cliente_existe',{p_tel:t,p_email:e}),
  emailLivre:(t,e)=>rpc('email_disponivel',{p_tipo:t,p_email:e}),
  meuPacote:()=>rpc('meu_pacote'),
  adminDecidir:(s,id,ac,m)=>rpc('admin_decidir',{p_id:id,p_acao:ac,p_motivo:m||''}),
@@ -755,18 +754,6 @@ let RS=null;
 async function entrarEmail(cli,tipo,id,senha){const j=await edgeEmail({acao:'login',tipo:tipo,id:id,senha:senha});const s=await cli.auth.setSession({access_token:j.access_token,refresh_token:j.refresh_token});if(s.error||!s.data.user)throw new Error('Não foi possível entrar. Tente de novo.');return{data:{user:s.data.user},error:null}}
 async function edgeEmail(b){let r;try{r=await fetch(SUPA_URL+'/functions/v1/email',{method:'POST',headers:{'Content-Type':'application/json',apikey:SUPA_KEY,Authorization:'Bearer '+SUPA_KEY},body:JSON.stringify(Object.assign({dev:dev},b))})}catch(e){throw new Error('Sem conexão com o servidor.')}
  const j=await r.json().catch(()=>({}));if(!r.ok){const x=new Error(j.erro||'Não foi possível agora.');x.srv=1;throw x}return j}
-let LC=null;
-function lcChk(inp){const f=inp.closest('form'),tel=String(f.elements.whatsapp.value||'').trim(),em=String(f.elements.email.value||'').trim().toLowerCase(),box=$('lcBox');
- const okT=tel.replace(/\D/g,'').length>=10,okE=/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em);if(!okT&&!okE){box.style.display='none';return}
- run('clienteExiste',okT?tel:'',okE?em:'').then(r=>{if(!r||!r.existe){LC=null;box.style.display='none';return}
-  LC={por:r.por};box.style.display='';box.innerHTML='<b>👤 Você já tem conta de cliente!</b><br>Digite a senha dela para preencher seus dados automaticamente (nome, endereço…). Ou continue preenchendo à mão.<div style="display:flex;gap:8px;margin-top:8px"><input id="lcSen" type="password" autocomplete="current-password" placeholder="Senha da conta de cliente" style="flex:1;min-width:0"><button type="button" class="btn s" style="width:auto" onclick="lcPreencher()">Preencher</button></div><small id="lcM" class="hint" style="display:block;margin-top:6px"></small>'}).catch(()=>{})}
-function lcPreencher(){const f=document.querySelector('#cadv form'),m=$('lcM'),sen=($('lcSen')||{}).value||'';if(!sen){m.style.color='var(--red)';m.textContent='Digite a senha da conta de cliente.';return}
- const id=LC&&LC.por==='email'?String(f.elements.email.value||'').trim():String(f.elements.whatsapp.value||'').trim();m.style.color='';m.textContent='Entrando…';
- run('contaEntrar',{tel:id,senha:sen}).then(p=>{CU=p;ctaLocal();hdUser();const set=(n,v)=>{if(f.elements[n]&&v)f.elements[n].value=v},pt=String(p.nome||'').trim().split(/\s+/);
-  set('responsavel',pt[0]);set('sobrenome',pt.slice(1).join(' '));if(!f.elements.whatsapp.value)set('whatsapp',String(p.tel||'').replace(/^55/,''));if(!f.elements.email.value&&p.email){set('email',p.email);emChk(f.elements.email,'loja')}
-  if(p.bairro&&f.elements.bairro)f.elements.bairro.value=p.bairro;
-  set('endereco',[p.rua,p.num].filter(Boolean).join(', ')+(p.comp?' - '+p.comp:'')+(p.ref?' ('+p.ref+')':''));
-  $('lcBox').innerHTML='<b>✓ Dados preenchidos com os da sua conta de cliente.</b><br>Confira e complete o que faltar (nome da loja, logo, horários e senha da loja).'}).catch(x=>{m.style.color='var(--red)';m.textContent=x.message})}
 function emReset(i){const f=i.closest('form');f.dataset.embad='';const m=f.querySelector('.evm');if(m)m.textContent=''}
 function emChk(inp,tipo){const f=inp.closest('form'),em=String(inp.value||'').trim().toLowerCase(),m=f.querySelector('.evm');f.dataset.embad='';
  if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)){m.style.color='var(--red)';m.textContent='Digite um e-mail válido.';f.dataset.embad='1';return}
