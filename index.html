@@ -92,6 +92,7 @@ input,select,textarea{font:inherit;padding:12px;border:1px solid var(--line);bor
 .st.novo{background:#f5d76e;color:#5a4500}.st.confirmado,.st.saiu{background:#bfe3ff;color:#0b4a7a}.st.entregue{background:#bff0d0;color:#0b5a2b}.st.cancelado,.st.expirado{background:#f5c6c0;color:#7a1b10}
 .nota{background:var(--card);border-radius:12px;padding:16px}
 .doc{padding:4px 16px 20px;line-height:1.55}.doc h3{margin:16px 0 4px}.doc p,.doc li{color:var(--mute);margin-bottom:6px}.doc ul{padding-left:20px}
+#ldx{position:fixed;inset:0;z-index:9999;display:none;align-items:center;justify-content:center;background:rgba(10,15,30,.45);-webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px)}#ldx .ldc{background:#1f2831;color:#fff;padding:18px 26px;border-radius:16px;display:flex;align-items:center;gap:12px;font-size:15px;box-shadow:0 8px 30px rgba(0,0,0,.4)}.ldsp{width:22px;height:22px;border:3px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:ldr .8s linear infinite}@keyframes ldr{to{transform:rotate(360deg)}}
 #toast{position:fixed;left:50%;bottom:calc(92px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--navy);color:var(--head);padding:10px 16px;border-radius:20px;z-index:20;display:none;font-weight:600}
 @media print{header,.bar,.no-print,.top,#toast{display:none!important}body{background:#fff;color:#000;padding:0}.nota{padding:0}}
 .fl{display:inline-block;background:#e8541d;color:#fff;font-size:11px;font-weight:800;padding:2px 6px;border-radius:4px;margin-bottom:5px}
@@ -519,7 +520,11 @@ const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;'
 const brl=n=>'R$ '+Number(n).toFixed(2).replace('.',',');
 const num=s=>{s=String(s).trim().replace(/[^\d.,]/g,'');if(s.indexOf(',')>-1)s=s.replace(/\./g,'').replace(',','.');else if((s.match(/\./g)||[]).length>1)s=s.replace(/\./g,'');return s};
 const nrm=s=>String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
-const run=(fn,...a)=>Promise.resolve().then(()=>T[fn](...a));
+const LDM={addProduto:'Adicionando produto',trocarLogo:'Enviando logo',trocarCapa:'Enviando capa',toggleProduto:'Salvando',setVariacoes:'Salvando',setEstoque:'Salvando',salvarLoja:'Salvando dados da loja',alterarSenha:'Alterando senha',cadastrarLoja:'Enviando cadastro',criarPedido:'Enviando pedido',contaSalvar:'Salvando seus dados',contaCriar:'Criando sua conta',contaEntrar:'Entrando',login:'Entrando',avaliar:'Enviando avaliação',perguntar:'Enviando pergunta',responderPergunta:'Enviando resposta',pedirOferta:'Enviando oferta',cancelarOferta:'Cancelando oferta',confirmarRec:'Confirmando recebimento',senhaPedir:'Enviando código',senhaConfirmar:'Verificando código',senhaRedefinir:'Salvando nova senha',adminDecidir:'Salvando decisão',adminLojaLimite:'Salvando pacote',adminResetSenha:'Redefinindo senha',adminClienteReset:'Redefinindo senha',adminVerificar:'Salvando',adminSenhaLink:'Liberando',adminSenhaCodigo:'Gerando código',adminSenhaFechar:'Fechando pedido',adminPausarProduto:'Salvando',adminOfertaAprovar:'Salvando',ocultarPergunta:'Salvando',statusPedido:'Atualizando pedido'};
+let LDN=0,LDT=null;
+function ldOn(t){LDN++;if(LDN>1){const e=$('ldx');if(e)e.querySelector('b').textContent=t+'…';return}clearTimeout(LDT);LDT=setTimeout(()=>{let e=$('ldx');if(!e){e=document.createElement('div');e.id='ldx';e.innerHTML='<div class="ldc"><i class="ldsp"></i><b></b></div>';document.body.appendChild(e)}e.querySelector('b').textContent=t+'…';e.style.display='flex'},150)}
+function ldOff(){LDN=Math.max(0,LDN-1);if(LDN)return;clearTimeout(LDT);const e=$('ldx');if(e)e.style.display='none'}
+const run=(fn,...a)=>{const m=LDM[fn];if(!m)return Promise.resolve().then(()=>T[fn](...a));ldOn(m);return Promise.resolve().then(()=>T[fn](...a)).finally(ldOff)};
 const say=(id,t,e)=>{$(id).innerHTML=t?'<div class="msg'+(e?' err':'')+'">'+t+'</div>':''};
 let TT;function toast(t){const e=$('toast');e.textContent=t;e.style.display='block';clearTimeout(TT);TT=setTimeout(()=>e.style.display='none',2200)}
 const LJ=id=>D.lojas.find(l=>l.id===id)||{};
