@@ -318,15 +318,16 @@ header,.top{background:radial-gradient(120% 160% at 85% 0%,#C9A85C55 0%,#16363F 
 .lk,a{color:#E9D08A}.pcl .lk{color:#E9D08A}.ncor{background:#000a;color:#E9D08A}
 }
 .flb{margin:12px 14px;padding:10px;border-radius:14px;background:linear-gradient(135deg,#E9D08A,#C9A85C);box-shadow:0 2px 8px #0003}
-.flh{font-weight:800;font-size:17px;color:#16363F;padding:2px 4px 10px;letter-spacing:.2px}
+.flh{display:flex;align-items:center;justify-content:space-between;gap:8px;font-weight:800;font-size:16px;color:#16363F;padding:2px 4px 10px;letter-spacing:.2px}.flcd.urg{background:#c0392b;color:#fff}.flcd{font-variant-numeric:tabular-nums;background:#16363F;color:#E9D08A;font-size:14px;font-weight:800;padding:3px 9px;border-radius:6px;flex:none}
+.flc{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none}.flc::-webkit-scrollbar{display:none}.flc .flr{flex:none;width:100%;scroll-snap-align:start;border-bottom:0}
+.fld{display:flex;justify-content:center;gap:6px;padding:0 0 10px}.fld i{width:7px;height:7px;border-radius:50%;background:var(--line)}.fld i.on{background:#C9A85C;width:18px;border-radius:4px;transition:width .2s}
 .fli{background:var(--card);border-radius:10px;overflow:hidden}
 .flr{display:flex;gap:12px;align-items:center;padding:10px;cursor:pointer;border-bottom:1px solid var(--line)}.flr:last-of-type{border-bottom:0}
 .flf{flex:none;width:84px;height:84px;border-radius:10px;overflow:hidden;background:#f4f4f4;display:grid;place-items:center;font-size:32px}.flf img{width:100%;height:100%;object-fit:cover}
 .flt{min-width:0}.flo{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:13px;color:var(--mute)}
 .flp{background:#C9A85C;color:#16363F;font-weight:800;font-size:13px;padding:2px 6px;border-radius:4px}
 .flv{font-size:22px;font-weight:600;margin:2px 0}.flt small{display:block;color:var(--mute);font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.flm{display:block;width:100%;padding:12px;font-weight:700;color:#8a6d2c;border-top:1px solid var(--line)}
-@media(prefers-color-scheme:dark){.flb{background:linear-gradient(135deg,#C9A85C,#8a6d2c)}.fli{background:#1d2428}.flf{background:#262d31}.flm{color:#E9D08A}}
+@media(prefers-color-scheme:dark){.flb{background:linear-gradient(135deg,#C9A85C,#8a6d2c)}.fli{background:#1d2428}.flf{background:#262d31}}
 </style></head><body>
 <header id="hd">
  <div class="t1"><img src="/logo.webp" width="44" height="44" alt="ValeShop Sobradinho"><label class="sr"><span aria-hidden="true">🔍</span><input id="q" placeholder="Buscar em ValeShop Sobradinho" oninput="PN=1;home();qtr()"></label></div>
@@ -641,7 +642,7 @@ const rg=(a,b)=>{const o=[];for(let i=a;i<=b;i++)o.push(String(i));return o};
 const TZ={letras:['PP','P','M','G','GG','XG'],num:['34','36','38','40','42','44','46','48','50'],unico:['Único'],cal:rg(33,46),calinf:rg(16,32)};
 const TN={letras:'Letras (PP ao XG)',num:'Numeração (34 a 50)',unico:'Tamanho único',cal:'Calçado adulto (33 a 46)',calinf:'Calçado infantil (16 a 32)'};
 const dev=(()=>{let d=null;try{d=localStorage.getItem('vv_dev')}catch(e){}if(!d){d=Math.random().toString(36).slice(2)+Date.now().toString(36);try{localStorage.setItem('vv_dev',d)}catch(e){}}return d})();
-function tick(){document.querySelectorAll('.cd').forEach(e=>{const s=Math.floor((e.dataset.ate-Date.now())/1000);if(s<=0){e.textContent='encerrada';return}const h=Math.floor(s/3600),p2=n=>String(n).padStart(2,'0');e.textContent=(h>=24?Math.floor(h/24)+'d ':'')+p2(h%24)+':'+p2(Math.floor(s%3600/60))+':'+p2(s%60)});}
+function tick(){document.querySelectorAll('.cd').forEach(e=>{const s=Math.floor((e.dataset.ate-Date.now())/1000);if(s<=0){e.textContent='encerrada';return}const h=Math.floor(s/3600),p2=n=>String(n).padStart(2,'0');e.textContent=(h>=24?Math.floor(h/24)+'d ':'')+p2(h%24)+':'+p2(Math.floor(s%3600/60))+':'+p2(s%60);if(e.classList.contains('flcd'))e.classList.toggle('urg',s<3600)});}
 setInterval(tick,1000);
 const sess=(()=>{let s=null;try{s=sessionStorage.getItem('vv_s')}catch(e){}if(!s){s=Math.random().toString(36).slice(2)+Date.now().toString(36);try{sessionStorage.setItem('vv_s',s)}catch(e){}}return s})();
 const EV=[];let LK=null,QT,PN=1,AT,AP=7,RD=7,APD=1,AS='',LR=null;const DET={};
@@ -711,13 +712,17 @@ function cp(t){try{navigator.clipboard.writeText(t);toast('Copiado')}catch(e){dl
 /* ---------- Vitrine ---------- */
 function card(p){const o=pct(p),f=FV.p.indexOf(p.id)>-1;
  return '<div class="card" role="button" tabindex="0" onclick="clk(\''+p.id+'\')"><div class="ph">'+thumb(p)+(p.nCores>1?'<span class="ncor">🎨 '+p.nCores+' cores</span>':'')+'<button class="hr" aria-label="Favoritar" onclick="event.stopPropagation();fav(\'p\',\''+p.id+'\')">'+(f?'♥':'♡')+'</button></div><div class="ct">'+flTag(p)+'<div class="nm">'+esc(p.titulo)+'</div>'+(po(p)?'<div class="old">'+brl(po(p))+'</div>':'')+'<div class="pr">'+brs(pe(p))+(o?'<span class="off">'+o+'% OFF</span>':'')+'</div>'+(p.estoque===0?'<div class="off" style="background:var(--red);margin:3px 0">Esgotado</div>':'')+'<small>'+esc(LJ(p.lojaId).nome)+'</small></div></div>'}
-let FLX=0;
-function flBox(fp){const L=FLX?fp:fp.slice(0,3);
- return '<div class="flb"><div class="flh">⚡ OFERTAS RELÂMPAGO</div><div class="fli">'+L.map(p=>{const o=pct(p);return '<div class="flr" role="button" tabindex="0" onclick="clk(\''+p.id+'\')"><div class="flf">'+thumb(p)+'</div><div class="flt"><div class="flo">'+(o?'<span class="flp">'+o+'% OFF</span>':'')+(po(p)?'<s>'+brl(po(p))+'</s>':'')+'</div><div class="flv">'+brs(pe(p))+'</div><small>'+esc(p.titulo)+' · '+esc(LJ(p.lojaId).nome)+'</small></div></div>'}).join('')+(fp.length>3?'<button class="flm" onclick="FLX=FLX?0:1;home()">'+(FLX?'Mostrar menos ‹':'Ver todas as ofertas ('+fp.length+') ›')+'</button>':'')+'</div></div>'}
+let FLSTOP=0,FLT=null;
+function flBox(fp){const L=fp.slice(0,8);
+ return '<div class="flb" data-n="'+L.length+'"><div class="flh"><span>⚡ OFERTAS RELÂMPAGO</span><span class="cd flcd" id="flcd" data-ate="'+L[0].oferta.ate+'"></span></div><div class="fli"><div class="flc" id="flc" onscroll="flSc(this)" ontouchstart="FLSTOP=1" onpointerdown="FLSTOP=1">'+L.map(p=>{const o=pct(p);return '<div class="flr" role="button" tabindex="0" data-ate="'+p.oferta.ate+'" onclick="clk(\''+p.id+'\')"><div class="flf">'+thumb(p)+'</div><div class="flt"><div class="flo">'+(o?'<span class="flp">'+o+'% OFF</span>':'')+(po(p)?'<s>'+brl(po(p))+'</s>':'')+'</div><div class="flv">'+brs(pe(p))+'</div><small>'+esc(p.titulo)+' · '+esc(LJ(p.lojaId).nome)+'</small></div></div>'}).join('')+'</div>'+(L.length>1?'<div class="fld" id="fld">'+L.map((p,k)=>'<i'+(k?'':' class="on"')+'></i>').join('')+'</div>':'')+'</div></div>'}
+function flSc(e){const k=Math.max(0,Math.min(e.children.length-1,Math.round(e.scrollLeft/e.clientWidth))),c=$('flcd'),r=e.children[k];if(c&&r&&c.dataset.ate!==r.dataset.ate){c.dataset.ate=r.dataset.ate;tick()}document.querySelectorAll('#fld i').forEach((d,i)=>d.classList.toggle('on',i===k))}
+function flAuto(){clearInterval(FLT);FLT=setInterval(()=>{const b=document.querySelector('.flb'),h=$('home');if(!b||!h||!h.classList.contains('on')||document.hidden)return;
+ const n=D.produtos.filter(p=>fl(p)&&p.capa!==false).slice(0,8).length;if(n!==+b.dataset.n){home();return}
+ const e=$('flc');if(FLSTOP||!e||e.children.length<2)return;const k=Math.round(e.scrollLeft/e.clientWidth),nx=(k+1)%e.children.length;e.scrollTo({left:nx*e.clientWidth,behavior:'smooth'})},5000)}
 function home(){
  $('cats').innerHTML=['Tudo','Favoritos',...CATS].map(c=>'<button class="'+(c===cat?'on':'')+'" onclick="cat=\''+c+'\';PN=1;home();tr(\'categoria\',\'\',\''+c+'\')">'+(c==='Favoritos'?'♥ ':'')+c+'</button>').join('');
  const fv=cat==='Favoritos',q=nrm($('q').value);filtroSrv();
- const fp=D.produtos.filter(p=>fl(p)&&p.capa!==false).sort((x,y)=>x.oferta.ate-y.oferta.ate);$('fls').innerHTML=fp.length&&!fv?flBox(fp):'';
+ const fp=D.produtos.filter(p=>fl(p)&&p.capa!==false).sort((x,y)=>x.oferta.ate-y.oferta.ate);$('fls').innerHTML=fp.length&&!fv?flBox(fp):'';if(fp.length&&!fv){flAuto();tick()}
  const ls=D.lojas.filter(l=>!fv||FV.l.indexOf(l.id)>-1);
  $('lj').innerHTML=ls.length?ls.map(l=>'<button class="av" onclick="go(\'loja/'+l.id+'\')"><i>'+lg(l)+'</i><span>'+esc(l.nome)+vb(l)+'</span></button>').join(''):'<p class="hint">'+(fv?'Toque no ♡ de uma loja ou produto para guardar aqui.':loading?'Carregando…':'As lojas aparecem aqui assim que forem aprovadas.')+'</p>';
  const ps=D.produtos.filter(p=>(fv||p.capa!==false)&&(cat==='Tudo'||fv||p.categoria===cat)&&(!fv||FV.p.indexOf(p.id)>-1)&&nrm(p.titulo+' '+LJ(p.lojaId).nome+' '+p.categoria).includes(q));
