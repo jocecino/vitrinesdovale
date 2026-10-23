@@ -66,6 +66,7 @@ input,select,textarea{font:inherit;padding:12px;border:1px solid var(--line);bor
 .btn.s{padding:9px 12px;font-size:14px;width:auto}.btn.r{background:none;color:var(--red);border-color:var(--red)}
 .msg{margin:8px 14px;padding:12px;border-radius:10px;background:var(--card);border:1px solid var(--line);line-height:1.4}
 .msg.err{border-color:var(--red);color:var(--red)}
+.fal input:not([type=checkbox]),.fal select,.fal textarea{border-color:var(--red)!important;background:#fff5f5}.fal{outline:2px solid var(--red);outline-offset:3px;border-radius:8px}
 .item{display:flex;gap:10px;align-items:center;margin:0 14px 10px;padding:10px;background:var(--card);border-radius:12px;flex-wrap:wrap}
 .th{width:52px;height:52px;border-radius:8px;overflow:hidden;background:#d9cfb9;display:grid;place-items:center;flex:none}
 .item>.g{flex:1;min-width:120px}.item small{display:block;color:var(--mute)}.item.off{opacity:.55}
@@ -308,7 +309,7 @@ body{padding-bottom:calc(84px + env(safe-area-inset-bottom,0px))}
   <p class="msg">Ainda não tem loja? <button class="lk" onclick="cadV(1)">Cadastre sua loja</button><br>Esqueceu a senha? <button class="lk" onclick="esqueci()">Pedir nova senha</button></p>
  </div>
  <div id="cadv" style="display:none"><div class="top"><button onclick="cadV(0)" aria-label="Voltar">←</button>Cadastre sua loja</div><div id="cadMsg"></div>
-  <form onsubmit="return cadastrar(event)">
+  <form novalidate onsubmit="return cadastrar(event)">
    <label>Nome da loja<input name="nome" id="cnome" required maxlength="80" autocomplete="off" oninput="chkNome()"><small id="nmChk" class="chk"></small></label>
    <label>Nome do responsável<input name="responsavel" required></label>
    <label>Sobrenome do responsável<input name="sobrenome" required></label>
@@ -332,7 +333,7 @@ body{padding-bottom:calc(84px + env(safe-area-inset-bottom,0px))}
   <div class="lhead"><label class="lgp" for="lgFile" title="Toque para trocar a logo"><span id="lgPrev"></span><em>📷</em></label><input type="file" id="lgFile" accept="image/*" hidden onchange="trocarLogoArq(this)"><div><h2 id="lojaNome" style="margin:0"></h2><small class="hint">Toque na logo para trocar</small></div></div><div id="lgMsg"></div><div id="pnlMsg"></div>
   <div class="seg"><button id="sgpp" class="on" onclick="sub('pp')">Produtos</button><button id="sgpd" onclick="sub('pd')">Pedidos</button><button id="sgpq" onclick="sub('pq')">Perguntas</button><button id="sgrl" onclick="sub('rl')">Resultados</button><button id="sgpl" onclick="sub('pl')">Loja</button></div>
   <div id="pp">
-   <form onsubmit="return novoProd(event)">
+   <form novalidate onsubmit="return novoProd(event)">
     <div class="fgrp"><b>Fotos do produto (até 4)</b><input id="pfIn" type="file" accept="image/*" multiple hidden onchange="pfAdd(this)"><div id="pfG" class="pfg"></div><small class="hint" style="margin:6px 0 0">A primeira foto é a capa. Use ◀ ▶ para mudar a ordem e ✕ para remover.</small></div>
     <label>Título<input name="titulo" required></label>
     <label>Preço (R$)<input name="preco" inputmode="decimal" required oninput="pvw(this)"><small class="hint" style="margin:0"></small></label>
@@ -882,7 +883,11 @@ function pvw(i){const s=i.nextElementSibling,v=num(i.value);s.textContent=i.valu
 let NOK=null,NT_;
 function chkNome(){const i=$('cnome'),o=$('nmChk'),v=i.value.trim();clearTimeout(NT_);NOK=null;i.classList.remove('ok','bad');o.className='chk';o.textContent='';if(v.length<2)return;o.textContent='Verificando…';
  NT_=setTimeout(()=>run('nomeLivre',v).then(r=>{if(i.value.trim()!==v)return;NOK=r;i.classList.add(r?'ok':'bad');o.className='chk '+(r?'ok':'bad');o.textContent=r?'✓ Nome disponível':'✗ Já existe uma loja com este nome. Escolha outro.'}).catch(()=>{o.textContent=''}),400)}
-async function cadastrar(e){e.preventDefault();if(NOK===false){say('cadMsg','Já existe uma loja com este nome. Escolha outro nome.',1);return false}const f=e.target,fd=new FormData(f),d=Object.fromEntries(fd);if(d.senha!==d.senha2){say('cadMsg','As senhas não são iguais. Digite de novo.',1);return false}delete d.senha2;delete d.arq;d.email=String(d.email||'').trim().toLowerCase();if(f.dataset.embad){say('cadMsg','Confira o e-mail: já está cadastrado ou é inválido.',1);return false}d.horario=dRead('dc2');d.aceite=!!d.aceite;$('cadBtn').disabled=true;say('cadMsg','Enviando…');
+function faltam(f,id,ex){f.querySelectorAll('.fal').forEach(x=>x.classList.remove('fal'));const L=[];let first=null;
+ f.querySelectorAll('[required]').forEach(c=>{if(c.type==='file'||!c.offsetParent)return;const vazio=c.type==='checkbox'||c.type==='radio'?!c.checked:!String(c.value||'').trim();if(!vazio)return;const lb=c.closest('label');let t='';if(lb){const k=lb.cloneNode(true);k.querySelectorAll('small,input,select,textarea,em').forEach(x=>x.remove());t=k.textContent.replace(/\(.*?\)/g,'').trim()}t=t||c.name||'Campo';const el=lb||c;el.classList.add('fal');if(!first)first=el;if(!L.includes(t))L.push(t)});
+ (ex||[]).forEach(x=>{L.push(x[0]);const el=$(x[1]);if(el){el.classList.add('fal');if(!first)first=el}});
+ if(!L.length)return false;say(id,'⚠️ <b>Falta preencher:</b><ul style="margin:6px 0 0;padding-left:18px">'+L.map(x=>'<li>'+esc(x)+'</li>').join('')+'</ul>',1);const m=$(id);if(m)m.scrollIntoView({block:'center',behavior:'smooth'});return true}
+async function cadastrar(e){e.preventDefault();if(faltam(e.target,'cadMsg',LOGOC?[]:[['Logo da loja (foto)','lgCad']]))return false;if(NOK===false){say('cadMsg','Já existe uma loja com este nome. Escolha outro nome.',1);return false}const f=e.target,fd=new FormData(f),d=Object.fromEntries(fd);if(d.senha!==d.senha2){say('cadMsg','As senhas não são iguais. Digite de novo.',1);return false}delete d.senha2;delete d.arq;d.email=String(d.email||'').trim().toLowerCase();if(f.dataset.embad){say('cadMsg','Confira o e-mail: já está cadastrado ou é inválido.',1);return false}d.horario=dRead('dc2');d.aceite=!!d.aceite;$('cadBtn').disabled=true;say('cadMsg','Enviando…');
  try{d.logo=LOGOC;if(!d.logo)throw new Error('Envie a logo da loja.');await run('cadastrarLoja',d);f.reset();f.dataset.embad='';f.querySelector('.evm').textContent='';LOGOC='';$('lgCad').innerHTML='';NOK=null;$('cnome').classList.remove('ok','bad');$('nmChk').textContent='';say('cadMsg','Cadastro enviado! Ele agora está em análise pela administração. Você recebe a resposta no WhatsApp informado.');scrollTo(0,0)}catch(x){say('cadMsg',esc(x.message),1)}
  $('cadBtn').disabled=false;return false}
 function entrar(e){e.preventDefault();const d=Object.fromEntries(new FormData(e.target));say('logMsg','');
@@ -963,7 +968,7 @@ function pfDraw(){const g=$('pfG');if(!g)return;g.innerHTML=PF.map((u,i)=>'<div 
 function pfDel(i){PF.splice(i,1);pfDraw()}
 function pfMov(i,d){const j=i+d;if(j<0||j>=PF.length)return;[PF[i],PF[j]]=[PF[j],PF[i]];pfDraw()}
 function reduzir(file,m,q){return new Promise(ok=>{if(!file||!file.size)return ok('');const r=new FileReader();r.onload=()=>{const i=new Image();i.onload=()=>{const k=Math.min(1,(m||900)/Math.max(i.width,i.height)),c=document.createElement('canvas');c.width=i.width*k;c.height=i.height*k;c.getContext('2d').drawImage(i,0,0,c.width,c.height);ok(c.toDataURL('image/jpeg',q||.7))};i.src=r.result};r.readAsDataURL(file)})}
-async function novoProd(e){e.preventDefault();const f=e.target,fd=new FormData(f);$('addBtn').disabled=true;say('pnlMsg','Enviando…');
+async function novoProd(e){e.preventDefault();const f=e.target,fd=new FormData(f);if(faltam(f,'pnlMsg',PF.length?[]:[['Foto do produto (pelo menos 1)','pfG']]))return false;$('addBtn').disabled=true;say('pnlMsg','Enviando…');
  try{const fs=PF.slice(0,4);
   const g=$('tam').style.display==='block',vs=g?lerTam('tg'):[];
   if(g&&!vs.some(v=>v.e>0))throw new Error('Informe a quantidade de pelo menos um tamanho.');
