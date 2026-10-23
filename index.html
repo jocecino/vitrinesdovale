@@ -403,6 +403,7 @@ const E=r=>{if(r.error){const m=String(r.error.message||'Erro');throw new Error(
 const rpc=async(f,p)=>E(await sb.rpc(f,p||{}));
 const rpcC=async(f,p)=>E(await sbc.rpc(f,p||{}));
 let ML=null;
+async function uidL(o){let u=null;try{u=(await sb.auth.getSession()).data.session}catch(e){}if(!u){try{const r=await sb.auth.refreshSession();u=r.data&&r.data.session}catch(e){}}if(!u||!u.user){if(o)return null;throw new Error('Sua sessão expirou. Toque em Sair, entre de novo na loja e tente outra vez.')}return o?u.user:u.user.id}
 async function up(bucket,uid,du,nome){const b=await (await fetch(du)).blob(),path=uid+'/'+nome+'.jpg',r=await sb.storage.from(bucket).upload(path,b,{contentType:'image/jpeg',upsert:false});if(r.error)throw new Error('Não foi possível enviar a imagem ('+r.error.message+').');return sb.storage.from(bucket).getPublicUrl(path).data.publicUrl}
 const lojaOut=l=>({id:l.id,nome:l.nome,logo:l.logo||'',capa:l.capa||'',status:l.status,motivo:l.motivo||'',horario:l.horario,taxas:l.taxas,pagamentos:l.pagamentos,pix:l.pix||'',retirada:l.retirada});
 const ofx=p=>p.oferta_ate&&new Date(p.oferta_ate)>new Date()&&Number(p.oferta_preco)>0?{preco:Number(p.oferta_preco),ate:new Date(p.oferta_ate).getTime()}:null;
@@ -440,12 +441,12 @@ const T={
   const l=(await sb.from('lojas').select('*').eq('owner_id',r.data.user.id).maybeSingle()).data;
   if(!l){await sb.auth.signOut();throw new Error('Nenhuma loja encontrada para este WhatsApp.')}ML=l.id;return lojaOut(l)},
  async alterarSenha(a,n){if(String(n||'').length<6)throw new Error('A nova senha deve ter pelo menos 6 caracteres.');E(await sb.auth.updateUser({password:n}));return true},
- async trocarLogo(a,du){if(!du)throw new Error('Escolha uma imagem.');const u=(await sb.auth.getUser()).data.user;if(!u)throw new Error('Entre de novo na sua loja.');const url=await up('logos',u.id,du,'logo-'+Date.now());E(await sb.from('lojas').update({logo:url}).eq('id',ML));return url},
+ async trocarLogo(a,du){if(!du)throw new Error('Escolha uma imagem.');const u=(await uidL(1));if(!u)throw new Error('Entre de novo na sua loja.');const url=await up('logos',u.id,du,'logo-'+Date.now());E(await sb.from('lojas').update({logo:url}).eq('id',ML));return url},
  async salvarLoja(a,c){E(await sb.from('lojas').update({horario:c.horario,taxas:c.taxas,pagamentos:c.pagamentos,pix:c.pix||'',retirada:c.retirada?'sim':'não'}).eq('id',ML));return true},
  async meusProdutos(){const r=E(await sb.from('produtos').select('id,titulo,descricao,categoria,marca,cor,preco_original,preco,ativo,fotos,estoque,variacoes,oferta_preco,oferta_ate,oferta_status,oferta_pedido_preco,oferta_pedido_horas').eq('loja_id',ML).order('criado_em',{ascending:false}));return r.map(p=>({id:p.id,titulo:p.titulo,descricao:p.descricao,categoria:p.categoria,marca:p.marca,cor:p.cor,po:p.preco_original,preco:p.preco,ativo:p.ativo,fotos:p.fotos,estoque:p.estoque,variacoes:p.variacoes,oferta:ofx(p),ofSt:p.oferta_status,ofPed:p.oferta_pedido_preco,ofH:p.oferta_pedido_horas}))},
- async addProduto(a,p){const u=(await sb.auth.getUser()).data.user.id,fs=[];for(let i=0;i<(p.fotos||[]).length&&i<4;i++)fs.push(await up('produtos',u,p.fotos[i],Date.now()+'-'+i));
+ async addProduto(a,p){const u=(await uidL()),fs=[];for(let i=0;i<(p.fotos||[]).length&&i<4;i++)fs.push(await up('produtos',u,p.fotos[i],Date.now()+'-'+i));
   E(await sb.from('produtos').insert({loja_id:ML,titulo:p.titulo,preco:Number(p.preco),preco_original:p.precoOriginal?Number(p.precoOriginal):null,categoria:p.categoria,descricao:p.descricao||'',estoque:parseInt(p.estoque,10)||0,variacoes:p.variacoes||[],marca:p.marca||null,cor:p.cor||null,fotos:fs}));return true},
- async editarProduto(a,id,p){const u=(await sb.auth.getUser()).data.user.id,fs=[];for(let i=0;i<(p.fotos||[]).length&&i<4;i++){const f=p.fotos[i];fs.push(/^data:/.test(f)?await up('produtos',u,f,Date.now()+'-'+i):f)}
+ async editarProduto(a,id,p){const u=(await uidL()),fs=[];for(let i=0;i<(p.fotos||[]).length&&i<4;i++){const f=p.fotos[i];fs.push(/^data:/.test(f)?await up('produtos',u,f,Date.now()+'-'+i):f)}
   if(!(Number(p.preco)>0))throw new Error('Preço inválido.');if(String(p.titulo||'').trim().length<2)throw new Error('Informe o título.');
   E(await sb.from('produtos').update({titulo:p.titulo,descricao:p.descricao,preco:Number(p.preco),preco_original:p.po?Number(p.po):null,categoria:p.categoria,marca:p.marca||null,cor:p.cor||null,fotos:fs}).eq('id',id));return fs},
  async toggleProduto(a,id){const r=E(await sb.from('produtos').select('ativo').eq('id',id).single());E(await sb.from('produtos').update({ativo:!r.ativo}).eq('id',id));return true},
@@ -487,7 +488,7 @@ const T={
  clientePorTel:(tel,d)=>rpc('cliente_por_tel',{p_tel:tel,p_dev:d}),
  adminAvaliacoes:()=>rpc('admin_avaliacoes'),
  adminVerificar:(s,id,on)=>rpc('admin_verificar',{p_id:id,p_on:on}),
- async trocarCapa(a,du){if(!du)throw new Error('Escolha uma imagem.');const u=(await sb.auth.getUser()).data.user;if(!u)throw new Error('Entre de novo na sua loja.');const url=await up('logos',u.id,du,'capa-'+Date.now());E(await sb.from('lojas').update({capa:url}).eq('id',ML));return url},
+ async trocarCapa(a,du){if(!du)throw new Error('Escolha uma imagem.');const u=(await uidL(1));if(!u)throw new Error('Entre de novo na sua loja.');const url=await up('logos',u.id,du,'capa-'+Date.now());E(await sb.from('lojas').update({capa:url}).eq('id',ML));return url},
  meusPedidos:()=>rpc('meus_pedidos'),
  statusPedido:(a,id,n)=>rpc('status_pedido',{p_id:id,p_novo:n}),
  minhasPerguntas:()=>rpc('minhas_perguntas'),
