@@ -344,3 +344,4 @@ header,.top{background:radial-gradient(120% 160% at 85% 0%,#C9A85C55 0%,#16363F 
 .bfx{border-color:#3a3a3a}.bfx .ofh{background:linear-gradient(90deg,#0d0d0d,#2b2b2b);color:#E9D08A;font-style:normal;letter-spacing:.6px}.bfx .ofh .cdb b{background:#E9D08A;color:#141414}.bfx .ofh .ofe{color:#f2e9cf}
 .bni.of.bk{background:linear-gradient(135deg,#0d0d0d,#2b2b2b)}.bni.of.bk .flh{color:#E9D08A;letter-spacing:.6px}.bni.of.bk .flcd{background:#E9D08A;color:#141414}.bni.of.bk .fli{background:#1b1b1b}.bni.of.bk .flv{color:#fff}.bni.of.bk .flp{background:#E9D08A;color:#141414}
 #ab .item{max-width:100%;box-sizing:border-box;overflow:hidden}#ab .item small,#ab .item b{display:block;min-width:0;overflow-wrap:anywhere;word-break:break-word;white-space:normal}#ab .item .rs b{display:inline;flex:1}
+.cxr{display:flex;gap:6px;margin-top:8px}.cxr input{flex:1;min-width:0}.cxr .btn{flex:none}
