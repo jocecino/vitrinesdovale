@@ -342,6 +342,10 @@ header,.top{background:radial-gradient(120% 160% at 85% 0%,#C9A85C55 0%,#16363F 
 .opill.ativa{background:#1f9d55;color:#fff}.opill.pausada{background:#EB6A33;color:#fff}.opill.slide{background:#C9A85C26;color:#C9A85C;border:1px solid #C9A85C}.opill.pede{background:#EB6A3322;color:#EB6A33}
 .est{position:absolute;left:8px;bottom:8px;display:inline-flex;align-items:center;gap:5px;font-weight:800;font-size:12px;padding:5px 9px;border-radius:7px;background:#ffe9db;color:#e8590c;line-height:1;z-index:2}.est.u{background:#f26d2d;color:#fff}.est svg{width:14px;height:14px;fill:currentColor}.est.in{position:static;margin:0 0 8px}.ph.eb .ncor{bottom:auto;top:6px}
 .psw{padding:0 14px}.psw h2{margin:6px 0}.sch{display:flex;flex-direction:column;gap:8px;padding:12px 4px;max-height:58vh;min-height:140px;overflow:auto}.sb{max-width:84%;padding:9px 12px;border-radius:14px;font-size:15px;white-space:pre-wrap;word-break:break-word;background:var(--card);border:1px solid var(--line);color:var(--ink)}.sb.eu{align-self:flex-end;background:var(--navy);border-color:var(--navy);color:#fff}.sb small{display:block;opacity:.65;font-size:11px;margin-top:3px}.sfm{display:flex;gap:8px;align-items:flex-end;margin-top:8px}.sfm textarea{flex:1;min-height:46px;max-height:120px;resize:none}
+#pbx .fl{display:inline-flex;align-items:center;gap:8px;white-space:nowrap;padding:4px 9px}#pbx .fl span{display:inline}#pbx .fl .ft{font-size:10.5px}#pbx .fl .cd{font-size:11px}
+.bn{margin:10px 14px 4px;position:relative}.bnc{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;border-radius:14px}.bnc::-webkit-scrollbar{display:none}.bni{flex:none;width:100%;scroll-snap-align:start;aspect-ratio:16/7;background:var(--line)}.bni.lk2{cursor:pointer}.bni img{width:100%;height:100%;object-fit:cover;display:block}.bnd{display:flex;justify-content:center;gap:5px;margin-top:7px}.bnd i{width:6px;height:6px;border-radius:3px;background:var(--line);transition:width .2s}.bnd i.on{background:var(--gold);width:16px}
+.crp.bnx canvas{width:min(92vw,520px);height:auto;aspect-ratio:16/7;border-radius:12px;box-shadow:0 0 0 3px #fff}
+.bap{display:block;width:100%;aspect-ratio:16/7;object-fit:cover;border-radius:10px;background:var(--line);margin-bottom:8px}.bpl{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}.bpl button{padding:8px 10px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);font-size:14px;text-align:left}.bpl button.on{border-color:var(--gold);outline:2px solid var(--gold)}.bfm label{display:block;margin:10px 0 0;font-weight:700;font-size:14px}.bfm input[type=checkbox]{width:auto;margin:0}.crp.bnx input[type=range],.crp.bnx .rw{width:min(92vw,520px)}.bfm input:not([type=checkbox]),.bfm select{width:100%;margin-top:4px}
 </style></head><body>
 <header id="hd">
  <div class="t1"><img src="/logo.webp" width="44" height="44" alt="ValeShop Sobradinho"><label class="sr"><span aria-hidden="true">🔍</span><input id="q" placeholder="Buscar em ValeShop Sobradinho" oninput="PN=1;home();qtr()"></label></div>
@@ -350,6 +354,7 @@ header,.top{background:radial-gradient(120% 160% at 85% 0%,#C9A85C55 0%,#16363F 
 </header>
 
 <main id="home" class="v on">
+ <div id="bnr"></div>
  <div id="fls"></div>
  <div id="lj" style="display:none"></div>
  <h2 id="gt">🔥 Mais vendidos e procurados</h2><div class="grid" id="grid"></div><div id="mais" style="text-align:center;padding:0 14px 14px"></div>
@@ -440,7 +445,7 @@ header,.top{background:radial-gradient(120% 160% at 85% 0%,#C9A85C55 0%,#16363F 
   <div class="atop"><button class="amb" onclick="adr(1)" aria-label="Abrir menu"><span></span><span></span><span></span></button><b id="atit">Painel</b></div>
   <div id="adrv" class="adrv" onclick="adr(0)"></div>
   <nav id="adr" class="adr" aria-label="Menu administrativo"><div class="adh"><b>Administração</b><button onclick="adr(0)" aria-label="Fechar">✕</button></div>
-   <button id="agp" class="on" onclick="asub('p')"><i>📊</i>Painel</button><button id="agc" onclick="asub('c')"><i>🏪</i>Lojas</button><button id="agr" onclick="asub('r')"><i>📦</i>Produtos</button><button id="agd" onclick="asub('d')"><i>🧾</i>Pedidos</button><button id="ago" onclick="asub('o')"><i>✅</i>Aprovações</button><button id="agu" onclick="asub('u')"><i><img class="cpi" src="/cupom.webp" alt="" style="margin:0"></i>Cupons</button><button id="agf" onclick="asub('f')"><i>⚡</i>Ofertas</button><button id="ags" onclick="asub('s')"><i>🛟</i>Suporte</button>
+   <button id="agp" class="on" onclick="asub('p')"><i>📊</i>Painel</button><button id="agc" onclick="asub('c')"><i>🏪</i>Lojas</button><button id="agr" onclick="asub('r')"><i>📦</i>Produtos</button><button id="agd" onclick="asub('d')"><i>🧾</i>Pedidos</button><button id="ago" onclick="asub('o')"><i>✅</i>Aprovações</button><button id="agu" onclick="asub('u')"><i><img class="cpi" src="/cupom.webp" alt="" style="margin:0"></i>Cupons</button><button id="agf" onclick="asub('f')"><i>⚡</i>Ofertas</button><button id="agb" onclick="asub('b')"><i>🖼️</i>Banners</button><button id="ags" onclick="asub('s')"><i>🛟</i>Suporte</button>
    <button class="adx" onclick="admSair()"><i>🚪</i>Sair</button></nav>
   <div id="ap"></div>
   <div id="ac" style="display:none"><div class="pd"><input id="aq" placeholder="Buscar loja…" oninput="admRender()"></div><div class="row" id="aF" style="margin:10px 0"></div><div id="aMsg"></div><div id="aRel"></div><div id="aL"></div></div>
@@ -448,6 +453,7 @@ header,.top{background:radial-gradient(120% 160% at 85% 0%,#C9A85C55 0%,#16363F 
   <div id="ao" style="display:none"></div>
   <div id="au" style="display:none"></div>
   <div id="af" style="display:none"></div>
+  <div id="ab" class="psw" style="display:none"></div>
   <div id="as" class="psw" style="display:none"></div>
   <div id="ad" style="display:none"><div class="row" id="adf" style="margin:10px 0"></div><div id="adl"></div></div>
   <p style="margin:12px 14px 20px"><button class="btn s" onclick="admSair()">Sair</button></p>
@@ -491,7 +497,7 @@ async function up(bucket,uid,du,nome){const b=await (await fetch(du)).blob(),pat
 const lojaOut=l=>({id:l.id,nome:l.nome,logo:l.logo||'',capa:l.capa||'',status:l.status,motivo:l.motivo||'',horario:l.horario,taxas:l.taxas,pagamentos:l.pagamentos,pix:l.pix||'',retirada:l.retirada,frete_gratis:l.frete_gratis,parcelas_max:l.parcelas_max,parcelas_sem_juros:l.parcelas_sem_juros,juros_pct:l.juros_pct,volta_em:l.volta_em||'',resumo_semanal:l.resumo_semanal!==false});
 const ofx=p=>p.oferta_ate&&new Date(p.oferta_ate)>new Date()&&Number(p.oferta_preco)>0?{preco:Number(p.oferta_preco),ate:new Date(p.oferta_ate).getTime()}:null;
 const T={
- getCatalogo:()=>rpc('get_catalogo'),
+ getCatalogo:()=>rpc('get_catalogo'),getBanners:()=>rpc('banners_ativos'),adminBannersLista:()=>rpc('admin_banners_lista'),adminBannerSalvar:(s,p)=>rpc('admin_banner_salvar',p),adminBannerOrdem:(s,id,d)=>rpc('admin_banner_ordem',{p_id:id,p_dir:d}),adminBannerAtivo:(s,id,on)=>rpc('admin_banner_ativo',{p_id:id,p_on:on}),adminBannerApagar:(s,id)=>rpc('admin_banner_apagar',{p_id:id}),
  listarProdutos:(pg,c,q,l)=>rpc('listar_produtos',{p_pg:pg,p_cat:c||'',p_q:q||'',p_loja:l||null}),
  produtosPorIds:ids=>rpc('produtos_por_ids',{p_ids:ids}),
  produtoCores:id=>rpc('produto_cores',{p_id:id}),agruparProduto:(a,id,ids)=>rpc('produtos_agrupar',{p_id:id,p_ids:ids}),getProduto:async id=>(await rpc('get_produto',{p_id:id}))||{},
@@ -744,7 +750,7 @@ function flAuto(){clearInterval(FLT);FLT=setInterval(()=>{const b=document.query
  const e=$('flc');if(FLSTOP||!e||e.children.length<2)return;const k=Math.round(e.scrollLeft/e.clientWidth),nx=(k+1)%e.children.length;e.scrollTo({left:nx*e.clientWidth,behavior:'smooth'})},5000)}
 function home(){
  $('cats').innerHTML=['Tudo','Favoritos',...CATS].map(c=>'<button class="'+(c===cat?'on':'')+'" onclick="cat=\''+c+'\';PN=1;home();tr(\'categoria\',\'\',\''+c+'\')">'+(c==='Favoritos'?'♥ ':'')+c+'</button>').join('');
- const fv=cat==='Favoritos',q=nrm($('q').value);filtroSrv();
+ const fv=cat==='Favoritos',q=nrm($('q').value);filtroSrv();{const be=$('bnr');if(be)be.style.display=fv||q?'none':''}
  const fp=D.produtos.filter(p=>fl(p)&&p.oferta.dest&&p.capa!==false).sort((x,y)=>x.oferta.ate-y.oferta.ate);$('fls').innerHTML=fp.length&&!fv?flBox(fp):'';if(fp.length&&!fv){flAuto();tick()}
  const ls=D.lojas.filter(l=>!fv||FV.l.indexOf(l.id)>-1);
  $('lj').innerHTML=ls.length?ls.map(l=>'<button class="av" onclick="go(\'loja/'+l.id+'\')"><i>'+lg(l)+'</i><span>'+esc(l.nome)+vb(l)+'</span></button>').join(''):'<p class="hint">'+(fv?'Toque no ♡ de uma loja ou produto para guardar aqui.':loading?'Carregando…':'As lojas aparecem aqui assim que forem aprovadas.')+'</p>';
@@ -1203,6 +1209,67 @@ function supRes(id,on){run('adminSupRes',S,id,on).then(()=>{toast(on?'Marcada co
 async function supApagar(id){if(!(await dlg({msg:'Apagar toda a conversa com esta loja? Não dá para desfazer.',ok:'Apagar',no:'Voltar'})))return;run('adminSupApagar',S,id).then(()=>{toast('Conversa apagada.');supVoltar()}).catch(x=>toast(x.message))}
 async function supApagarRes(){if(!(await dlg({msg:'Apagar todas as conversas resolvidas? Não dá para desfazer.',ok:'Apagar',no:'Voltar'})))return;run('adminSupApagarRes',S).then(n=>{toast(n+' conversa(s) apagada(s).');supL()}).catch(x=>toast(x.message))}
 setInterval(()=>{if(S&&!document.hidden&&$('aPainel')&&$('aPainel').style.display==='block'){supBadge();if($('as').style.display==='block'){const id=$('as').dataset.loja;if(id)run('adminSupConv',S,id).then(c=>{const x=$('sch');if(x&&$('as').dataset.loja===id&&x.children.length!==c.msgs.length){x.innerHTML=psHtml(c.msgs,'admin');x.scrollTop=x.scrollHeight}}).catch(()=>{});else supL()}}},15000);
+
+let BN=[],BNT=null;
+function bnLoad(){run('getBanners').then(l=>{BN=Array.isArray(l)?l:[];sv('vv_bn',BN);bnRender()}).catch(()=>{})}
+function bnRender(){const e=$('bnr');if(!e)return;clearInterval(BNT);if(!BN.length){e.innerHTML='';return}
+ e.innerHTML='<div class="bn"><div class="bnc" id="bnc" onscroll="bnDot(this)">'+BN.map((b,i)=>'<div class="bni'+(b.t!=='none'?' lk2':'')+'" onclick="bnGo('+i+')"><img src="'+esc(b.img)+'" alt=""'+(i?' loading="lazy"':'')+'></div>').join('')+'</div>'+(BN.length>1?'<div class="bnd" id="bnd">'+BN.map((_,i)=>'<i class="'+(i?'':'on')+'"></i>').join('')+'</div>':'')+'</div>';
+ if(BN.length>1)BNT=setInterval(()=>{const c=$('bnc'),h=$('home');if(!c||document.hidden||!h||!h.classList.contains('on'))return;const w=c.clientWidth,i=(Math.round(c.scrollLeft/w)+1)%BN.length;c.scrollTo({left:i*w,behavior:'smooth'})},5000)}
+function bnDot(c){const i=Math.round(c.scrollLeft/Math.max(1,c.clientWidth));document.querySelectorAll('#bnd i').forEach((d,k)=>d.classList.toggle('on',k===i))}
+function bnGo(i){const b=BN[i];if(!b||b.t==='none')return;try{sb.rpc('banner_clique',{p_id:b.id}).then(()=>{},()=>{})}catch(e){}
+ if(b.t==='produto')clk(b.v);else if(b.t==='loja')go('loja/'+b.v);else if(b.t==='url')window.open(b.v,'_blank','noopener')}
+/* ---- admin banners ---- */
+let BNA=[],BNF=null,BNE=null;
+function bnL(){if(!S)return;BNF=null;BNE=null;run('adminBannersLista',S).then(l=>{BNA=l;bnLista()}).catch(x=>$('ab').innerHTML='<div class="msg err">'+esc(x.message)+'</div>')}
+function bnNome(b){return b.t==='produto'?'🛍️ '+esc((D.produtos.find(p=>p.id===b.v)||{}).titulo||'produto'):b.t==='loja'?'🏪 '+esc((D.lojas.find(l=>l.id===b.v)||{}).nome||'loja'):b.t==='url'?'🔗 '+esc(b.v):'sem link'}
+function bnLista(){$('ab').innerHTML='<p class="hint">Banners da página inicial (até 10). Passam sozinhos a cada 5 segundos, na ordem desta lista.</p><div style="margin:8px 0"><button class="btn" onclick="bnForm()">➕ Novo banner</button></div>'+
+ (BNA.length?BNA.map((b,i)=>{const st=b.no_ar?'<span class="opill ativa">● No ar</span>':b.expirado?'<span class="opill">Expirado</span>':b.ativo?'<span class="opill pausada">🕒 Agendado</span>':'<span class="opill">⏸ Desligado</span>';
+  return '<div class="item" style="display:block"><img class="bap" src="'+esc(b.img)+'" alt=""><div class="rs"><b>'+esc(b.titulo||'Banner '+(i+1))+'</b>'+st+'</div><small>Ao tocar: '+bnNome(b)+'</small><small>👆 '+b.cliques+' clique'+(b.cliques===1?'':'s')+(b.inicio?' · começa '+fdt(b.inicio):'')+(b.fim?' · termina '+fdt(b.fim):'')+'</small>'+
+  '<div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap"><button class="btn s" '+(i?'':'disabled')+' onclick="bnOrd(\''+b.id+'\',-1)" aria-label="Subir">⬆️</button><button class="btn s" '+(i<BNA.length-1?'':'disabled')+' onclick="bnOrd(\''+b.id+'\',1)" aria-label="Descer">⬇️</button><button class="btn s" onclick="bnForm(\''+b.id+'\')">✏️ Editar</button><button class="btn s" onclick="bnAtv(\''+b.id+'\','+(!b.ativo)+')">'+(b.ativo?'⏸ Desligar':'▶️ Ligar')+'</button><button class="btn s r" onclick="bnDel(\''+b.id+'\')">🗑️ Apagar</button></div></div>'}).join(''):'<div class="item" style="display:block">Nenhum banner ainda. Toque em "Novo banner" para criar o primeiro.</div>')}
+function bnOrd(id,d){run('adminBannerOrdem',S,id,d).then(bnL).catch(x=>toast(x.message))}
+function bnAtv(id,on){run('adminBannerAtivo',S,id,on).then(()=>{bnL();bnLoad()}).catch(x=>toast(x.message))}
+async function bnDel(id){if(!(await dlg({msg:'Apagar este banner? Não dá para desfazer.',ok:'Apagar',no:'Voltar'})))return;run('adminBannerApagar',S,id).then(u=>{delSt('banners',u);toast('Banner apagado.');bnL();bnLoad()}).catch(x=>toast(x.message))}
+const bnLoc=v=>{if(!v)return '';const d=new Date(v),p=n=>String(n).padStart(2,'0');return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate())+'T'+p(d.getHours())+':'+p(d.getMinutes())}
+function bnForm(id){const b=BNA.find(x=>x.id===id)||{t:'none',ativo:true};BNE=id||null;BNF=null;BNV={t:b.t||'none',v:b.v||''};
+ $('ab').innerHTML='<form class="item bfm" style="display:block" onsubmit="return bnSalvar(event)"><b>'+(id?'✏️ Editar banner':'➕ Novo banner')+'</b>'+
+ '<label>Imagem<input type="file" id="bni" accept="image/*" onchange="bnImg(this)"></label><div id="bnp" style="margin-top:8px">'+(b.img?'<img class="bap" src="'+esc(b.img)+'" alt="">':'')+'</div><small class="hint">Formato retangular e baixo (16:7), como os banners do Mercado Livre. Você ajusta o enquadramento na próxima tela.</small>'+
+ '<label>Nome interno (só você vê)<input id="bnt" maxlength="80" value="'+esc(b.titulo||'')+'" placeholder="Ex.: Promoção de Natal"></label>'+
+ '<label>Ao tocar no banner<select id="bnd2" onchange="bnDest(this.value)"><option value="none">Nada (só mostra a imagem)</option><option value="produto">Abrir um produto</option><option value="loja">Abrir uma loja</option><option value="url">Abrir um link externo</option></select></label><div id="bndv"></div>'+
+ '<label>Começa em (opcional)<input type="datetime-local" id="bni1" value="'+bnLoc(b.inicio)+'"></label><label>Termina em (opcional)<input type="datetime-local" id="bni2" value="'+bnLoc(b.fim)+'"></label>'+
+ '<label style="display:flex;gap:8px;align-items:center;font-weight:600"><input type="checkbox" id="bna" '+(b.ativo!==false?'checked':'')+'> Banner ligado</label><div id="bnm"></div>'+
+ '<div style="display:flex;gap:8px;margin-top:12px"><button class="btn" type="submit">Salvar</button><button class="btn s r" type="button" onclick="bnL()">Cancelar</button></div></form>';
+ $('bnd2').value=BNV.t;bnDest(BNV.t,1)}
+let BNV={t:'none',v:''};
+function bnDest(t,keep){BNV.t=t;if(!keep)BNV.v='';const e=$('bndv');
+ if(t==='loja')e.innerHTML='<label>Loja<select id="bnv">'+D.lojas.map(l=>'<option value="'+l.id+'"'+(BNV.v===l.id?' selected':'')+'>'+esc(l.nome)+'</option>').join('')+'</select></label>',BNV.v=$('bnv').value;
+ else if(t==='url')e.innerHTML='<label>Link (começa com https://)<input id="bnv" inputmode="url" value="'+esc(BNV.v)+'" placeholder="https://"></label>';
+ else if(t==='produto'){const cur=D.produtos.find(p=>p.id===BNV.v);e.innerHTML='<label>Buscar produto<input id="bnq" placeholder="Digite o nome do produto" oninput="bnBusca()"></label><div class="bpl" id="bnl"></div><small class="hint" id="bns">'+(cur?'Selecionado: <b>'+esc(cur.titulo)+'</b>':'Nenhum produto escolhido.')+'</small>'}
+ else e.innerHTML=''}
+function bnBusca(){const q=nrm($('bnq').value);const L=q?D.produtos.filter(p=>nrm(p.titulo+' '+LJ(p.lojaId).nome).includes(q)).slice(0,8):[];$('bnl').innerHTML=L.map(p=>'<button type="button" class="'+(BNV.v===p.id?'on':'')+'" onclick="bnPick(\''+p.id+'\')">'+esc(p.titulo)+' <small>· '+esc(LJ(p.lojaId).nome)+'</small></button>').join('')}
+function bnPick(id){BNV.v=id;const p=D.produtos.find(x=>x.id===id);$('bns').innerHTML='Selecionado: <b>'+esc(p.titulo)+'</b>';bnBusca()}
+async function bnImg(inp){const f=inp.files[0];if(!f)return;const du=await recortarBn(f);if(!du){inp.value='';return}BNF=du;$('bnp').innerHTML='<img class="bap" src="'+du+'" alt="">'}
+async function bnSalvar(e){e.preventDefault();const m=$('bnm');m.innerHTML='';const old=BNA.find(x=>x.id===BNE),btn=e.target.querySelector('button[type=submit]');
+ const t=$('bnd2').value,v=t==='url'||t==='loja'?($('bnv')?$('bnv').value.trim():''):t==='produto'?BNV.v:'';
+ if(!BNF&&!(old&&old.img)){m.innerHTML='<div class="msg err">Escolha a imagem do banner.</div>';return false}
+ btn.disabled=true;try{let img=old?old.img:'';if(BNF){img=await up('banners','b',BNF,String(Date.now()))}
+  const i1=$('bni1').value,i2=$('bni2').value;
+  await run('adminBannerSalvar',S,{p_id:BNE,p_titulo:$('bnt').value,p_img:img,p_tipo:t,p_valor:v||null,p_inicio:i1?new Date(i1).toISOString():null,p_fim:i2?new Date(i2).toISOString():null,p_ativo:$('bna').checked});
+  if(BNF&&old&&old.img&&old.img!==img)delSt('banners',old.img);
+  toast('Banner salvo!');bnL();bnLoad()}catch(x){m.innerHTML='<div class="msg err">'+esc(x.message)+'</div>';btn.disabled=false}return false}
+function recortarBn(file){return new Promise(ok=>{if(!file||!file.size)return ok('');const fr=new FileReader();fr.onerror=()=>ok('');fr.onload=()=>{const im=new Image();im.onerror=()=>ok('');im.onload=()=>{
+ const W=1120,H=490,m=document.createElement('div');m.className='crp bnx';m.innerHTML='<h3>Ajuste o banner</h3><p>Arraste para posicionar e use o zoom. O que aparece no retângulo é o que ficará na página inicial.</p><canvas id="crc" width="'+W+'" height="'+H+'"></canvas><input id="crz" type="range" min="1" max="4" step="0.01" value="1" aria-label="Zoom"><div class="rw"><button class="btn r" id="crn" type="button">Cancelar</button><button class="btn" id="cry" type="button">Usar esta imagem</button></div>';document.body.appendChild(m);
+ const cv=m.querySelector('#crc'),cx=cv.getContext('2d'),z=m.querySelector('#crz'),base=Math.max(W/im.width,H/im.height);let k=1,ox=0,oy=0;
+ const lim=()=>{const w=im.width*base*k,h=im.height*base*k,mx=(w-W)/2,my=(h-H)/2;ox=Math.max(-mx,Math.min(mx,ox));oy=Math.max(-my,Math.min(my,oy))};
+ const draw=()=>{lim();cx.fillStyle='#fff';cx.fillRect(0,0,W,H);const w=im.width*base*k,h=im.height*base*k;cx.drawImage(im,W/2+ox-w/2,H/2+oy-h/2,w,h)};draw();
+ const P=new Map();let d0=0,k0=1;
+ cv.onpointerdown=e=>{cv.setPointerCapture(e.pointerId);P.set(e.pointerId,[e.clientX,e.clientY]);if(P.size===2){const a=[...P.values()];d0=Math.hypot(a[0][0]-a[1][0],a[0][1]-a[1][1]);k0=k}};
+ cv.onpointermove=e=>{if(!P.has(e.pointerId))return;const p=P.get(e.pointerId),r=W/cv.getBoundingClientRect().width;if(P.size===1){ox+=(e.clientX-p[0])*r;oy+=(e.clientY-p[1])*r}P.set(e.pointerId,[e.clientX,e.clientY]);if(P.size===2&&d0){const a=[...P.values()];k=Math.max(1,Math.min(4,k0*Math.hypot(a[0][0]-a[1][0],a[0][1]-a[1][1])/d0));z.value=k}draw()};
+ cv.onpointerup=cv.onpointercancel=e=>{P.delete(e.pointerId);d0=0};
+ cv.onwheel=e=>{e.preventDefault();k=Math.max(1,Math.min(4,k-e.deltaY/500));z.value=k;draw()};
+ z.oninput=()=>{k=+z.value;draw()};
+ m.querySelector('#crn').onclick=()=>{m.remove();ok('')};
+ m.querySelector('#cry').onclick=()=>{const u=cv.toDataURL('image/jpeg',.85);m.remove();ok(u)};
+ };im.src=fr.result};fr.readAsDataURL(file)})}
 function pqL(q){if(!A)return;run('minhasPerguntas',A).then(qs=>{const n=qs.filter(x=>x.status==='pendente').length;$('sgpq').innerHTML='<i>💬</i>Perguntas'+(n?' ('+n+')':'');if(q&&SB!=='pq'&&n)toast(n+' pergunta(s) nova(s)!');if(SB!=='pq')return;
  $('pqq').innerHTML=qs.length?qs.map(x=>'<div class="item" style="display:block"><small>'+esc(x.data)+' · '+esc(x.produto)+'</small><p style="margin:4px 0"><b>'+esc(x.nome||'Cliente')+':</b> '+esc(x.pergunta)+'</p>'+(x.tel?'<p class="hint" style="margin:0 0 6px">📱 <a href="https://wa.me/'+esc(x.tel)+'" target="_blank" rel="noopener">'+esc(x.tel)+'</a></p>':'')+(x.status==='respondida'?'<p class="hint" style="margin:0">Sua resposta: '+esc(x.resposta)+'</p>':x.status==='oculta'?'<p class="hint">Oculta</p>':'<textarea id="r'+x.id+'" rows="2" maxlength="500" placeholder="Sua resposta (aparece para todos no produto)"></textarea><div style="display:flex;gap:8px;margin-top:8px"><button class="btn s" onclick="resp(\''+x.id+'\')">Responder</button><button class="btn s r" onclick="ocq(\''+x.id+'\')">Ocultar</button></div>')+'</div>').join(''):'<p class="msg">Nenhuma pergunta ainda.</p>'}).catch(x=>say('pnlMsg',esc(x.message),1))}
 function avalL(){if(!A)return;run('minhasAvaliacoes',A).then(L=>{$('pqa').innerHTML=L.length?L.map(a=>'<div class="item" style="display:block'+(a.visivel?'':';opacity:.6')+'"><div class="rs"><span>'+strs(a.nota,16)+' <b>'+esc(a.nome||'Cliente')+'</b></span><small>'+esc(a.data)+'</small></div><small>'+esc(a.produto)+'</small>'+(a.texto?'<p style="margin:6px 0">'+esc(a.texto)+'</p>':'')+(a.foto?'<img src="'+esc(a.foto)+'" alt="" style="max-width:120px;border-radius:10px;display:block;margin:6px 0">':'')+'<button class="btn s'+(a.visivel?' r':'')+'" onclick="avVis(\''+a.id+'\','+(!a.visivel)+')">'+(a.visivel?'Ocultar da vitrine':'Mostrar de novo')+'</button></div>').join(''):'<p class="msg">Ainda sem avaliações.</p>'}).catch(()=>{})}
@@ -1215,13 +1282,13 @@ setInterval(()=>{if(A&&!document.hidden){pedL(1);pqL(1);avL(1)}},30000);
 const nf=n=>Number(n||0).toLocaleString('pt-BR');
 const dd=n=>String(n).slice(6)+'/'+String(n).slice(4,6);
 const kp=(l,v)=>'<div class="kp"><b>'+v+'</b><span>'+l+'</span></div>';
-const pbtn=(d,fn)=>'<div class="seg" style="margin:8px 14px">'+[[1,'Hoje'],[7,'7 dias'],[30,'30 dias'],[90,'90 dias']].map(x=>'<button class="'+(x[0]===d?'on':'')+'" onclick="'+fn+'('+x[0]+')">'+x[1]+'</button>').join('')+'</div>';
+const pbtn=(d,fn)=>'<div class="seg" style="margin:8px 14px">'+[[1,'Hoje'],[7,'7 dias'],[30,'30 dias']].map(x=>'<button class="'+(x[0]===d?'on':'')+'" onclick="'+fn+'('+x[0]+')">'+x[1]+'</button>').join('')+'</div>';
 function relHtml(m,adm){const k=m.k,base=adm?k.visitas:k.loja,conv=base?(k.pedidos/base*100).toFixed(1).replace('.',',')+'%':'—',tk=k.pedidos?brl(k.valor/k.pedidos):'—';
  const val=s=>adm?s.visitas:s.loja+s.produto,mx=Math.max(1,...m.serie.map(val));
  const fun=[[adm?'Visitas':'Visitas à loja',base],['Produtos vistos',k.produto],['No carrinho',k.carrinho],['Checkout',k.checkout],['Pedidos',k.pedidos]],f0=Math.max(1,fun[0][1],fun[1][1]),tp=m.topProdutos;
  const lista=(a,v)=>a.length?a.map(b=>'<div class="rs"><span>'+esc(b.nome)+'</span><b>'+b.n+'</b></div>').join(''):'<p class="hint">'+v+'</p>';
  return '<div class="pd"><div class="kps">'+kp(adm?'Visitas (sessões)':'Visitas à loja',nf(base))+kp('Produtos vistos',nf(k.produto))+kp('Cliques em produtos',nf(k.clique))+kp('Cliques no WhatsApp da loja',nf(k.zap))+kp('Adições ao carrinho',nf(k.carrinho))+kp('Pedidos',nf(k.pedidos))+kp('Valor em pedidos',brl(k.valor))+kp('Ticket médio',tk)+kp('Conversão (pedidos ÷ '+(adm?'visitas':'visitas à loja')+')',conv)+kp('Favoritos / compartilhamentos',nf(k.favoritos)+' / '+nf(k.compart))+'</div>'+
- '<div class="h3">'+(adm?'Visitas por dia':'Visitas à loja e produtos vistos, por dia')+'</div><div style="display:flex;align-items:flex-end;gap:2px;height:90px">'+m.serie.map(s=>'<div title="'+dd(s.dia)+': '+val(s)+'" style="flex:1;background:var(--teal);height:'+Math.max(2,Math.round(val(s)/mx*100))+'%;border-radius:2px 2px 0 0"></div>').join('')+'</div><div class="rs"><small class="hint">'+dd(m.serie[0].dia)+'</small><small class="hint">'+dd(m.serie[m.serie.length-1].dia)+'</small></div>'+
+ 
  '<div class="h3">Funil de compra</div>'+fun.map(f=>'<div style="margin-bottom:6px"><div class="rs" style="padding:0"><span>'+f[0]+'</span><b>'+nf(f[1])+'</b></div><div style="height:8px;background:var(--line);border-radius:4px"><div style="height:8px;width:'+Math.min(100,Math.round(f[1]/f0*100))+'%;background:var(--gold);border-radius:4px"></div></div></div>').join('')+
  '<div class="h3">Produtos mais vistos</div><div class="tb hd"><span>Produto</span><span>Vistas</span><span>Cliq.</span><span>Carr.</span><span>Ped.</span></div>'+(tp.length?tp.map(p=>'<div class="tb"><span>'+esc(p.nome)+(adm?'<small>'+esc(p.loja)+'</small>':'')+'</span><span>'+p.views+'</span><span>'+p.cliques+'</span><span>'+p.carrinho+'</span><span>'+p.pedidos+'</span></div>').join(''):'<p class="hint">Sem dados no período.</p>')+
  (adm?'<div class="h3">Lojas</div><div class="tb hd"><span>Loja</span><span>Visit.</span><span>Zap</span><span>Prod.</span><span>Ped.</span></div>'+(m.topLojas.length?m.topLojas.map(l=>'<div class="tb"><span>'+esc(l.nome)+'</span><span>'+l.visitas+'</span><span>'+l.zap+'</span><span>'+l.produtos+'</span><span>'+l.pedidos+'</span></div>').join(''):'<p class="hint">Sem dados no período.</p>')+'<div class="h3">Buscas mais feitas</div>'+lista(m.buscas,'Sem buscas.')+'<div class="h3">Categorias mais abertas</div>'+lista(m.categorias,'Sem dados.'):'')+'</div>'}
@@ -1269,8 +1336,8 @@ function cupSalvar(e){e.preventDefault();const f=e.target,fd=new FormData(f),tod
 let OFL=[];
 function ofL(){$('af').innerHTML='<p class="msg">Carregando…</p>';run('adminOfertasTodas',S).then(l=>{OFL=l;ofRender()}).catch(x=>$('af').innerHTML='<p class="msg err">'+esc(x.message)+'</p>')}
 function ofRest(ms){if(ms<=0)return 'encerrada';const m=Math.floor(ms/60000),h=Math.floor(m/60);return h>=24?Math.floor(h/24)+'d '+(h%24)+'h':h?h+'h '+(m%60)+'min':m+' min'}
-function ofRender(){const N={ativa:'● Ativa',pausada:'⏸ Pausada',pendente:'Pendente',encerrada:'Encerrada'},agora=Date.now();
- $('af').innerHTML='<p class="hint" style="margin:10px 14px">Ofertas relâmpago de todas as lojas. Você pode editar o preço e o tempo, pausar, retomar ou apagar. Quando o lojista coloca um produto em oferta, o pedido de destaque no slide aparece em <b>Aprovações</b>. O slide mostra até 10 ofertas.</p>'+(OFL.length?OFL.map(o=>{const st=o.status,ms=o.ate?new Date(o.ate)-agora:0,
+function ofRender(){const N={ativa:'● Ativa',pausada:'⏸ Pausada',pendente:'Pendente',encerrada:'Encerrada'},agora=Date.now(),OL=OFL.filter(o=>o.status!=='encerrada');
+ $('af').innerHTML='<p class="hint" style="margin:10px 14px">Ofertas relâmpago de todas as lojas. Você pode editar o preço e o tempo, pausar, retomar ou apagar. Quando o lojista coloca um produto em oferta, o pedido de destaque no slide aparece em <b>Aprovações</b>. O slide mostra até 10 ofertas.</p>'+(OL.length?OL.map(o=>{const st=o.status,ms=o.ate?new Date(o.ate)-agora:0,
   info=st==='ativa'?'Termina em '+ofRest(ms)+' ('+fdt(o.ate)+')':st==='pausada'?'Pausada · ao retomar volta com '+ofRest((o.resta||0)*60000):st==='pendente'?'Loja pediu '+brl(o.pedido)+' por '+o.horas+'h · decida em Aprovações':'Encerrada em '+(o.ate?fdt(o.ate):'—');
   return '<div class="item" style="display:block'+(st==='ativa'?'':';opacity:.75')+'"><div class="rs"><b>'+esc(o.titulo)+'</b><span class="opw"><span class="opill '+st+'">'+N[st]+'</span>'+(o.dest&&st==='ativa'?'<span class="opill slide">⭐ No slide</span>':'')+(o.pede&&st==='ativa'?'<span class="opill pede">⏳ Pede destaque</span>':'')+'</span></div><small>'+esc(o.loja)+' · normal '+brl(o.preco)+(o.oferta?' · <b>oferta '+brl(o.oferta)+'</b>':'')+'</small><small>'+info+'</small>'+
   '<div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">'+(st!=='pendente'?'<button class="btn s" onclick="ofEd(\''+o.id+'\')">✏️ Editar</button>':'')+(st==='ativa'?'<button class="btn s" onclick="ofDest(\''+o.id+'\','+(o.dest?'false':'true')+')">'+(o.dest?'⭐ Tirar do slide':'⭐ Colocar no slide')+'</button><button class="btn s" onclick="ofPausa(\''+o.id+'\',true)">⏸️ Pausar</button>':'')+(st==='pausada'?'<button class="btn s" onclick="ofPausa(\''+o.id+'\',false)">▶️ Retomar</button>':'')+'<button class="btn s r" onclick="ofApagar(\''+o.id+'\')">🗑️ Apagar</button></div>'+
@@ -1300,9 +1367,9 @@ function verif(id,on){run('adminVerificar',S,id,on).then(()=>run('adminListar',S
 function admAbrir(){ofBadge();$('aLogin').style.display='none';$('aPainel').style.display='block';AF='pendente';const n=AD.filter(l=>l.status==='pendente').length;tabPend();asub(n||ADIR==='lojas'?'c':'p');LNP=n}
 function tabPend(){const n=AD.filter(l=>l.status==='pendente').length;$('agc').innerHTML='<i>🏪</i>Lojas'+(n?' <span class="nb">'+n+'</span>':'')}
 function admSair(){S=null;AD=[];sb.auth.signOut();$('aPainel').style.display='none';$('aLogin').style.display='block'}
-const ATIT={p:'Painel',c:'Lojas',r:'Produtos',d:'Pedidos',o:'Aprovações',u:'Cupons',f:'Ofertas',s:'Suporte'};
+const ATIT={p:'Painel',c:'Lojas',r:'Produtos',d:'Pedidos',o:'Aprovações',u:'Cupons',f:'Ofertas',b:'Banners',s:'Suporte'};
 function adr(o){$('adr').classList.toggle('open',!!o);$('adrv').classList.toggle('open',!!o);document.body.style.overflow=o?'hidden':''}
-function asub(k){adr(0);$('atit').textContent=ATIT[k]||'';['p','c','r','d','o','u','f','s'].forEach(x=>{$('a'+x).style.display=x===k?'block':'none';$('ag'+x).classList.toggle('on',x===k)});if(k==='p')relA(AP);if(k==='c')admRender();if(k==='r')prodA(1);if(k==='d')pedA(AS);if(k==='o')aprovL();if(k==='u')cupL();if(k==='f')ofL();if(k==='s')supL()}
+function asub(k){adr(0);$('atit').textContent=ATIT[k]||'';['p','c','r','d','o','u','f','b','s'].forEach(x=>{$('a'+x).style.display=x===k?'block':'none';$('ag'+x).classList.toggle('on',x===k)});if(k==='p')relA(AP);if(k==='c')admRender();if(k==='r')prodA(1);if(k==='d')pedA(AS);if(k==='o')aprovL();if(k==='u')cupL();if(k==='f')ofL();if(k==='s')supL();if(k==='b')bnL()}
 function admRender(){tabPend();const n0=AD.filter(l=>l.status==='pendente').length;const N={pendente:'Pendentes',ativa:'Ativas',pausada:'Pausadas (lojista)',recusada:'Recusadas',suspensa:'Suspensas',banida:'Banidas'};
  $('aF').innerHTML=Object.keys(N).map(k=>'<button class="btn s" style="'+(k===AF?'':'opacity:.6')+'" onclick="AF=\''+k+'\';admRender()">'+N[k]+' ('+AD.filter(l=>l.status===k).length+')</button>').join('');
  const q=nrm($('aq').value),L=AD.filter(l=>l.status===AF&&(!q||nrm(l.nome+' '+l.responsavel+' '+l.sobrenome+' '+l.bairro).includes(q)));
@@ -1355,7 +1422,7 @@ document.querySelectorAll('.csel').forEach(s=>s.innerHTML=CATS.map(c=>'<option>'
 $('cid').innerHTML=CIDADES.map(c=>'<option>'+c+'</option>').join('');
 $('bsel').innerHTML='<option value="">Escolha o bairro</option>'+BAIRROS.map(b=>'<option>'+b+'</option>').join('');
 $('dc').innerHTML=dEd('dc2',defH());
-catChg();badge();tr('visita');route();carregar();
+catChg();badge();tr('visita');route();carregar();BN=ld('vv_bn',[]);bnRender();bnLoad();
 async function restaurar(){try{const s=(await sb.auth.getSession()).data.session;if(!s)return;
  if((await sb.rpc('is_admin')).data===true){S={email:s.user.email};AD=await rpc('admin_listar');admAbrir();return}
  const l=(await sb.from('lojas').select('*').eq('owner_id',s.user.id).maybeSingle()).data;if(l){ML=l.id;abrirLoja(lojaOut(l))}}catch(e){}}
