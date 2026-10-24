@@ -237,7 +237,7 @@ function proxAb(l){const h=J(l.horario),K=['dom','seg','ter','qua','qui','sex','
  for(let i=0;i<=7;i++){const v=h[K[(a.d+i)%7]];if(!v)continue;const st=mm(v[0]);if(i===0&&st<=a.m)continue;return{dt:new Date(Date.now()+(i*1440+st-a.m)*60000),txt:(i===0?'hoje':i===1?'amanhã':DSEM[(a.d+i)%7])+' às '+v[0]}}return null}
 const abTxt=l=>{const p=proxAb(l);return p?p.txt:''};
 const fechBar=l=>stat(l).o===false?'<div class="fchb">Loja fechada'+(abTxt(l)?' · abre '+abTxt(l):'')+'</div>':'';
-const avFech=l=>stat(l).o===false?'<div class="msg" style="margin:0 0 10px">🔴 Loja fechada agora. Seu pedido será visto quando a loja abrir'+(abTxt(l)?' ('+abTxt(l)+')':'')+'. A loja tem 24 horas, a partir da abertura, para responder.</div>':'';
+const avFech=l=>stat(l).o===false?'<div class="msg" style="margin:0 0 10px;border-color:var(--red)">Loja fechada agora. Seu pedido será visto quando a loja abrir'+(abTxt(l)?' ('+abTxt(l)+')':'')+'. A loja tem 24 horas, a partir da abertura, para responder.</div>':'';
 const PRZ={2:'até 2 horas',4:'até 4 horas',6:'até 6 horas',8:'até 8 horas',12:'até 12 horas',24:'até 1 dia',48:'até 2 dias',72:'até 3 dias'};
 const prazoTxt=l=>l.prazo_h==null?'':(PRZ[l.prazo_h]||'');
 function fmtPrev(t){const n=new Date(),dd=Math.round((new Date(t.getFullYear(),t.getMonth(),t.getDate())-new Date(n.getFullYear(),n.getMonth(),n.getDate()))/864e5),hm=t.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});return (dd<=0?'hoje':dd===1?'amanhã':DSEM[t.getDay()]+', '+t.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'}))+', '+hm}
