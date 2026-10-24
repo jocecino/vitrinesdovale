@@ -346,6 +346,8 @@ header,.top{background:radial-gradient(120% 160% at 85% 0%,#C9A85C55 0%,#16363F 
 .bn{margin:10px 14px 4px;position:relative}.bnc{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;border-radius:14px}.bnc::-webkit-scrollbar{display:none}.bni{flex:none;width:100%;scroll-snap-align:start;aspect-ratio:16/7;background:var(--line)}.bni.lk2{cursor:pointer}.bni img{width:100%;height:100%;object-fit:cover;display:block}.bnd{display:flex;justify-content:center;gap:5px;margin-top:7px}.bnd i{width:6px;height:6px;border-radius:3px;background:var(--line);transition:width .2s}.bnd i.on{background:var(--gold);width:16px}
 .crp.bnx canvas{width:min(92vw,520px);height:auto;aspect-ratio:16/7;border-radius:12px;box-shadow:0 0 0 3px #fff}
 .bap{display:block;width:100%;aspect-ratio:16/7;object-fit:cover;border-radius:10px;background:var(--line);margin-bottom:8px}.bpl{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}.bpl button{padding:8px 10px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);font-size:14px;text-align:left}.bpl button.on{border-color:var(--gold);outline:2px solid var(--gold)}.bfm label{display:block;margin:10px 0 0;font-weight:700;font-size:14px}.bfm input[type=checkbox]{width:auto;margin:0}.crp.bnx input[type=range],.crp.bnx .rw{width:min(92vw,520px)}.bfm input:not([type=checkbox]),.bfm select{width:100%;margin-top:4px}
+.bni.of{display:flex;flex-direction:column;gap:6px;padding:10px 12px;background:linear-gradient(135deg,#E9D08A,#C9A85C);color:#16363F;box-sizing:border-box}.oft{display:flex;align-items:center;justify-content:space-between;gap:8px;font-weight:800;font-size:13px;letter-spacing:.2px}.oft .flcd{font-size:13px;padding:2px 8px}.ofb{display:flex;gap:12px;align-items:center;flex:1;min-height:0}.bni.of .flf{width:clamp(70px,24vw,96px);height:clamp(70px,24vw,96px)}.bni.of .flt{flex:1}.bni.of .flv{font-size:22px;color:#16363F}.bni.of .flo,.bni.of .flt small{color:#16363F}.bni.of .flp{background:#16363F;color:#E9D08A}.bni.of .flt small{opacity:.8}
+@media(prefers-color-scheme:dark){.bni.of{background:linear-gradient(135deg,#C9A85C,#8a6d2c)}}
 </style></head><body>
 <header id="hd">
  <div class="t1"><img src="/logo.webp" width="44" height="44" alt="ValeShop Sobradinho"><label class="sr"><span aria-hidden="true">🔍</span><input id="q" placeholder="Buscar em ValeShop Sobradinho" oninput="PN=1;home();qtr()"></label></div>
@@ -751,7 +753,7 @@ function flAuto(){clearInterval(FLT);FLT=setInterval(()=>{const b=document.query
 function home(){
  $('cats').innerHTML=['Tudo','Favoritos',...CATS].map(c=>'<button class="'+(c===cat?'on':'')+'" onclick="cat=\''+c+'\';PN=1;home();tr(\'categoria\',\'\',\''+c+'\')">'+(c==='Favoritos'?'♥ ':'')+c+'</button>').join('');
  const fv=cat==='Favoritos',q=nrm($('q').value);filtroSrv();{const be=$('bnr');if(be)be.style.display=fv||q?'none':''}
- const fp=D.produtos.filter(p=>fl(p)&&p.oferta.dest&&p.capa!==false).sort((x,y)=>x.oferta.ate-y.oferta.ate);$('fls').innerHTML=fp.length&&!fv?flBox(fp):'';if(fp.length&&!fv){flAuto();tick()}
+ const fp=D.produtos.filter(p=>fl(p)&&p.oferta.dest&&p.capa!==false).sort((x,y)=>x.oferta.ate-y.oferta.ate);$('fls').innerHTML='';hmSl(fp);
  const ls=D.lojas.filter(l=>!fv||FV.l.indexOf(l.id)>-1);
  $('lj').innerHTML=ls.length?ls.map(l=>'<button class="av" onclick="go(\'loja/'+l.id+'\')"><i>'+lg(l)+'</i><span>'+esc(l.nome)+vb(l)+'</span></button>').join(''):'<p class="hint">'+(fv?'Toque no ♡ de uma loja ou produto para guardar aqui.':loading?'Carregando…':'As lojas aparecem aqui assim que forem aprovadas.')+'</p>';
  const ps=D.produtos.filter(p=>(fv||p.capa!==false)&&(cat==='Tudo'||fv||p.categoria===cat)&&(!fv||FV.p.indexOf(p.id)>-1)&&nrm(p.titulo+' '+LJ(p.lojaId).nome+' '+p.categoria).includes(q));
@@ -1212,9 +1214,17 @@ setInterval(()=>{if(S&&!document.hidden&&$('aPainel')&&$('aPainel').style.displa
 
 let BN=[],BNT=null;
 function bnLoad(){run('getBanners').then(l=>{BN=Array.isArray(l)?l:[];sv('vv_bn',BN);bnRender()}).catch(()=>{})}
-function bnRender(){const e=$('bnr');if(!e)return;clearInterval(BNT);if(!BN.length){e.innerHTML='';return}
- e.innerHTML='<div class="bn"><div class="bnc" id="bnc" onscroll="bnDot(this)">'+BN.map((b,i)=>'<div class="bni'+(b.t!=='none'?' lk2':'')+'" onclick="bnGo('+i+')"><img src="'+esc(b.img)+'" alt=""'+(i?' loading="lazy"':'')+'></div>').join('')+'</div>'+(BN.length>1?'<div class="bnd" id="bnd">'+BN.map((_,i)=>'<i class="'+(i?'':'on')+'"></i>').join('')+'</div>':'')+'</div>';
- if(BN.length>1)BNT=setInterval(()=>{const c=$('bnc'),h=$('home');if(!c||document.hidden||!h||!h.classList.contains('on'))return;const w=c.clientWidth,i=(Math.round(c.scrollLeft/w)+1)%BN.length;c.scrollTo({left:i*w,behavior:'smooth'})},5000)}
+let FPO=[],HSIG='',BNP=0;
+function hmSl(fp){FPO=fp.slice(0,10);bnRender()}
+function bnRender(force){const e=$('bnr');if(!e)return;const OF=FPO.filter(p=>fl(p)&&p.oferta.dest&&p.capa!==false);
+ const sig=BN.map(b=>b.id+'/'+b.img.length).join()+'|'+OF.map(p=>p.id+'/'+p.oferta.ate+'/'+pe(p)).join();
+ if(sig===HSIG&&!force&&e.innerHTML)return;HSIG=sig;clearInterval(BNT);const N=BN.length+OF.length;if(!N){e.innerHTML='';return}
+ const bs=BN.map((b,i)=>'<div class="bni'+(b.t!=='none'?' lk2':'')+'" onclick="bnGo('+i+')"><img src="'+esc(b.img)+'" alt=""'+(i?' loading="lazy"':'')+'></div>').join('');
+ const os=OF.map(p=>{const o=pct(p);return '<div class="bni of lk2" role="button" tabindex="0" onclick="clk(\''+p.id+'\')"><div class="oft"><span>⚡ OFERTA RELÂMPAGO</span><span class="cd flcd" data-ate="'+p.oferta.ate+'"></span></div><div class="ofb"><div class="flf">'+thumb(p)+'</div><div class="flt"><div class="flo">'+(o?'<span class="flp">'+o+'% OFF</span>':'')+(po(p)?'<s>'+brl(po(p))+'</s>':'')+'</div><div class="flv">'+brs(pe(p))+'</div><small>'+esc(p.titulo)+'</small></div></div></div>'}).join('');
+ e.innerHTML='<div class="bn"><div class="bnc" id="bnc" onscroll="bnDot(this)" onpointerdown="BNP=Date.now()" ontouchstart="BNP=Date.now()">'+bs+os+'</div>'+(N>1?'<div class="bnd" id="bnd">'+Array.from({length:N},(_,i)=>'<i class="'+(i?'':'on')+'"></i>').join('')+'</div>':'')+'</div>';tick();
+ BNT=setInterval(()=>{const c=$('bnc'),h=$('home');if(!c||document.hidden||!h||!h.classList.contains('on'))return;
+  if(FPO.some(p=>p.oferta&&p.oferta.ate<=Date.now())){bnRender();return}
+  if(N<2||Date.now()-BNP<8000)return;const w=c.clientWidth,i=(Math.round(c.scrollLeft/w)+1)%N;c.scrollTo({left:i*w,behavior:'smooth'})},5000)}
 function bnDot(c){const i=Math.round(c.scrollLeft/Math.max(1,c.clientWidth));document.querySelectorAll('#bnd i').forEach((d,k)=>d.classList.toggle('on',k===i))}
 function bnGo(i){const b=BN[i];if(!b||b.t==='none')return;try{sb.rpc('banner_clique',{p_id:b.id}).then(()=>{},()=>{})}catch(e){}
  if(b.t==='produto')clk(b.v);else if(b.t==='loja')go('loja/'+b.v);else if(b.t==='url')window.open(b.v,'_blank','noopener')}
