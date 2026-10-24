@@ -572,7 +572,7 @@ const T={
  responderPergunta:(a,id,x)=>rpc('responder_pergunta',{p_id:id,p_texto:x}),
  ocultarPergunta:(a,id)=>rpc('ocultar_pergunta',{p_id:id}),
  lojaRelatorio:(a,d)=>rpc('relatorio',{p_dias:d,p_loja:null}),
- async adminListar(s){const r=await sb.auth.signInWithPassword({email:s.email,password:s.senha});if(r.error){const m=String(r.error.message||'');throw new Error(/invalid login/i.test(m)?'E-mail ou senha incorretos.':'Não foi possível entrar: '+m)}try{return await rpc('admin_listar')}catch(e){await sb.auth.signOut();throw e}},
+ async adminListar(s){if(!s.senha){return await rpc('admin_listar')}const r=await sb.auth.signInWithPassword({email:s.email,password:s.senha});if(r.error){const m=String(r.error.message||'');throw new Error(/invalid login/i.test(m)?'E-mail ou senha incorretos.':'Não foi possível entrar: '+m)}try{return await rpc('admin_listar')}catch(e){await sb.auth.signOut();throw e}},
  adminLojaLimite:(s,id,n)=>rpc('admin_loja_limite',{p_id:id,p_limite:n}),
  emailLivre:(t,e)=>rpc('email_disponivel',{p_tipo:t,p_email:e}),
  meuPacote:()=>rpc('meu_pacote'),
@@ -1242,7 +1242,7 @@ function ofDec(id,ac){let m=null;if(ac==='aprovar'){m=(parseInt(($('oh_'+id)||{}
 function admAvVis(id,v){run('avalVis',S,id,v).then(()=>{aprovL();carregar()}).catch(x=>toast(x.message))}
 function verif(id,on){run('adminVerificar',S,id,on).then(()=>run('adminListar',S)).then(l=>{AD=l;admRender();carregar();toast(on?'Selo concedido':'Selo removido')}).catch(x=>toast(x.message))}
 function admAbrir(){ofBadge();$('aLogin').style.display='none';$('aPainel').style.display='block';AF='pendente';const n=AD.filter(l=>l.status==='pendente').length;tabPend();asub(n||ADIR==='lojas'?'c':'p');LNP=n}
-function tabPend(){const n=AD.filter(l=>l.status==='pendente').length;$('agc').innerHTML='Lojas'+(n?' <span class="nb">'+n+'</span>':'')}
+function tabPend(){const n=AD.filter(l=>l.status==='pendente').length;$('agc').innerHTML='<i>🏪</i>Lojas'+(n?' <span class="nb">'+n+'</span>':'')}
 function admSair(){S=null;AD=[];sb.auth.signOut();$('aPainel').style.display='none';$('aLogin').style.display='block'}
 const ATIT={p:'Painel',c:'Lojas',r:'Produtos',d:'Pedidos',o:'Aprovações',u:'Cupons',f:'Ofertas'};
 function adr(o){$('adr').classList.toggle('open',!!o);$('adrv').classList.toggle('open',!!o);document.body.style.overflow=o?'hidden':''}
