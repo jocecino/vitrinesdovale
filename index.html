@@ -14,6 +14,7 @@
  <div class="t1"><img src="/logo.webp" width="44" height="44" alt="ValeShop Sobradinho"><label class="sr"><span aria-hidden="true">🔍</span><input id="q" placeholder="Buscar em ValeShop Sobradinho" oninput="PN=1;home();qtr()"></label></div>
  <div class="loc" style="display:flex;justify-content:space-between;gap:8px"><span>📍 Lojas exclusivas de Sobradinho</span><a id="hdU" href="#/pedidos" style="display:none;text-decoration:none;font-weight:800;white-space:nowrap;max-width:48vw;overflow:hidden;text-overflow:ellipsis"></a></div>
  <nav class="tabs" id="cats"></nav>
+ <nav class="tabs" id="subs"></nav>
 </header>
 
 <main id="home" class="v on">
@@ -66,6 +67,7 @@
     <label>Preço (R$)<input name="preco" inputmode="decimal" required oninput="pvw(this)"><small class="hint" style="margin:0"></small></label>
     <label>Preço antigo, se estiver em promoção<input name="precoOriginal" inputmode="decimal" oninput="pvw(this)"><small class="hint" style="margin:0"></small></label>
     <label>Categoria<select name="categoria" class="csel" id="pcat" onchange="catChg()"></select></label>
+    <label id="psubl" style="display:none">Subcategoria (opcional)<select name="subcategoria" id="psub" onchange="catChg()"></select></label>
     <div id="tam" style="display:none"><label>Tipo de tamanho<select id="tt" onchange="tamGrid()"></select></label><p class="hint" style="margin:8px 0">Informe a quantidade de cada tamanho. Deixe em branco os que você não tem.</p><div class="tg" id="tg"></div></div>
     <label id="estl">Quantidade em estoque<input name="estoque" inputmode="numeric" placeholder="Ex.: 10" required></label>
     <label>Marca (opcional)<input name="marca" maxlength="40"></label>
