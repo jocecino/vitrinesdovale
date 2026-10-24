@@ -350,7 +350,7 @@ header,.top{background:radial-gradient(120% 160% at 85% 0%,#C9A85C55 0%,#16363F 
 @media(prefers-color-scheme:dark){.bni.of{background:linear-gradient(135deg,#C9A85C,#8a6d2c)}.bni.of .fli{background:#1d2428}.bni.of .flf{background:#262d31}}
 #okb{position:fixed;top:calc(10px + env(safe-area-inset-top,0px));left:12px;right:12px;max-width:536px;margin:0 auto;z-index:99999;padding:14px 16px;border-radius:12px;font-weight:700;color:#fff;background:#1f9d55;box-shadow:0 6px 20px #0006;transition:opacity .25s;font-size:15px}#okb.err{background:#c0392b}
 #pbx .est.in,#pbx .fl{display:inline-flex;align-items:center;vertical-align:top;height:28px;margin:0 6px 8px 0;padding:0 10px;font-size:11px;line-height:1;border-radius:6px;box-sizing:border-box}#pbx .fl .ft,#pbx .fl .cd{font-size:11px}
-.fch{position:absolute;right:8px;bottom:8px;background:#000b;color:#fff;font-size:11px;font-weight:700;padding:4px 8px;border-radius:6px;z-index:2}.fchb{background:#c0392b;color:#fff;font-weight:800;padding:8px 12px;border-radius:8px;margin:0 0 8px;font-size:14px}
+.fch{position:absolute;right:8px;bottom:8px;background:#000b;color:#fff;font-size:11px;font-weight:700;padding:4px 8px;border-radius:6px;z-index:2}.fchb{display:flex;align-items:center;gap:7px;color:#9aa5ad;font-weight:500;padding:0;margin:0 0 8px;font-size:12.5px}.fchb:before{content:'';width:7px;height:7px;border-radius:50%;background:#e5484d;flex:none}
 </style></head><body>
 <header id="hd">
  <div class="t1"><img src="/logo.webp" width="44" height="44" alt="ValeShop Sobradinho"><label class="sr"><span aria-hidden="true">🔍</span><input id="q" placeholder="Buscar em ValeShop Sobradinho" oninput="PN=1;home();qtr()"></label></div>
@@ -715,7 +715,7 @@ const DSEM=['domingo','segunda','terça','quarta','quinta','sexta','sábado'];
 function proxAb(l){const h=J(l.horario),K=['dom','seg','ter','qua','qui','sex','sab'];if(!Object.keys(h).length||stat(l).o!==false)return null;const a=agora();
  for(let i=0;i<=7;i++){const v=h[K[(a.d+i)%7]];if(!v)continue;const st=mm(v[0]);if(i===0&&st<=a.m)continue;return{dt:new Date(Date.now()+(i*1440+st-a.m)*60000),txt:(i===0?'hoje':i===1?'amanhã':DSEM[(a.d+i)%7])+' às '+v[0]}}return null}
 const abTxt=l=>{const p=proxAb(l);return p?p.txt:''};
-const fechBar=l=>stat(l).o===false?'<div class="fchb">🔴 Loja fechada agora'+(abTxt(l)?' · abre '+abTxt(l):'')+'</div>':'';
+const fechBar=l=>stat(l).o===false?'<div class="fchb">Loja fechada'+(abTxt(l)?' · abre '+abTxt(l):'')+'</div>':'';
 const avFech=l=>stat(l).o===false?'<div class="msg" style="margin:0 0 10px">🔴 Loja fechada agora. Seu pedido será visto quando a loja abrir'+(abTxt(l)?' ('+abTxt(l)+')':'')+'. A loja tem 24 horas, a partir da abertura, para responder.</div>':'';
 const PRZ={2:'até 2 horas',4:'até 4 horas',6:'até 6 horas',8:'até 8 horas',12:'até 12 horas',24:'até 1 dia',48:'até 2 dias',72:'até 3 dias'};
 const prazoTxt=l=>l.prazo_h==null?'':(PRZ[l.prazo_h]||'');
