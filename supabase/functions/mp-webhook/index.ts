@@ -21,6 +21,7 @@ Deno.serve(async (req) => {
     const g = await fetch(SU + '/rest/v1/rpc/mp_pagamento_registrar', { method: 'POST', headers: H,
       body: JSON.stringify({ p_pedido: n, p_loja: loja, p_payment: String(p.id), p_status: String(p.status), p_valor: Number(p.transaction_amount) }) });
     console.log('pedido', n, p.status, await g.text());
+    if (p.status === 'approved') await fetch(SU + '/rest/v1/pedidos?id=eq.' + n + '&loja_id=eq.' + loja, { method: 'PATCH', headers: { ...H, Prefer: 'return=minimal' }, body: JSON.stringify({ mp_tipo: String(p.payment_type_id || ''), mp_parcelas: Number(p.installments || 1) }) });
     return ok();
   } catch (x) { console.error('falha', String(x)); return ok(); }
 });

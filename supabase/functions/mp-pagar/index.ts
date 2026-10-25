@@ -12,6 +12,7 @@ const bahia = (iso: string) => { const d = new Date(new Date(iso).getTime() - 3 
 async function registrar(n: number, loja: string, p: any) {
   const r = await fetch(SU + '/rest/v1/rpc/mp_pagamento_registrar', { method: 'POST', headers: H,
     body: JSON.stringify({ p_pedido: n, p_loja: loja, p_payment: String(p.id), p_status: String(p.status), p_valor: Number(p.transaction_amount) }) });
+  if (p.status === 'approved') await fetch(SU + '/rest/v1/pedidos?id=eq.' + n + '&loja_id=eq.' + loja, { method: 'PATCH', headers: { ...H, Prefer: 'return=minimal' }, body: JSON.stringify({ mp_tipo: String(p.payment_type_id || ''), mp_parcelas: Number(p.installments || 1) }) });
   return r.ok ? r.json() : 'erro';
 }
 
