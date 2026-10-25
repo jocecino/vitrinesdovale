@@ -593,7 +593,7 @@ const comHint=v=>MPC&&CTAB&&+v>0?'Comissão por unidade: '+brl(cUnit(v)):'';
 const MPCID='8392831437110993',MPRED=SUPA_URL+'/functions/v1/mp-oauth';
 let MPRET=null;try{const q=new URLSearchParams(location.search);MPRET=q.get('mp');if(q.get('mpteste')!==null)sv('vv_mpteste',q.get('mpteste')==='1'?1:0);if(MPRET||q.get('mpteste')!==null)history.replaceState(null,'',location.pathname+location.hash)}catch(e){}
 const MPMSG={ok:'✓ Conta do Mercado Pago conectada!',cancelado:'Conexão cancelada no Mercado Pago.',expirado:'O link de conexão expirou. Toque em Conectar de novo.',config:'Pagamentos ainda não configurados. Fale com o suporte.',erro:'Não foi possível conectar. Tente de novo.'};
-async function mpInit(){const e=$('mpBox');if(!e)return;const T='<b>💳 Receber pelo Mercado Pago</b>';
+async function mpInit(){const e=$('mpBox');if(!e)return;const T='<b class="mpth"><img src="mp.webp" alt="" width="28" height="19">Receber pelo Mercado Pago</b>';
  if(MPRET){const m=MPRET;MPRET=null;toast(MPMSG[m]||MPMSG.erro);setTimeout(()=>{sub('pl');e.scrollIntoView({block:'center'})},300)}
  e.innerHTML=T+'<small class="hint" style="display:block;margin:2px 0 0">Verificando…</small>';
  try{const s=await rpc('mp_status');MPC=!!s.conectado;if(MPC&&!CTAB)try{CTAB=await rpc('comissao_tabela')}catch(x){}
