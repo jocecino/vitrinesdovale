@@ -68,6 +68,8 @@
     <label>Preço antigo, se estiver em promoção<input name="precoOriginal" inputmode="decimal" oninput="pvw(this)"><small class="hint" style="margin:0"></small></label>
     <label>Categoria<select name="categoria" class="csel" id="pcat" onchange="catChg()"></select></label>
     <label id="psubl" style="display:none">Subcategoria (opcional)<select name="subcategoria" id="psub" onchange="catChg()"></select></label>
+    <label>Condição<select name="condicao" id="pcond" onchange="condChg('pcond','pcdl')"><option value="novo">Novo</option><option value="seminovo">Seminovo</option><option value="usado">Usado</option></select></label>
+    <label id="pcdl" style="display:none">Detalhes do estado (opcional)<input name="condicao_det" maxlength="200" placeholder="Ex.: bateria 89%, marcas leves na tampa"></label>
     <div id="tam" style="display:none"><label>Tipo de tamanho<select id="tt" onchange="tamGrid()"></select></label><p class="hint" style="margin:8px 0">Informe a quantidade de cada tamanho. Deixe em branco os que você não tem.</p><div class="tg" id="tg"></div></div>
     <label id="estl">Quantidade em estoque<input name="estoque" inputmode="numeric" placeholder="Ex.: 10" required></label>
     <label>Marca (opcional)<input name="marca" maxlength="40"></label>
@@ -115,7 +117,7 @@
   <div class="atop"><button class="amb" onclick="adr(1)" aria-label="Abrir menu"><span></span><span></span><span></span></button><b id="atit">Painel</b></div>
   <div id="adrv" class="adrv" onclick="adr(0)"></div>
   <nav id="adr" class="adr" aria-label="Menu administrativo"><div class="adh"><b>Administração</b><button onclick="adr(0)" aria-label="Fechar">✕</button></div>
-   <button id="agp" class="on" onclick="asub('p')"><i>📊</i>Painel</button><button id="agc" onclick="asub('c')"><i>🏪</i>Lojas</button><button id="agr" onclick="asub('r')"><i>📦</i>Produtos</button><button id="agd" onclick="asub('d')"><i>🧾</i>Pedidos</button><button id="ago" onclick="asub('o')"><i>✅</i>Aprovações</button><button id="agu" onclick="asub('u')"><i><img class="cpi" src="/cupom.webp" alt="" style="margin:0"></i>Cupons</button><button id="agf" onclick="asub('f')"><i>⚡</i>Ofertas</button><button id="agb" onclick="asub('b')"><i>🖼️</i>Banners</button><button id="ags" onclick="asub('s')"><i>🛟</i>Suporte</button><button id="agm" onclick="asub('m')"><i>💰</i>Comissão</button>
+   <button id="agp" class="on" onclick="asub('p')"><i>📊</i>Painel</button><button id="agc" onclick="asub('c')"><i>🏪</i>Lojas</button><button id="agr" onclick="asub('r')"><i>📦</i>Produtos</button><button id="agd" onclick="asub('d')"><i>🧾</i>Pedidos</button><button id="ago" onclick="asub('o')"><i>✅</i>Aprovações</button><button id="agu" onclick="asub('u')"><i><img class="cpi" src="/cupom.webp" alt="" style="margin:0"></i>Cupons</button><button id="agf" onclick="asub('f')"><i>⚡</i>Ofertas</button><button id="agb" onclick="asub('b')"><i>🖼️</i>Banners</button><button id="ags" onclick="asub('s')"><i>🛟</i>Suporte</button><button id="agm" onclick="asub('m')"><i>💰</i>Comissão</button><button id="agg" onclick="asub('g')"><i>💳</i>Pagamentos</button>
    <button class="adx" onclick="admSair()"><i>🚪</i>Sair</button></nav>
   <div id="ap"></div>
   <div id="ac" style="display:none"><div class="pd"><input id="aq" placeholder="Buscar loja…" oninput="admRender()"></div><div class="row" id="aF" style="margin:10px 0"></div><div id="aMsg"></div><div id="aRel"></div><div id="aL"></div></div>
@@ -126,6 +128,7 @@
   <div id="ab" class="psw" style="display:none"></div>
   <div id="as" class="psw" style="display:none"></div>
   <div id="am" style="display:none"></div>
+  <div id="ag" style="display:none"></div>
   <div id="ad" style="display:none"><div class="row" id="adf" style="margin:10px 0"></div><div id="adl"></div></div>
   <p style="margin:12px 14px 20px"><button class="btn s" onclick="admSair()">Sair</button></p>
  </div>
