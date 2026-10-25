@@ -1,7 +1,10 @@
 const V='vv-__V__';
 self.addEventListener('install',e=>{e.waitUntil(caches.open(V).then(c=>c.addAll(['/','/manifest.webmanifest','/icon-192.png','/logo.webp'])));self.skipWaiting()});
-self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(k=>Promise.all(k.filter(x=>x!==V).map(x=>caches.delete(x)))));self.clients.claim()});
+const IMG='vv-img-1',R2='https://pub-c1cbf15f15c14757a0192ce3ea39d547.r2.dev/';
+self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(k=>Promise.all(k.filter(x=>x!==V&&x!==IMG).map(x=>caches.delete(x)))));self.clients.claim()});
+async function aparar(){try{const c=await caches.open(IMG),k=await c.keys();if(k.length>400)for(const r of k.slice(0,k.length-350))await c.delete(r)}catch(e){}}
 self.addEventListener('fetch',e=>{const r=e.request,u=new URL(r.url);
+ if(r.method==='GET'&&(r.url.startsWith(R2)||(u.pathname.indexOf('/storage/v1/object/public/')>-1&&/supabase\.co$/.test(u.hostname)))){e.respondWith(caches.open(IMG).then(c=>c.match(r).then(m=>m||fetch(r).then(x=>{if(x.ok||x.type==='opaque'){c.put(r,x.clone());aparar()}return x}))));return}
  if(r.method!=='GET'||u.origin!==location.origin||u.pathname.startsWith('/api/'))return;
  e.respondWith(fetch(r).then(x=>{const c=x.clone();caches.open(V).then(h=>h.put(r,c));return x}).catch(()=>caches.match(r).then(m=>m||caches.match('/'))))});
 

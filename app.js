@@ -5,13 +5,22 @@ const sbc=window.supabase.createClient(SUPA_URL,SUPA_KEY,{auth:{storageKey:'vv-c
 const EMC='@clientes.valeshop.app';
 const EM='@lojas.vitrinesdovale.app';
 const nt=x=>{let d=String(x||'').replace(/\D/g,'');if(d.length<=11)d='55'+d;return d};
-async function delSt(b,u){try{const k='/object/public/'+b+'/',i=String(u||'').indexOf(k);if(i<0)return;await sb.storage.from(b).remove([decodeURIComponent(String(u).slice(i+k.length))])}catch(e){}}
+async function delSt(b,u){try{if(String(u||'').startsWith(R2U)){let s=null;try{s=(await sb.auth.getSession()).data.session}catch(e){}fetch(SUPA_URL+'/functions/v1/foto',{method:'POST',headers:{'Content-Type':'application/json',apikey:SUPA_KEY,Authorization:'Bearer '+(s?s.access_token:SUPA_KEY)},body:JSON.stringify({pasta:b,acao:'apagar',url:u})}).catch(()=>{});return}const k='/object/public/'+b+'/',i=String(u||'').indexOf(k);if(i<0)return;await sb.storage.from(b).remove([decodeURIComponent(String(u).slice(i+k.length))])}catch(e){}}
 const E=r=>{if(r.error){const m=String(r.error.message||'Erro');throw new Error(/duplicate key|unique/i.test(m)?'Este WhatsApp já está cadastrado.':/row-level security/i.test(m)?'Você não tem permissão para fazer isso.':/failed to fetch|network/i.test(m)?'Sem conexão. Tente de novo.':m)}return r.data};
 const rpc=async(f,p)=>E(await sb.rpc(f,p||{}));
 const rpcC=async(f,p)=>E(await sbc.rpc(f,p||{}));
 let ML=null;
 async function uidL(o){let u=null;try{u=(await sb.auth.getSession()).data.session}catch(e){}if(!u){try{const r=await sb.auth.refreshSession();u=r.data&&r.data.session}catch(e){}}if(!u||!u.user){if(o)return null;throw new Error('Sua sessão expirou. Toque em Sair, entre de novo na loja e tente outra vez.')}return o?u.user:u.user.id}
-async function up(bucket,uid,du,nome){const b=await (await fetch(du)).blob(),path=uid+'/'+nome+'.jpg',r=await sb.storage.from(bucket).upload(path,b,{contentType:'image/jpeg',upsert:false});if(r.error)throw new Error('Não foi possível enviar a imagem ('+r.error.message+').');return sb.storage.from(bucket).getPublicUrl(path).data.publicUrl}
+const R2U='https://pub-c1cbf15f15c14757a0192ce3ea39d547.r2.dev/';
+const mini=u=>typeof u==='string'&&u.startsWith(R2U)&&!/-m\.\w+$/.test(u)&&u.indexOf('/banners/')<0?u.replace(/\.(\w+)$/,'-m.$1'):u;
+const imgM=(u,a)=>{const m=mini(u);return '<img loading="lazy" decoding="async" src="'+esc(m)+'"'+(m!==u?' onerror="this.onerror=null;this.src=\''+esc(u)+'\'"':'')+' alt="'+(a||'')+'">'};
+function encDU(du,max,q){return new Promise((ok,no)=>{const i=new Image();i.onload=()=>{const k=Math.min(1,max/Math.max(i.width,i.height)),c=document.createElement('canvas');c.width=Math.round(i.width*k);c.height=Math.round(i.height*k);c.getContext('2d').drawImage(i,0,0,c.width,c.height);let d=c.toDataURL('image/webp',q);if(!/^data:image\/webp/.test(d))d=c.toDataURL('image/jpeg',q);ok(d)};i.onerror=()=>no(new Error('Imagem inválida.'));i.src=du})}
+async function upR2(pasta,du,ex){let s=null;try{s=(await sb.auth.getSession()).data.session}catch(e){}
+ const img=await encDU(du,pasta==='banners'?1600:1100,.8),mn=pasta==='banners'?null:await encDU(du,420,.72);
+ const r=await fetch(SUPA_URL+'/functions/v1/foto',{method:'POST',headers:{'Content-Type':'application/json',apikey:SUPA_KEY,Authorization:'Bearer '+(s?s.access_token:SUPA_KEY)},body:JSON.stringify(Object.assign({pasta:pasta,img:img,mini:mn},ex||{}))});
+ const j=await r.json().catch(()=>({}));if(!r.ok||!j.url)throw new Error(j.erro||'Falha ao enviar a foto.');return j.url}
+async function up(bucket,uid,du,nome,ex){try{return await upR2(bucket,du,ex)}catch(e){console.warn('R2:',e&&e.message)}
+const b=await (await fetch(du)).blob(),path=uid+'/'+nome+'.jpg',r=await sb.storage.from(bucket).upload(path,b,{contentType:'image/jpeg',upsert:false});if(r.error)throw new Error('Não foi possível enviar a imagem ('+r.error.message+').');return sb.storage.from(bucket).getPublicUrl(path).data.publicUrl}
 const lojaOut=l=>({id:l.id,nome:l.nome,logo:l.logo||'',capa:l.capa||'',status:l.status,motivo:l.motivo||'',horario:l.horario,taxas:l.taxas,pagamentos:l.pagamentos,pix:l.pix||'',retirada:l.retirada,so_retirada:!!l.so_retirada,prazo_entrega_h:l.prazo_entrega_h==null?null:l.prazo_entrega_h,frete_gratis:l.frete_gratis,parcelas_max:l.parcelas_max,parcelas_sem_juros:l.parcelas_sem_juros,juros_pct:l.juros_pct,volta_em:l.volta_em||'',resumo_semanal:l.resumo_semanal!==false});
 const ofx=p=>p.oferta_ate&&new Date(p.oferta_ate)>new Date()&&Number(p.oferta_preco)>0?{preco:Number(p.oferta_preco),ate:new Date(p.oferta_ate).getTime(),tipo:p.oferta_tipo}:null;
 const T={
@@ -26,7 +35,7 @@ const T={
  listarPerguntas:id=>rpc('listar_perguntas',{p_id:id}),
  produtoSocial:id=>rpc('produto_social',{p_id:String(id)}),
  itensAvaliar:(n,t)=>rpc('itens_avaliar',{p_numero:Number(n),p_tel:String(t)}),
- async avaliar(n,t,nome,itens){const L=[];for(const i of itens){let f='';if(i.foto)f=await up('avaliacoes','a',i.foto,n+'-'+String(i.id).slice(0,8)+'-'+Date.now());L.push({id:i.id,nota:i.nota,texto:i.texto||'',foto:f})}return rpc('avaliar',{p:{numero:Number(n),tel:String(t),nome:nome||'',itens:L}})},
+ async avaliar(n,t,nome,itens){const L=[];for(const i of itens){let f='';if(i.foto)f=await up('avaliacoes','a',i.foto,n+'-'+String(i.id).slice(0,8)+'-'+Date.now(),{n:n,t:t});L.push({id:i.id,nota:i.nota,texto:i.texto||'',foto:f})}return rpc('avaliar',{p:{numero:Number(n),tel:String(t),nome:nome||'',itens:L}})},
  perguntar:p=>rpc('perguntar',{p:p}),
  async cadastrarLoja(d){
   if(!d.aceite)throw new Error('É preciso aceitar os Termos de Uso e a Política de Privacidade.');
@@ -180,9 +189,9 @@ const ini=n=>esc(String(n||'?').trim().charAt(0).toUpperCase());
 const vb=l=>l&&l.verificada?'<img class="vsel" src="selo.webp" alt="Loja verificada" title="Loja verificada" onclick="event.stopPropagation();vselInfo()">':'';
 function vselInfo(){dlg({msg:'Loja verificada pelo ValeShop\n\nLoja reconhecida em Sobradinho, com cadastro conferido pela equipe ValeShop. Mais segurança na sua compra.',ok:'Entendi',cancel:false})}
 let VF=false;
-const lg=l=>l.logo?'<img src="'+esc(l.logo)+'" alt="">':ini(l.nome);
+const lg=l=>l.logo?imgM(l.logo):ini(l.nome);
 const estB=(p,c)=>{const n=p.estoque;if(!(n>=1&&n<=5)||fl(p))return'';return '<span class="est'+(n===1?' u':'')+(c?' '+c:'')+'"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12.5 2c.6 3-.9 4.6-2.2 6.2C9 9.8 7.5 11.4 7.5 14a5 5 0 0010 0c0-1.8-.8-3.2-1.7-4.3-.3 1.2-.9 1.9-1.9 2.2.7-3.2.1-6.700-1.400-9.900z"/></svg>'+(n===1?'ÚLTIMA!':'ÚLTIMAS '+n)+'</span>'};
-const thumb=p=>(p.fotos&&p.fotos[0])?'<img loading="lazy" src="'+esc(p.fotos[0])+'" alt="">':(ICO[p.categoria]||'🛍️');
+const thumb=p=>(p.fotos&&p.fotos[0])?imgM(p.fotos[0]):(ICO[p.categoria]||'🛍️');
 const SITE='https://valeshop-sobradinho.vercel.app/';
 let OFS=0;const NOW=()=>Date.now()+OFS;
 function syncHora(){try{const t0=Date.now();sb.rpc('hora_servidor').then(r=>{if(r&&typeof r.data==='number'){OFS=r.data-(t0+Date.now())/2}},()=>{})}catch(e){}}
@@ -302,7 +311,7 @@ function home(){
  $('lj').innerHTML=ls.length?ls.map(l=>'<button class="av" onclick="go(\'loja/'+l.id+'\')"><i>'+lg(l)+'</i><span>'+esc(l.nome)+vb(l)+'</span></button>').join(''):'<p class="hint">'+(fv?'Toque no ♡ de uma loja ou produto para guardar aqui.':loading?'Carregando…':'As lojas aparecem aqui assim que forem aprovadas.')+'</p>';
  const ps=D.produtos.filter(p=>(fv||p.capa!==false)&&(cat==='Tudo'||fv||p.categoria===cat)&&(!scat||fv||p.sub===scat)&&(!fv||FV.p.indexOf(p.id)>-1)&&nrm(p.titulo+' '+LJ(p.lojaId).nome+' '+p.categoria+' '+(p.cond||'')).includes(q)).sort((a,b)=>(a.estoque===0)-(b.estoque===0));
  $('gt').textContent=fv?'Meus favoritos':'🔥 Mais vendidos e procurados';
- $('grid').innerHTML=ps.length?ps.slice(0,PN*24).map(card).join(''):'<p class="empty">'+(loading?'Carregando vitrine…':'Nenhum produto por aqui ainda.')+'</p>';HC=ps.length;$('mais').innerHTML=ps.length>PN*24||temMais()?'<button class="btn" onclick="maisProd()">'+(FQ.busy?'Carregando…':'Ver mais produtos')+'</button>':'';
+ $('grid').innerHTML=ps.length?ps.slice(0,PN*12).map(card).join(''):'<p class="empty">'+(loading?'Carregando vitrine…':'Nenhum produto por aqui ainda.')+'</p>';HC=ps.length;$('mais').innerHTML=ps.length>PN*12||temMais()?'<button class="btn" onclick="maisProd()">'+(FQ.busy?'Carregando…':'Ver mais produtos')+'</button>':'';
  $('ll').innerHTML=(D.lojas.some(l=>l.verificada)?'<label class="ck vfl"><input type="checkbox"'+(VF?' checked':'')+' onchange="VF=this.checked;home()"><span>Só lojas verificadas <img class="vsel" src="selo.webp" alt=""></span></label>':'')+D.lojas.filter(l=>!VF||l.verificada).map(l=>'<button class="item" style="width:calc(100% - 28px)" onclick="go(\'loja/'+l.id+'\')"><div class="av"><i>'+lg(l)+'</i></div><div class="g" style="text-align:left"><b>'+esc(l.nome)+vb(l)+'</b><small>'+esc(l.categoria)+' · '+esc(l.bairro)+'</small><small>'+stTxt(l)+'</small></div></button>').join('')||'<p class="msg">Nenhuma loja aprovada ainda.</p>'}
 function verLoja(id){const l=D.lojas.find(x=>x.id===id);if(!l){$('loja').innerHTML='<div class="top"><button onclick="history.back()">←</button>Loja</div>'+(loading?wait():'<p class="msg">Esta loja não está disponível no momento (pode estar fora do ar).</p>');return show('loja','lojas')}
  const ps=D.produtos.filter(p=>p.lojaId===id&&p.capa!==false),f=FV.l.indexOf(id)>-1,sl=SLP[id],maisL=sl&&sl.total!=null&&sl.pg*24<sl.total;if(!sl)fetchLoja(id);
