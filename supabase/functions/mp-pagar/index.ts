@@ -65,7 +65,6 @@ Deno.serve(async (req) => {
     const j = await r.json();
     if (!r.ok || !j.id) { console.error('pref', r.status, JSON.stringify(j).slice(0, 400)); return out({ erro: 'Não foi possível abrir o pagamento agora. Tente de novo.' }, 502); }
     await fetch(SU + '/rest/v1/pedidos?id=eq.' + n, { method: 'PATCH', headers: { ...H, Prefer: 'return=minimal' }, body: JSON.stringify({ mp_pref_id: String(j.id) }) });
-    const teste = String(ct.access_token).startsWith('TEST-');
-    return out({ url: (teste && j.sandbox_init_point) || j.init_point });
+    return out({ url: j.init_point });
   } catch (x) { console.error('falha', String(x)); return out({ erro: 'Erro inesperado. Tente de novo.' }, 500); }
 });

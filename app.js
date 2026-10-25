@@ -599,7 +599,7 @@ async function comSalvar(){comLer();try{const r=await rpc('admin_comissao_salvar
 let MPC=false,CTAB=null;
 function cUnit(v,t){t=t||CTAB||[];v=+v;if(!(v>0))return 0;for(const b of t){if(b.ate==null||v<=+b.ate)return Math.min(v,Math.round((v*(+b.pct)/100+(+b.fixo||0))*100+1e-9)/100)}return 0}
 const comHint=v=>MPC&&CTAB&&+v>0?'Comissão por unidade: '+brl(cUnit(v)):'';
-const MPCID='8392831437110993',MPRED=SUPA_URL+'/functions/v1/mp-oauth';
+const MPRED=SUPA_URL+'/functions/v1/mp-oauth';
 let MPRET=null,MPPAG=null;try{const q=new URLSearchParams(location.search);MPRET=q.get('mp');if(q.get('mppag'))MPPAG={s:q.get('mppag'),n:q.get('n')};if(q.get('mpteste')!==null)sv('vv_mpteste',q.get('mpteste')==='1'?1:0);if(MPRET||MPPAG||q.get('mpteste')!==null)history.replaceState(null,'',location.pathname+location.hash)}catch(e){}
 const MPMSG={ok:'✓ Conta do Mercado Pago conectada!',cancelado:'Conexão cancelada no Mercado Pago.',expirado:'O link de conexão expirou. Toque em Conectar de novo.',config:'Pagamentos ainda não configurados. Fale com o suporte.',erro:'Não foi possível conectar. Tente de novo.'};
 async function mpInit(){const e=$('mpBox');if(!e)return;const T='<b class="mpth"><img src="mp.webp" alt="" width="28" height="19">Receber pelo Mercado Pago</b>';
@@ -610,7 +610,7 @@ async function mpInit(){const e=$('mpBox');if(!e)return;const T='<b class="mpth"
   :T+(s.obrigatorio?'<div class="msg err" style="margin:6px 0 0">Sua loja está fora da vitrine: conecte sua conta do Mercado Pago para voltar a vender.</div>':'')+'<small class="hint" style="display:block;margin:2px 0 10px">Conecte sua conta para receber os pagamentos dos pedidos direto no seu Mercado Pago.</small><button type="button" class="btn" id="mpBtn" onclick="mpCon()">Conectar minha conta</button>'
  }catch(x){e.innerHTML=T+'<small class="hint" style="display:block;margin:2px 0 0">Não foi possível verificar agora.</small>'}}
 async function mpCon(){const b=$('mpBtn');if(b){b.disabled=true;b.textContent='Abrindo o Mercado Pago…'}
- try{const st=await rpc('mp_iniciar',{p_teste:!!ld('vv_mpteste',0)});location.href='https://auth.mercadopago.com.br/authorization?client_id='+MPCID+'&response_type=code&platform_id=mp&state='+st+'&redirect_uri='+encodeURIComponent(MPRED)}
+ try{const st=await rpc('mp_iniciar',{p_teste:!!ld('vv_mpteste',0)});location.href=MPRED+'?start='+st}
  catch(x){toast(x.message||'Erro');if(b){b.disabled=false;b.textContent='Conectar minha conta'}}}
 async function mpDesc(){if(!await dlg({msg:'Desconectar o Mercado Pago?\nVocê deixa de receber pagamentos online até conectar de novo.',ok:'Desconectar'}))return;try{await rpc('mp_desconectar');toast('Mercado Pago desconectado.')}catch(x){toast(x.message)}mpInit()}
 async function pushInit(){const e=$('pushBox');if(!e)return;
