@@ -56,7 +56,7 @@ Deno.serve(async (req) => {
       notification_url: SU + '/functions/v1/mp-webhook?loja=' + ped.loja_id,
       back_urls: { success: APP + '?mppag=ok&n=' + n + '#/pedidos', pending: APP + '?mppag=pend&n=' + n + '#/pedidos', failure: APP + '?mppag=erro&n=' + n + '#/pedidos' },
       auto_return: 'approved',
-      payment_methods: { installments: inst },
+      payment_methods: { installments: inst, excluded_payment_types: [{ id: 'ticket' }, { id: 'atm' }] },
       statement_descriptor: 'VALESHOP',
       payer: { name: String(ped.cliente || '').slice(0, 60) },
     };
