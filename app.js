@@ -1185,3 +1185,5 @@ function carMv(d){const c=document.querySelector("#prod .car");if(c)c.scrollBy({
 var IOM=null;function obsM(){if(!('IntersectionObserver' in window))return;if(!IOM)IOM=new IntersectionObserver(es=>es.forEach(e=>{if(!e.isIntersecting)return;const t=e.target;IOM.unobserve(t);if(!t.isConnected)return;
  if(t.dataset.a==='h'){if(FQ.busy){setTimeout(()=>t.isConnected&&IOM.observe(t),400);return}maisProd()}else if(t.dataset.a==='l'){const st=SLP[t.dataset.id];if(st&&st.busy){setTimeout(()=>t.isConnected&&IOM.observe(t),400);return}fetchLoja(t.dataset.id)}}),{rootMargin:'0px 0px 700px 0px'});
  document.querySelectorAll('.ldm').forEach(x=>IOM.observe(x))}
+
+try{if(isApp()){const b=document.getElementById('inst');if(b)b.style.display='none'}}catch(e){}
