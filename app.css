@@ -457,3 +457,5 @@ header,.top{background:radial-gradient(120% 160% at 85% 0%,#C9A85C55 0%,#16363F 
 .shg span{width:54px;height:54px;border-radius:50%;display:grid;place-items:center}.shg svg{width:30px;height:30px}
 .cdb .cdd{margin-right:3px}
 .kp .kpx{display:block;font-size:11.5px;color:#C9A85C;margin-top:2px;font-weight:600}
+.ldm{text-align:center;color:var(--mute);font-size:13px;padding:14px 14px 22px}.ldm::before{content:"";display:inline-block;width:14px;height:14px;border:2px solid #C9A85C;border-right-color:transparent;border-radius:50%;vertical-align:-2px;margin-right:8px;animation:ldr .8s linear infinite}@keyframes ldr{to{transform:rotate(360deg)}}
+.ldf{text-align:center;color:var(--mute);font-size:13px;margin:4px 14px 18px}
