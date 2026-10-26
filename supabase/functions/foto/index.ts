@@ -45,7 +45,8 @@ Deno.serve(async (req) => {
     if (b.acao === 'apagar') {
       const url = String(b.url || '');
       const adm = uid && (await db('admins?user_id=eq.' + uid + '&select=user_id')).length;
-      if (!url.startsWith(PUB + pref) && !(adm && url.startsWith(PUB))) return out({ erro: 'Sem permissão.' }, 403);
+      // fotos migradas do Supabase ficaram em "migr/<pasta>/<dono>/..."
+      if (!url.startsWith(PUB + pref) && !url.startsWith(PUB + 'migr/' + pref) && !(adm && url.startsWith(PUB))) return out({ erro: 'Sem permissão.' }, 403);
       const k = url.slice(PUB.length), km = k.replace(/\.(\w+)$/, '-m.$1');
       await r2.fetch(BASE + k, { method: 'DELETE' }); await r2.fetch(BASE + km, { method: 'DELETE' });
       return out({ ok: true });

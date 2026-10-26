@@ -1147,7 +1147,7 @@ async function decidir(id,acao){let motivo='';
   return run('adminListar',S)}).then(l=>{AD=l;admRender();carregar()}).catch(x=>say('aMsg',esc(x.message),1))}
 
 /* ---------- Início, instalação ---------- */
-function carregar(){loading=true;return run('getCatalogo').then(d=>{D=d;sv('vv_cat',d);FQ.k='';return ensureIds([...FV.p,...C.i.map(i=>i.id)])}).catch(()=>{if(!D.lojas.length)$('grid').innerHTML='<p class="empty" style="color:var(--red)">Não foi possível carregar a vitrine. Tente de novo em instantes.</p>'}).finally(()=>{loading=false;if(/^#\/(loja|produto|carrinho|checkout|home|lojas)?\/?/.test(location.hash||'#/')){KS=1;route()}})}
+function carregar(){loading=true;return run('getCatalogo').then(d=>{if(!d||!Array.isArray(d.lojas)||!Array.isArray(d.produtos))throw new Error('catálogo inválido');D=d;sv('vv_cat',d);FQ.k='';return ensureIds([...FV.p,...C.i.map(i=>i.id)])}).catch(()=>{if(!D.lojas.length)$('grid').innerHTML='<p class="empty" style="color:var(--red)">Não foi possível carregar a vitrine. Tente de novo em instantes.</p>'}).finally(()=>{loading=false;if(/^#\/(loja|produto|carrinho|checkout|home|lojas)?\/?/.test(location.hash||'#/')){KS=1;route()}})}
 addEventListener('beforeinstallprompt',e=>{e.preventDefault();IP=e});
 function instalar(){tr('instalar');if(IP){IP.prompt();IP=null}else dlg({msg:'No iPhone: toque em Compartilhar e depois em "Adicionar à Tela de Início".\nNo Android: menu do navegador > "Instalar app".',cancel:false})}
 if('serviceWorker' in navigator)addEventListener('load',()=>navigator.serviceWorker.register('/sw.js').catch(()=>{}));
