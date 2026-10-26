@@ -382,3 +382,6 @@ header,.top{background:radial-gradient(120% 160% at 85% 0%,#C9A85C55 0%,#16363F 
 .sln .sla2{padding:6px 8px;min-width:0;flex:none}.sln .sla2[disabled]{opacity:.3}.slk{cursor:pointer}.bnit.pisca{outline:2px solid var(--gold);transition:outline .3s}
 .sln>span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.sln>span small{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 #ab .sln>span small,#ab .sln>span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;word-break:normal;overflow-wrap:normal}
+.docw{margin:10px 14px 4px;padding:12px;border:1px solid var(--gold);border-radius:12px;background:var(--card)}.docw>b{display:block}.docw>small{display:block;color:var(--mute);margin:4px 0 8px;font-size:12.5px}
+.docs{display:grid;gap:8px}.docs a{display:flex;align-items:center;gap:12px;padding:11px 12px;border-radius:10px;background:var(--bg);border:1px solid var(--line);text-decoration:none;color:inherit}.docs a i{font-style:normal;font-size:22px;width:28px;text-align:center}.docs a span{flex:1;min-width:0}.docs a b{display:block;font-size:14.5px}.docs a small{display:block;color:var(--mute);font-size:12px}.docs a::after{content:'↗';color:var(--gold);font-weight:800}
+.dwr .dwx{margin-top:auto;border-top:1px solid #ffffff22;border-radius:0 !important;padding-top:16px !important}
