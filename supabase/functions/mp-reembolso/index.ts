@@ -31,8 +31,9 @@ Deno.serve(async (req) => {
     const j = await r.json().catch(() => ({}));
     if (!r.ok) {
       console.error('refund', r.status, JSON.stringify(j).slice(0, 300));
-      const saldo = /insufficient|amount/i.test(JSON.stringify(j));
-      return out({ erro: saldo ? 'Saldo insuficiente na conta Mercado Pago da loja para devolver agora.' : 'O Mercado Pago não aceitou a devolução agora. Tente de novo mais tarde.' }, 502);
+      // 2031 = "Collector hasn't enough available money": a loja não tem saldo disponível no Mercado Pago
+      const saldo = /2031|available money|enough|insufficient/i.test(JSON.stringify(j));
+      return out({ erro: saldo ? 'A conta Mercado Pago da loja está sem saldo disponível para devolver. Coloque saldo na conta (por exemplo, por Pix) ou aguarde a liberação do dinheiro das vendas e tente de novo.' : 'O Mercado Pago não aceitou a devolução agora. Tente de novo mais tarde.' }, 502);
     }
     await fetch(SU + '/rest/v1/rpc/mp_reembolso_registrar', { method: 'POST', headers: H, body: JSON.stringify({ p_pedido: n, p_por: adm && !dono ? 'admin' : 'loja' }) });
     return out({ ok: true });
