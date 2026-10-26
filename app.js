@@ -4,7 +4,7 @@ const sb=window.supabase.createClient(SUPA_URL,SUPA_KEY);
 const sbc=window.supabase.createClient(SUPA_URL,SUPA_KEY,{auth:{storageKey:'vv-cli-auth'}});
 // Conexão instável (ex.: "Load failed" no iPhone): tenta de novo uma vez antes de mostrar erro
 const NETRE=/load failed|failed to fetch|networkerror|network request failed|fetch failed|sem conex|conexão caiu/i,MSGNET='A conexão caiu. Verifique a internet e tente de novo.';
-[sb,sbc].forEach(c=>['signUp','signInWithPassword'].forEach(k=>{const f=c.auth[k].bind(c.auth);c.auth[k]=async a=>{let r;for(let i=0;i<2;i++){try{r=await f(a)}catch(x){r={data:{},error:x}}
+[sb,sbc].forEach(c=>['signUp','signInWithPassword'].forEach(k=>{if(!c||!c.auth||typeof c.auth[k]!=='function')return;const f=c.auth[k].bind(c.auth);c.auth[k]=async a=>{let r;for(let i=0;i<2;i++){try{r=await f(a)}catch(x){r={data:{},error:x}}
  if(!(r&&r.error&&NETRE.test(String(r.error.message||''))))return r;if(!i)await new Promise(z=>setTimeout(z,1500))}return {data:{},error:{message:MSGNET,status:0}}}}));
 const EMC='@clientes.valeshop.app';
 const EM='@lojas.vitrinesdovale.app';
@@ -269,7 +269,7 @@ function lAd(l){return [l.endereco,[l.bairro,l.cidade].filter(Boolean).join(', '
 function adrH(c,o){c=c||{};o=o||{};const r=o.req?' required':'';
  return '<label>Cidade<select name="cidade">'+CIDADES.map(x=>'<option'+((c.cidade||CIDADES[0])===x?' selected':'')+'>'+x+'</option>').join('')+'</select></label>'+
  '<label>Bairro<select name="bairro"'+r+'><option value="">Escolha o bairro</option>'+BAIRROS.map(b=>'<option'+((c.bairro||o.b)===b?' selected':'')+'>'+b+'</option>').join('')+'</select></label>'+
- '<label>Rua / Avenida<input name="rua" maxlength="120" autocomplete="address-line1" value="'+esc(c.rua)+'" placeholder="Ex.: Rua 07"'+r+'></label>'+
+ '<label>Rua / Avenida / Quadra<input name="rua" maxlength="120" autocomplete="address-line1" value="'+esc(c.rua)+'" placeholder="Ex.: Rua 07 ou Quadra S09"'+r+'></label>'+
  '<label>Número<input name="num" maxlength="20" value="'+esc(c.num)+'" placeholder="Ex.: 21A ou S/N"'+r+'></label>'+
  '<label>Complemento (opcional)<input name="comp" maxlength="60" value="'+esc(c.comp)+'" placeholder="Casa, apto, quadra…"></label>'+
  '<label>Ponto de referência<input name="ref" maxlength="120" value="'+esc(c.ref)+'" placeholder="Ex.: ao lado da padaria"'+r+'></label>'}
@@ -439,7 +439,7 @@ function cpAplicar(){const f=$('fco'),d=Object.fromEntries(new FormData(f)),l=LJ
  run('cupomValidar',cod,C.l,s,r?0:(x.v||0),!r&&x.v==null,r,d.tel).then(k=>{if(!k||!k.ok){say('cpm',esc((k&&k.msg)||'Cupom inválido.'),1);return}CP={codigo:k.codigo,tipo:k.tipo,desconto:+k.desconto||0};cpDraw();sum();toast('Cupom aplicado!')}).catch(x=>say('cpm',esc(x.message),1))}
 function enviar(e){e.preventDefault();const d=Object.fromEntries(new FormData(e.target)),l=LJ(C.l),r=d.tipo==='retirada',x=r?{v:0}:frete(l,d.bairro,cartSub()),has=Object.keys(J(l.taxas)).length;if(d.pg!=='cartao'||!pcOn(l))delete d.parcelas;
  d.nome=String(d.nome||'').trim().replace(/\s+/g,' ');if(d.nome.split(' ').filter(w=>w.length>1).length<2){say('em','Digite seu nome completo (nome e sobrenome).',1);return false}
- if(!r){if(!d.bairro||!d.rua||!d.num||!d.ref){say('em','Preencha bairro, rua, número e ponto de referência.',1);return false}}
+ if(!r){if(!d.bairro||!d.rua||!d.num||!d.ref){say('em','Preencha bairro, rua ou quadra, número e ponto de referência.',1);return false}}
  if(CP&&CP.tipo==='frete'&&r){say('em','O cupom de frete grátis vale só para entrega. Remova o cupom ou escolha entrega.',1);return false}
  sv('vv_cli',{nome:d.nome,tel:d.tel,cidade:d.cidade,bairro:d.bairro,rua:d.rua,num:d.num,comp:d.comp,ref:d.ref});
  const b=$('cbB'),fe=stat(l).o===false;b.disabled=true;say('em','Registrando pedido…');
@@ -525,7 +525,7 @@ function avisoSenha(c){run(c?'senhaAvisoC':'senhaAviso').then(a=>{if(!a||!a.id||
 function recFechar(){if(RS)clearTimeout(RS.tm);const m=$('rcv');if(m)m.remove()}
 function ctaEsqueci(){const i=document.querySelector('#ctd input[name=tel]');recSenha('cliente',i?i.value.trim():'')}
 function ctaDados(){const c=CU||{};$('ctd').innerHTML='<form style="padding:0;margin-top:10px;display:grid;gap:12px" onsubmit="return ctaSalvar(event)"><label>Nome completo<input name="nome" required minlength="5" autocomplete="name" placeholder="Nome e sobrenome" value="'+esc(c.nome)+'"></label><div class="h3" style="margin:4px 0 -4px">Endereço de entrega</div>'+adrH(c)+'<button class="btn">Salvar</button><div id="ctm"></div></form>'}
-function ctaSalvar(e){e.preventDefault();const d=Object.fromEntries(new FormData(e.target));if((d.bairro||d.rua||d.num||d.ref)&&!adrOk(d)){say('ctm','Preencha bairro, rua, número e ponto de referência.',1);return false}
+function ctaSalvar(e){e.preventDefault();const d=Object.fromEntries(new FormData(e.target));if((d.bairro||d.rua||d.num||d.ref)&&!adrOk(d)){say('ctm','Preencha bairro, rua ou quadra, número e ponto de referência.',1);return false}
  run('contaSalvar',d).then(p=>{CU=p;ctaLocal();ctaDraw();toast('Dados salvos!')}).catch(x=>say('ctm',esc(x.message),1));return false}
 let PDF={tab:'and',q:'',n:10,ens:0};
 function pedCarregar(){const L=ld('vv_ped',[]);
@@ -744,7 +744,7 @@ function sorTg(){const o=$('sor').checked;$('txw').style.display=o?'none':'';if(
 let OKT;function okBar(m,er){let e=$('okb');if(!e){e=document.createElement('div');e.id='okb';e.setAttribute('role','status');document.body.appendChild(e)}e.className=er?'err':'';e.textContent=m;e.style.opacity=1;e.style.display='block';clearTimeout(OKT);OKT=setTimeout(()=>{e.style.opacity=0;setTimeout(()=>{e.style.display='none'},260)},er?6000:4000)}
 let SVL=0,LADR0='';
 function salvarLoja(){if(SVL)return;const ad=adrV($('ladr')),adCh=JSON.stringify(ad)!==LADR0;
- if(adCh&&!adrOk(ad)){say('plMsg','Preencha o endereço da loja: bairro, rua, número e ponto de referência.',1);okBar('Preencha o endereço da loja: bairro, rua, número e ponto de referência.',1);$('ladr').scrollIntoView({behavior:'smooth',block:'center'});return}
+ if(adCh&&!adrOk(ad)){say('plMsg','Preencha o endereço da loja: bairro, rua ou quadra, número e ponto de referência.',1);okBar('Preencha o endereço da loja: bairro, rua ou quadra, número e ponto de referência.',1);$('ladr').scrollIntoView({behavior:'smooth',block:'center'});return}
  SVL=1;const t={};document.querySelectorAll('#tx input').forEach(i=>{const v=num(i.value);if(i.value.trim()!==''&&!isNaN(v))t[i.dataset.b]=Number(v)});
  const g=[...document.querySelectorAll('#pg input:checked')].map(i=>i.value).join(',');say('plMsg','Salvando…');
  run('salvarLoja',A,{horario:dRead('dl2'),taxas:JSON.stringify(t),pagamentos:g,pix:$('pix').value,retirada:$('ret').checked||$('sor').checked,so_retirada:$('sor').checked,prazo_entrega_h:$('przE').value?Number($('przE').value):null,frete_gratis:num($('fgr').value)>0?num($('fgr').value):null,parcelas_max:Number($('pcm').value),parcelas_sem_juros:Math.min(Number($('pcsj').value),Number($('pcm').value)),juros_pct:Math.min(30,Math.max(0,Number(num($('pcj').value))||0)),adr:adCh?ad:null}).then(()=>{if(adCh)LADR0=JSON.stringify(ad);say('plMsg','');okBar('✅ Alterações salvas! Já valem para os clientes.');carregar()}).catch(x=>{say('plMsg',esc(x.message),1);okBar('Não foi possível salvar: '+x.message,1)}).finally(()=>{SVL=0})}
