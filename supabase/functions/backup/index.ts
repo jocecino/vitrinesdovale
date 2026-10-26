@@ -21,7 +21,7 @@ async function listar() {
 async function fazer() {
   const [esq, dados] = await Promise.all([rpc('backup_esquema'), rpc('backup_dados')]);
   const agora = new Date();
-  const doc = JSON.stringify({ sistema: 'Vale Shop Sobradinho', gerado_em: agora.toISOString(), formato: 1, esquema_sql: esq, dados });
+  const doc = JSON.stringify({ sistema: 'ValeShop Sobradinho', gerado_em: agora.toISOString(), formato: 1, esquema_sql: esq, dados });
   const gz = new Uint8Array(await new Response(new Blob([doc]).stream().pipeThrough(new CompressionStream('gzip'))).arrayBuffer());
   const dia = new Date(agora.getTime() - 3 * 3600e3).toISOString().slice(0, 10);
   const k = 'backups/' + dia + '.json.gz';
