@@ -386,3 +386,63 @@ header,.top{background:radial-gradient(120% 160% at 85% 0%,#C9A85C55 0%,#16363F 
 .docs{display:grid;gap:8px}.docs a{display:flex;align-items:center;gap:12px;padding:11px 12px;border-radius:10px;background:var(--bg);border:1px solid var(--line);text-decoration:none;color:inherit}.docs a i{font-style:normal;font-size:22px;width:28px;text-align:center}.docs a span{flex:1;min-width:0}.docs a b{display:block;font-size:14.5px}.docs a small{display:block;color:var(--mute);font-size:12px}.docs a::after{content:'↗';color:var(--gold);font-weight:800}
 .dwr .dwx{margin-top:auto;border-top:1px solid #ffffff22;border-radius:0 !important;padding-top:16px !important}
 .slt{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:8px 0 10px;font-weight:700}.slt select{width:auto;min-width:140px}
+/* ===== Responsivo: tablet e computador (celular continua igual) ===== */
+.cnv{display:none}
+.info.pi1{padding-bottom:0}.info.pdw{padding-top:0}
+@media(min-width:600px){
+ .grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+@media(min-width:768px){
+ body{max-width:1200px}
+ .bar{max-width:none}
+ .bn{max-width:860px;width:calc(100% - 28px);margin:12px auto 4px}
+ #ll{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;padding:0 14px 14px}
+ #ll>.vfl{grid-column:1/-1}
+ #ll>.item{width:auto!important;margin:0!important}
+ #cart,#co,#ped,#doc,#av,#ns,#pnl>#login,#pnl>#cadv,#adm>#aLogin{max-width:720px;margin-left:auto;margin-right:auto}
+ .co-bar{max-width:720px}
+ .csh{align-items:center;justify-content:center;padding:20px}
+ .cshb{max-width:560px;border-radius:18px;padding-bottom:20px}
+ .mdl>*{max-width:560px}
+ #chat{left:50%;right:auto;width:min(720px,100vw);transform:translateX(-50%);box-shadow:0 0 0 100vmax #0009}
+ #okb{max-width:600px}
+ .kps{grid-template-columns:repeat(3,minmax(0,1fr))}
+ /* página do produto em duas colunas */
+ #prod.on{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-areas:"top top" "gal inf" "det det";column-gap:28px;align-items:start}
+ #prod>.top{grid-area:top}
+ #prod>.pgal{grid-area:gal;position:sticky;top:72px;padding:16px 0 0 14px}
+ #prod>.pi1{grid-area:inf;padding-bottom:16px;background:none}
+ #prod>.pdw{grid-area:det;padding-top:8px;background:none}
+ #prod .car{border-radius:14px}
+ #prod .big{height:auto;aspect-ratio:1}
+ #prod .cnv{display:grid;place-items:center;position:absolute;top:calc(50% - 12px);width:40px;height:40px;border-radius:50%;background:#000a;color:#fff;font-size:26px;line-height:1;z-index:2}
+ #prod .cpv{left:24px}#prod .cnx{right:10px}
+}
+@media(min-width:900px){
+ .grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+ #ll{grid-template-columns:repeat(3,minmax(0,1fr))}
+ .kps{grid-template-columns:repeat(4,minmax(0,1fr))}
+}
+@media(min-width:1100px){
+ .grid{grid-template-columns:repeat(5,minmax(0,1fr));gap:14px;padding:0 14px 18px}
+ /* barra de baixo vira menu no topo */
+ body{padding-top:62px;padding-bottom:28px}
+ body.coB{padding-bottom:90px}
+ .bar,body.coB .bar{display:flex;top:0;bottom:auto;height:62px;align-items:center;justify-content:flex-end;gap:4px;padding:0 max(20px,calc((100vw - 1200px)/2 + 14px));border-top:0;border-bottom:1px solid var(--line);box-shadow:0 2px 8px #0000001a}
+ .bar::before{content:'';width:42px;height:42px;background:url(logo.webp) center/contain no-repeat;margin-right:auto;cursor:default}
+ .bar button{flex:none;flex-direction:row;gap:8px;font-size:14px;padding:9px 14px;border-radius:10px}
+ .bar button:hover{background:#ffffff10}
+ .bar button.on{background:#C9A85C22}
+ .bar i{position:static;margin-left:2px}
+ header,.top,.atop{top:62px}
+ #hd .t1>img{display:none}
+ #hd .sr{max-width:720px;margin:0 auto;width:100%}
+ #toast{bottom:28px}
+ #prod>.pgal{top:136px}
+ /* painéis: menu fixo ao lado */
+ #painel[style*="block"],#aPainel[style*="block"]{display:grid!important;grid-template-columns:250px minmax(0,1fr);column-gap:24px;align-items:start;padding:0 14px}
+ #painel>*,#aPainel>*{grid-column:2;min-width:0}
+ #painel>.dwr,#aPainel>.adr{grid-column:1;grid-row:1/span 40;position:sticky;top:76px;transform:none;width:auto;max-width:none;height:auto;max-height:calc(100vh - 92px);border-radius:14px;box-shadow:none;transition:none;z-index:1;margin-top:14px}
+ #painel>.dwr .dwh button,#aPainel>.adr .adh button,#painel>.lbar,#dwrBg,#adrv,.atop .amb{display:none!important}
+}
+ @media(min-width:1100px){#aPainel>.adr>button{padding-top:9px;padding-bottom:9px}}
