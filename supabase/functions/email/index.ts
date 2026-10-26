@@ -20,6 +20,7 @@ const db = createClient(URL_, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!, { auth
 // Documentos enviados à loja que pede cadastro (publicados no site em /docs)
 const DOCS = [
   { arq: "politicas-de-pagamento.pdf", nome: "Políticas de Pagamento", desc: "comissão, prazos, frete e devoluções" },
+  { arq: "taxas-do-mercado-pago.pdf", nome: "Taxas do Mercado Pago", desc: "quanto o Mercado Pago cobra e quanto sobra para a loja" },
   { arq: "manual-do-lojista.pdf", nome: "Manual do Lojista", desc: "como usar o painel da loja" },
   { arq: "como-funciona-a-vitrine.pdf", nome: "Como funciona a Vitrine", desc: "o caminho do cliente até a compra" },
   { arq: "termos-e-privacidade.pdf", nome: "Termos de Uso e Privacidade", desc: "regras da plataforma e LGPD" },
@@ -75,7 +76,7 @@ async function enviarAviso(acao: string, to: string, assunto: string, titulo: st
   }
 }
 
-// e-mail para a loja que acabou de pedir cadastro: confirmação + os 4 documentos (anexos e links)
+// e-mail para a loja que acabou de pedir cadastro: confirmação + os documentos (anexos e links)
 async function enviarBoasVindas(to: string, loja: string, responsavel: string) {
   const s = smtp();
   if (!s) { await registrar("loja_boas_vindas", false, "SEM_CONFIG"); throw new Error("SEM_CONFIG"); }
