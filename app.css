@@ -366,3 +366,4 @@ header,.top{background:radial-gradient(120% 160% at 85% 0%,#C9A85C55 0%,#16363F 
 .cshl{display:grid;grid-template-columns:1fr 1fr;gap:8px}.cshl button{display:flex;align-items:center;gap:10px;text-align:left;padding:11px 10px;border:1px solid var(--line);border-radius:12px;background:none;color:inherit;font-size:13.5px;font-weight:600}.cshl button.on{border-color:#C9A85C;background:#C9A85C22}.cshl i{font-style:normal;font-size:20px;flex:none}
 @keyframes fdin{from{opacity:0}to{opacity:1}}
 .vsel{width:16px;height:16px;vertical-align:-3px;margin-left:4px;display:inline-block;cursor:pointer}.vfl{margin:0 14px 10px}
+#cadAdr{display:contents}#ladr{display:grid;gap:12px;margin-bottom:6px}
