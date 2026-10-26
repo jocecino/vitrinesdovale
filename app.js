@@ -2,6 +2,10 @@
 const SUPA_URL='https://kxyqozqnlhfszokboata.supabase.co',SUPA_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt4eXFvenFubGhmc3pva2JvYXRhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI2Mzg2MzUsImV4cCI6MjEwODIxNDYzNX0.Wjm-ctswX5KEBZ-vy9i-ez3IYic8Wo6No0wMoqgreeU';
 const sb=window.supabase.createClient(SUPA_URL,SUPA_KEY);
 const sbc=window.supabase.createClient(SUPA_URL,SUPA_KEY,{auth:{storageKey:'vv-cli-auth'}});
+// Conexão instável (ex.: "Load failed" no iPhone): tenta de novo uma vez antes de mostrar erro
+const NETRE=/load failed|failed to fetch|networkerror|network request failed|fetch failed|sem conex|conexão caiu/i,MSGNET='A conexão caiu. Verifique a internet e tente de novo.';
+[sb,sbc].forEach(c=>['signUp','signInWithPassword'].forEach(k=>{const f=c.auth[k].bind(c.auth);c.auth[k]=async a=>{let r;for(let i=0;i<2;i++){try{r=await f(a)}catch(x){r={data:{},error:x}}
+ if(!(r&&r.error&&NETRE.test(String(r.error.message||''))))return r;if(!i)await new Promise(z=>setTimeout(z,1500))}return {data:{},error:{message:MSGNET,status:0}}}}));
 const EMC='@clientes.valeshop.app';
 const EM='@lojas.vitrinesdovale.app';
 const nt=x=>{let d=String(x||'').replace(/\D/g,'');if(d.length<=11)d='55'+d;return d};
@@ -55,7 +59,7 @@ const T={
  async login(a){const id=String(a.whatsapp||'').trim(),em=id.includes('@');let r;
   if(em){const d=await sb.auth.signInWithPassword({email:id,password:a.senha});if(!d.error){if((await sb.rpc('is_admin')).data===true)return{__admin:1};await sb.auth.signOut()}r=await entrarEmail(sb,'loja',id,a.senha)}
   else r=await sb.auth.signInWithPassword({email:nt(a.whatsapp)+EM,password:a.senha});
-  if(r.error)throw new Error(/rate|many/i.test(r.error.message)?'Muitas tentativas. Aguarde alguns minutos.':'WhatsApp, e-mail ou senha incorretos.');
+  if(r.error)throw new Error(NETRE.test(r.error.message)?MSGNET:/rate|many/i.test(r.error.message)?'Muitas tentativas. Aguarde alguns minutos.':'WhatsApp, e-mail ou senha incorretos.');
   const l=(await sb.from('lojas').select('*').eq('owner_id',r.data.user.id).maybeSingle()).data;
   if(!l){await sb.auth.signOut();throw new Error('Nenhuma loja encontrada para este WhatsApp.')}ML=l.id;return lojaOut(l)},
  async alterarSenha(a,n){if(String(n||'').length<6)throw new Error('A nova senha deve ter pelo menos 6 caracteres.');E(await sb.auth.updateUser({password:n}));return true},
@@ -83,11 +87,11 @@ const T={
  chatEnviarCli:(n,t,x)=>rpcC('chat_enviar_cliente',{p_num:Number(n),p_tel:String(t||''),p_texto:x}),
  chatListarLoja:(a,n,ap)=>rpc('chat_listar_loja',{p_num:Number(n),p_apos:ap||0}),
  chatEnviarLoja:(a,n,x)=>rpc('chat_enviar_loja',{p_num:Number(n),p_texto:x}),
- async contaCriar(d){const em=nt(d.tel)+EMC,s=await sbc.auth.signUp({email:em,password:d.senha});
+ async contaCriar(d){const em=nt(d.tel)+EMC;try{await sbc.auth.signOut({scope:'local'})}catch(e){}const s=await sbc.auth.signUp({email:em,password:d.senha});
   if(s.error)throw new Error(/already|registered/i.test(s.error.message)?'Este WhatsApp já tem conta. Toque em Entrar.':/rate|many|limit/i.test(s.error.message)?'Muitas tentativas. Aguarde alguns minutos.':/password/i.test(s.error.message)?'Senha não aceita. Use pelo menos 6 caracteres.':'Não foi possível criar a conta: '+s.error.message);
   if(!s.data.session){const r=await sbc.auth.signInWithPassword({email:em,password:d.senha});if(r.error)throw new Error('Este WhatsApp já tem conta. Toque em Entrar.')}
   return rpcC('cliente_conta_email',{p_nome:d.nome,p_email:d.email}).catch(x=>{throw new Error(/duplicate|unique|j[áa] est[áa] cadastrado/i.test(x.message)?'Este e-mail já está cadastrado. Use outro e-mail.':x.message)})},
- async contaEntrar(d){const em=String(d.tel||'').trim().includes('@');const r=em?await entrarEmail(sbc,'cliente',d.tel,d.senha):await sbc.auth.signInWithPassword({email:nt(d.tel)+EMC,password:d.senha});if(r.error)throw new Error(/rate|many/i.test(r.error.message)?'Muitas tentativas. Aguarde alguns minutos.':'WhatsApp, e-mail ou senha incorretos.');
+ async contaEntrar(d){const em=String(d.tel||'').trim().includes('@');const r=em?await entrarEmail(sbc,'cliente',d.tel,d.senha):await sbc.auth.signInWithPassword({email:nt(d.tel)+EMC,password:d.senha});if(r.error)throw new Error(NETRE.test(r.error.message)?MSGNET:/rate|many/i.test(r.error.message)?'Muitas tentativas. Aguarde alguns minutos.':'WhatsApp, e-mail ou senha incorretos.');
   const p=await rpcC('cliente_perfil');if(!p)throw new Error('Conta sem cadastro. Use Criar conta.');return p},
  async contaSair(){await sbc.auth.signOut();return true},
  contaPedidos:()=>rpcC('cliente_pedidos'),
@@ -166,7 +170,8 @@ const LDM={adminProdutoAcao:'Aplicando',criarCor:'Criando nova cor',adminCupomEx
 let LDN=0,LDT=null;
 function ldOn(t){LDN++;if(LDN>1){const e=$('ldx');if(e)e.querySelector('b').textContent=t+'…';return}clearTimeout(LDT);LDT=setTimeout(()=>{let e=$('ldx');if(!e){e=document.createElement('div');e.id='ldx';e.innerHTML='<div class="ldc"><i class="ldsp"></i><b></b></div>';document.body.appendChild(e)}e.querySelector('b').textContent=t+'…';e.style.display='flex'},150)}
 function ldOff(){LDN=Math.max(0,LDN-1);if(LDN)return;clearTimeout(LDT);const e=$('ldx');if(e)e.style.display='none'}
-const run=(fn,...a)=>{const m=LDM[fn];if(!m)return Promise.resolve().then(()=>T[fn](...a));ldOn(m);return Promise.resolve().then(()=>T[fn](...a)).finally(ldOff)};
+const netMap=x=>{throw x&&NETRE.test(String(x.message||''))?new Error(MSGNET):x};
+const run=(fn,...a)=>{const m=LDM[fn];if(!m)return Promise.resolve().then(()=>T[fn](...a)).catch(netMap);ldOn(m);return Promise.resolve().then(()=>T[fn](...a)).catch(netMap).finally(ldOff)};
 const say=(id,t,e)=>{$(id).innerHTML=t?'<div class="msg'+(e?' err':'')+'">'+t+'</div>':''};
 let TT;function toast(t){const e=$('toast');e.textContent=t;e.style.display='block';clearTimeout(TT);TT=setTimeout(()=>e.style.display='none',2200)}
 const LJ=id=>D.lojas.find(l=>l.id===id)||{};
