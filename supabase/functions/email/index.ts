@@ -161,20 +161,23 @@ async function notificar(tipo: string, id: string) {
       "Abrir meu painel", SITE + "#/minha", `Dúvidas? Fale com a administração pelo e-mail ${CONTATO}.`);
     return;
   }
-  if (tipo === "campanha_nova") {
-    const { data: c } = await db.from("campanhas").select("nome,tag,inicio,fim,modo,desc_pct,desc_max,regra_com,com_pct,ativo").eq("id", id).maybeSingle();
-    if (!c || !c.ativo) return;
+  if (tipo === "campanha_nova" || tipo === "campanha_teste") {
+    const tst = tipo === "campanha_teste";
+    const { data: c } = await db.from("campanhas").select("nome,tag,inicio,fim,modo,desc_pct,desc_max,regra_com,com_pct,ativo,status,teste_loja").eq("id", id).maybeSingle();
+    if (!c || (!tst && !c.ativo) || (tst && (!c.teste_loja || c.status === "lancada"))) return;
     const dt = (v: string) => new Date(v).toLocaleString("pt-BR", { timeZone: "America/Bahia", day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" });
     const desc = c.modo === "fixo" ? `${Number(c.desc_pct)}% de desconto` : `de ${Number(c.desc_pct)}% a ${Number(c.desc_max)}% de desconto (você escolhe)`;
     const com = c.regra_com === "fixo" ? `${Number(c.com_pct)}% fixo` : c.regra_com === "extra" ? `tabela normal + ${Number(c.com_pct)}%` : "tabela normal";
-    const { data: ls } = await db.from("lojas").select("email,nome").eq("status", "ativa");
+    const q = db.from("lojas").select("email,nome");
+    const { data: ls } = tst ? await q.eq("id", c.teste_loja) : await q.eq("status", "ativa");
     for (const l of (ls || []) as Array<{ email: string; nome: string }>) {
       if (!l.email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(l.email)) continue;
       try {
-        await enviarAviso("campanha_nova", l.email, `${c.tag} Nova campanha na ValeShop: ${c.nome}`, `${c.tag} Sua loja está convidada: ${c.nome}`,
+        await enviarAviso(tipo, l.email, `${tst ? "🧪 TESTE · " : ""}${c.tag} Nova campanha na ValeShop: ${c.nome}`, `${tst ? "🧪 TESTE · " : ""}${c.tag} Sua loja está convidada: ${c.nome}`,
           [`Período: ${dt(c.inicio)} até ${dt(c.fim)}`, `Desconto: ${desc}`, `Comissão nas vendas da campanha: ${com}`,
             "Os produtos que participam ganham a tag, o preço com desconto e uma aba própria na vitrine.",
-            "Para participar, abra o painel da loja em Minha conta › Minha loja › Meus produtos e toque em \"Escolher produtos\"."],
+            "Para participar, abra o painel da loja em Minha conta › Minha loja › 🎉 Campanhas e escolha os produtos.",
+            ...(tst ? ["Este é um aviso de TESTE: só a sua loja recebeu. Na vitrine, a campanha aparece só para você até a administração lançá-la."] : [])],
           "Escolher produtos", SITE + "#/minha", `Dúvidas? Fale com a administração pelo WhatsApp ${WPP}.`);
       } catch (e) { console.error("campanha", l.email, String(e)); }
     }
@@ -229,8 +232,8 @@ Deno.serve(async (req: Request) => {
       if (!k || !cfg || cfg.valor !== k) return json({ erro: "Não autorizado." }, 401);
       const id = String(b.id || "");
       const tp = String(b.tipo);
-      const uu = (tp === "loja_nova" || tp === "aviso_produto" || tp === "campanha_nova");
-      if (!id || !["pedido_novo", "entregue", "loja_nova", "aviso_produto", "campanha_nova"].includes(tp) || (!uu && !Number(id)) || (uu && !/^[0-9a-f-]{36}$/i.test(id))) return json({ erro: "Pedido inválido." }, 400);
+      const uu = (tp === "loja_nova" || tp === "aviso_produto" || tp === "campanha_nova" || tp === "campanha_teste");
+      if (!id || !["pedido_novo", "entregue", "loja_nova", "aviso_produto", "campanha_nova", "campanha_teste"].includes(tp) || (!uu && !Number(id)) || (uu && !/^[0-9a-f-]{36}$/i.test(id))) return json({ erro: "Pedido inválido." }, 400);
       try { await notificar(tp, id); } catch (e) { console.error("notificar", String(e)); return json({ ok: false }, 200); }
       return json({ ok: true });
     }

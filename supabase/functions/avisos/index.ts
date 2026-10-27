@@ -139,6 +139,12 @@ Deno.serve(async (req: Request) => {
       }
       return json({ ok: true, enviados: n });
     }
+    if (tipo === "campanha_teste") {
+      const { data: c } = await db.from("campanhas").select("id,nome,tag,status,teste_loja").eq("id", id).maybeSingle();
+      if (!c || !c.teste_loja || c.status === "lancada") return json({ ok: false });
+      const n = await enviarPush(c.teste_loja, { title: `🧪 TESTE · Nova campanha: ${c.tag}`, body: `${c.nome} · só a sua loja recebeu este aviso de teste.`, url: "/#/minha", tag: "campanha-teste-" + c.id });
+      return json({ ok: true, enviados: n });
+    }
     if (tipo === "pergunta_nova") {
       const { data: q } = await db.from("perguntas").select("id,loja_id,produto,pergunta").eq("id", id).maybeSingle();
       if (!q) return json({ ok: false });

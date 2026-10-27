@@ -524,3 +524,10 @@ img.e3{display:inline-block;width:1.25em;height:1.25em;object-fit:contain;vertic
 .cmpi .ck{align-items:center;gap:10px}.cmpn{font-style:normal;font-size:11px;font-weight:700;color:#C9A85C;margin-left:4px}.cpvv{color:#2ecc71}
 .cmpav{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;width:calc(100% - 28px);margin:0 14px 12px;padding:12px 14px;border-radius:14px;background:linear-gradient(135deg,#C9A85C33,#16363F);border:1px solid #C9A85C88;color:#fff;text-align:left;font-weight:700;font-size:14px}
 .cmpav b{color:#E9D08A;white-space:nowrap}
+
+/* campanhas: rascunho / teste */
+.tstb{margin:6px 0 8px;padding:8px 10px;border-radius:10px;background:#FFF4D6;border:1px dashed #C9A13B;color:#7A5A00;font-size:12.5px;font-weight:700}
+.cfx+.tstb{margin:6px 14px 4px}
+.ctst{display:block;margin:6px 0 2px;padding:6px 8px;border-radius:8px;background:#FFF4D6;color:#7A5A00}
+.st.tst{background:#FFF4D6;color:#7A5A00}
+.btn.cln{background:#1E7D4F;color:#fff}
