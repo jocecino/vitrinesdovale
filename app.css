@@ -531,3 +531,27 @@ img.e3{display:inline-block;width:1.25em;height:1.25em;object-fit:contain;vertic
 .ctst{display:block;margin:6px 0 2px;padding:6px 8px;border-radius:8px;background:#FFF4D6;color:#7A5A00}
 .st.tst{background:#FFF4D6;color:#7A5A00}
 .btn.cln{background:#1E7D4F;color:#fff}
+
+/* contagem regressiva estilo TikTok */
+.czw{margin:12px 14px 4px;padding:12px 14px;border-radius:14px;background:linear-gradient(120deg,var(--cc),#16363F);color:#fff;cursor:pointer;box-shadow:0 2px 8px #0003}
+.czw[role=button]:active{transform:scale(.99)}
+.czl{display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:13px;opacity:.95}
+.czx{display:inline-flex;align-items:center;gap:3px;font-size:12px}
+.czx i{font-style:normal;font-weight:700;font-size:15px;font-variant-numeric:tabular-nums;background:#ffffff33;border-radius:6px;padding:3px 6px;min-width:1.4em;text-align:center;margin-left:3px}
+.czx i:first-child{margin-left:0}
+.czn{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:8px}
+.czn b{display:block;font-size:17px;font-weight:800;line-height:1.2}
+.czn span{display:block;font-size:13px;opacity:.9;margin-top:2px}
+.czn .cza{font-size:28px;font-weight:300;line-height:1;opacity:.95;margin:0}
+.czw+.tstb{margin:6px 14px 4px}
+/* tamanhos no padrão do Mercado Livre */
+.tabs button{font-size:14px;font-weight:500}
+.tabs button.on{font-weight:600}
+.tabs button.ctb{font-size:14px;font-weight:600}
+.tabs button.ctb img.e3{width:14px;height:14px}
+.flh,.bni.of .flh{font-size:14px}
+.flv,.bni.of .flv{font-size:20px}
+.flp{font-size:12px}
+.flo{font-size:12px}
+.nm{font-size:14px}.pr{font-size:21px}
+.cfx b{font-size:16px}
