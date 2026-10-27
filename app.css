@@ -555,3 +555,15 @@ img.e3{display:inline-block;width:1.25em;height:1.25em;object-fit:contain;vertic
 .flo{font-size:12px}
 .nm{font-size:14px}.pr{font-size:21px}
 .cfx b{font-size:16px}
+
+/* cartão de campanha no admin: botões organizados */
+.btn.cmaL{width:100%;margin-top:10px;padding:12px;font-size:15px}
+.cmaG{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+.cmaG .btn{width:100%;margin:0;justify-content:center;text-align:center}
+.cmaT{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:10px 0 0;padding:10px 12px;border-radius:10px;background:var(--bg2,#0003);cursor:pointer;font-weight:600;font-size:14px}
+.cmaT small{display:block;font-weight:400;font-size:12px;color:var(--mute);margin-top:2px}
+.cmaT input.sw{appearance:none;-webkit-appearance:none;flex:none;width:46px;height:26px;margin:0;border-radius:99px;background:#5a6268;position:relative;transition:background .2s;cursor:pointer}
+.cmaT input.sw::after{content:'';position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:left .2s}
+.cmaT input.sw:checked{background:#1E7D4F}.cmaT input.sw:checked::after{left:23px}
+.cmaX{text-align:right;margin-top:10px}.cmaX .lk{color:var(--red,#e5484d);font-size:13px}
+.item .rs>.st{white-space:nowrap;flex:none}
