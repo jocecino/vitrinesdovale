@@ -461,3 +461,7 @@ header,.top{background:radial-gradient(120% 160% at 85% 0%,#C9A85C55 0%,#16363F 
 .ldf{text-align:center;color:var(--mute);font-size:13px;margin:4px 14px 18px}
 .instb{background:none;border:0;padding:0;font:inherit;font-weight:800;color:#E9D08A;text-decoration:underline;text-underline-offset:3px;cursor:pointer;white-space:nowrap}
 .lnm{display:flex;align-items:center;gap:8px}.nmed{flex:none;width:34px;height:34px;border-radius:50%;background:var(--card);border:1px solid var(--line);font-size:15px;display:grid;place-items:center;cursor:pointer}
+/* ícones 3D */
+img.e3{display:inline-block;width:1.25em;height:1.25em;object-fit:contain;vertical-align:-.28em;margin:0 .04em;pointer-events:none}
+.bar .ic3{width:26px;height:26px;object-fit:contain;filter:grayscale(.4);opacity:.72;transition:transform .15s,opacity .15s}.bar button.on .ic3{filter:none;opacity:1;transform:scale(1.1)}
+@media(min-width:1100px){.bar .ic3{width:24px;height:24px}}
