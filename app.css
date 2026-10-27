@@ -507,3 +507,12 @@ img.e3{display:inline-block;width:1.25em;height:1.25em;object-fit:contain;vertic
 .esw{margin:8px 0 2px}
 .tabs button.ctb{display:inline-flex;align-items:center;gap:3px;height:26px;padding:0 11px;margin:0 2px;font-size:14px;font-weight:800;line-height:1;white-space:nowrap;min-width:max-content;box-sizing:border-box}
 .tabs button.ctb img.e3{width:15px;height:15px;margin:0;vertical-align:0}
+/* aba da campanha só com o nome */
+.tabs button.ctb{background:none!important;height:auto;padding:8px 0 9px;margin:0;font-size:15px;font-weight:800;border-bottom:3px solid transparent!important;display:inline-flex;align-items:center;gap:3px;align-self:stretch;line-height:normal}
+.tabs button.ctb.on{box-shadow:none;border-bottom-color:#C9A85C!important}
+.tabs button.ctb img.e3{width:16px;height:16px}
+/* faixa da campanha */
+.cmf{margin:12px 14px 4px;padding:12px 14px;border-radius:14px;display:flex;justify-content:space-between;align-items:center;gap:10px;background:linear-gradient(135deg,var(--cc),#16363F);color:#fff}
+.cmf b{display:block;font-size:18px;font-weight:900}.cmf span{font-size:13px;opacity:.95}
+.cmft{text-align:right;flex:none}.cmft small{display:block;font-size:11px;opacity:.85}.cmft .cd{font-weight:900;font-size:16px;font-variant-numeric:tabular-nums}
+.cmr{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:6px 0}.cmr div{background:#C9A85C14;border-radius:10px;padding:6px 8px}.cmr b{display:block;font-size:14px}.cmr span{font-size:11px;color:var(--mute)}
