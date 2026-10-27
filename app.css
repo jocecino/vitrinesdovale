@@ -472,3 +472,16 @@ img.e3{display:inline-block;width:1.25em;height:1.25em;object-fit:contain;vertic
 .cta .ctn{margin-top:14px;padding-top:12px;border-top:1px solid var(--line);display:grid;gap:8px}
 .cta .ctn>span{font-size:13px;color:var(--mute);font-weight:600}
 .cta .ctn .btn{flex:1;min-width:150px}
+/* Proporção das fontes: Minha conta e Minha loja */
+.cta>b{font-size:17px}.cta>small{font-size:13px;line-height:1.45}
+#ctd .lk{font-size:14px;margin:8px 0 0;padding:0}
+.cta .ctn .btn{font-size:13px;padding:10px 8px;min-width:0;white-space:nowrap;display:flex;align-items:center;justify-content:center;gap:4px}
+.cta .ctn .btn img.e3{width:1.15em;height:1.15em}
+.ctab{padding:4px;border-radius:12px}.ctab button{font-size:13.5px;padding:8px 6px;border-radius:9px}.ctab button img.e3{width:1.05em;height:1.05em}
+.lhead #lojaNome{font-size:20px;line-height:1.2}
+.nmed{width:28px;height:28px;font-size:13px}
+.mpth,#pushBox>b{font-size:17px;font-weight:800}
+#pl label.ck:has(#rsm){align-items:flex-start;font-size:15px}
+#pl label.ck:has(#rsm) .hint{font-weight:400;font-size:13px;line-height:1.4;color:var(--mute)}
+.cta .ctn>div{display:grid!important;grid-template-columns:1fr;gap:8px}.cta .ctn .btn{font-size:14px;padding:11px 10px}
+@media(min-width:600px){.cta .ctn>div{grid-template-columns:1fr 1fr}}
