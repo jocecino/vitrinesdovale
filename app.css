@@ -505,3 +505,5 @@ img.e3{display:inline-block;width:1.25em;height:1.25em;object-fit:contain;vertic
 .tabs button.ctb{align-self:center;padding:3px 10px;margin:0 2px;font-size:13px;line-height:1.35;border-bottom:0!important}
 .tabs button.ctb img.e3{width:1.05em;height:1.05em;vertical-align:-.15em}
 .esw{margin:8px 0 2px}
+.tabs button.ctb{display:inline-flex;align-items:center;gap:3px;height:26px;padding:0 11px;margin:0 2px;font-size:14px;font-weight:800;line-height:1;white-space:nowrap;min-width:max-content;box-sizing:border-box}
+.tabs button.ctb img.e3{width:15px;height:15px;margin:0;vertical-align:0}
