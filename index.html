@@ -29,7 +29,8 @@
 <main id="loja" class="v"></main><main id="prod" class="v"></main><main id="cart" class="v"></main><main id="co" class="v"></main><main id="ped" class="v"></main><main id="doc" class="v"></main><main id="av" class="v"></main><main id="ns" class="v"></main>
 
 <main id="pnl" class="v">
- <div id="login"><h2>Área do lojista</h2><div id="logMsg"></div>
+ <div class="ctab" id="ctabP" style="display:none"></div>
+ <div id="login" style="display:none"><h2>Área do lojista</h2><div id="logMsg"></div>
   <form onsubmit="return entrar(event)">
    <label>WhatsApp ou e-mail<input name="whatsapp" type="text" inputmode="email" autocapitalize="none" autocomplete="username" required></label>
    <label>Senha<input name="senha" type="password" required></label>
@@ -148,8 +149,7 @@
  <button data-t="home" onclick="go('')"><img class="ic ic3" src="/ic/house.webp" alt="">Início</button>
  <button data-t="lojas" onclick="go('lojas')"><img class="ic ic3" src="/ic/convenience-store.webp" alt="">Lojas</button>
  <button data-t="cart" onclick="go('carrinho')"><img class="ic ic3" src="/ic/shopping-cart.webp" alt="">Carrinho<i id="bc" style="display:none">0</i></button>
- <button data-t="ped" onclick="go('pedidos')"><img class="ic ic3" src="/ic/person.webp" alt="">Minha conta<i id="bp" style="display:none">0</i></button>
- <button data-t="pnl" onclick="go('minha')"><img class="ic ic3" src="/ic/briefcase.webp" alt="">Lojista</button>
+ <button data-t="conta" onclick="go('conta')"><img class="ic ic3" src="/ic/person.webp" alt="">Minha conta<i id="bp" style="display:none">0</i></button>
 </nav>
 <div id="toast"></div>
 

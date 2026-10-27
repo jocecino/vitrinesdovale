@@ -265,7 +265,7 @@ Deno.serve(async (req: Request) => {
       if (!id.includes("@") || !senha) return json(erroGen, 401);
       const desde = new Date(Date.now() - 15 * 60 * 1000).toISOString();
       const { count } = await db.from("login_falhas").select("id", { count: "exact", head: true }).in("chave", ["e:" + id, "d:" + dev]).gte("ts", desde);
-      if ((count || 0) >= 8) return json({ erro: "Muitas tentativas. Aguarde alguns minutos." }, 429);
+      if ((count || 0) >= 16) return json({ erro: "Muitas tentativas. Aguarde alguns minutos." }, 429);
       const tel = await telPorEmail(tipo, id);
       let sess = null;
       if (tel) {
