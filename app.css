@@ -502,3 +502,6 @@ img.e3{display:inline-block;width:1.25em;height:1.25em;object-fit:contain;vertic
 .cmil{margin-top:8px;border-top:1px solid var(--line)}.cmil .rs{padding:6px 0;border-bottom:1px solid var(--line)}
 .ctg.big{align-self:center;flex:none;line-height:1.25;height:auto}
 .rs:has(>span>.ctg.big),.cshh b:has(.ctg){align-items:center}
+.tabs button.ctb{align-self:center;padding:3px 10px;margin:0 2px;font-size:13px;line-height:1.35;border-bottom:0!important}
+.tabs button.ctb img.e3{width:1.05em;height:1.05em;vertical-align:-.15em}
+.esw{margin:8px 0 2px}
