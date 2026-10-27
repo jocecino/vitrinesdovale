@@ -508,7 +508,7 @@ img.e3{display:inline-block;width:1.25em;height:1.25em;object-fit:contain;vertic
 .tabs button.ctb{display:inline-flex;align-items:center;gap:3px;height:26px;padding:0 11px;margin:0 2px;font-size:14px;font-weight:800;line-height:1;white-space:nowrap;min-width:max-content;box-sizing:border-box}
 .tabs button.ctb img.e3{width:15px;height:15px;margin:0;vertical-align:0}
 /* aba da campanha só com o nome */
-.tabs button.ctb{background:none!important;height:auto;padding:8px 0 9px;margin:0;font-size:15px;font-weight:800;border-bottom:3px solid transparent!important;display:inline-flex;align-items:center;gap:3px;align-self:stretch;line-height:normal}
+.tabs button.ctb{background:none!important;border-radius:0!important;height:auto;padding:8px 0 9px;margin:0;font-size:15px;font-weight:800;border-bottom:3px solid transparent!important;display:inline-flex;align-items:center;gap:3px;align-self:stretch;line-height:normal}
 .tabs button.ctb.on{box-shadow:none;border-bottom-color:#C9A85C!important}
 .tabs button.ctb img.e3{width:16px;height:16px}
 /* faixa da campanha */
