@@ -49,7 +49,7 @@ Deno.serve(async (req) => {
     const lj = (await db('lojas?id=eq.' + ped.loja_id + '&select=nome,parcelas_max'))[0] || {};
     const ids = (ped.itens || []).map((i: any) => i.id).filter(Boolean);
     const pr = ids.length ? await db('produtos?id=in.(' + ids.join(',') + ')&select=id,parcela') : [];
-    const inst = pr.some((x: any) => x.parcela === false) ? 1 : Math.max(1, Math.min(12, Number(lj.parcelas_max || 1)));
+    const inst = pr.some((x: any) => x.parcela === false) ? 1 : Math.max(1, Math.min(18, Number(lj.parcelas_max || 1)));
     const pref: any = {
       items: [{ id: 'pedido-' + n, title: ('Pedido nº ' + n + ' · ' + (lj.nome || 'ValeShop')).slice(0, 250), quantity: 1, unit_price: total, currency_id: 'BRL' }],
       marketplace_fee: Math.round(fee * 100) / 100,
