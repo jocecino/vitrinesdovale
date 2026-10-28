@@ -527,7 +527,7 @@ function recup(e){e.preventDefault();const f=new FormData(e.target),n=String(f.g
  run('consultarPedidos',[{n:n,t:t}]).then(r=>{if(!r.length){say('rcM','Não encontramos um pedido com esse número e WhatsApp.',1);return}const x=r[0],L=ld('vv_ped',[]);if(!L.some(y=>String(y.n)===String(x.numero)))L.unshift({n:x.numero,t:t,lj:x.loja,tot:x.total,d:x.data});sv('vv_ped',L.slice(0,20));viewPed()}).catch(x=>say('rcM',esc(x.message),1));return false}
 let CU=null,OL=[],CH=null;
 function fone(t){let d=String(t||'').replace(/\D/g,'');if(d.startsWith('55')&&d.length>11)d=d.slice(2);return d.length===11?'('+d.slice(0,2)+') '+d.slice(2,7)+'-'+d.slice(7):d.length===10?'('+d.slice(0,2)+') '+d.slice(2,6)+'-'+d.slice(6):d}
-function viewPed(){$('ped').innerHTML='<div class="ctab" id="ctabC"></div><h2>Minha conta</h2><div id="cta"></div><h2 id="pdh">Meus pedidos</h2><div id="pdl"><p class="msg">Consultando…</p></div>';show('ped','conta');ctaDraw();pedCarregar();ctabDraw();
+function viewPed(){$('ped').innerHTML='<div class="ctab" id="ctabC"></div><div id="temaC"></div><h2>Minha conta</h2><div id="cta"></div><h2 id="pdh">Meus pedidos</h2><div id="pdl"><p class="msg">Consultando…</p></div>';show('ped','conta');ctaDraw();pedCarregar();ctabDraw();
  }
 function hdUser(){const a=$('hdU');if(!a)return;const ln=A?String($('lojaNome').textContent||'').trim():'';if(ln){a.textContent=ln;a.href='#/minha';a.style.display=''}else if(CU&&CU.nome){a.textContent=String(CU.nome).trim().split(' ')[0];a.href='#/pedidos';a.style.display=''}else a.style.display='none'}
 function ctaDraw(){hdUser();const b=$('cta');if(!b)return;
@@ -1330,7 +1330,12 @@ function e3(root){if(!root)return;if(root.nodeType===3){root=root.parentNode;if(
 var CADQ=0;
 function cadLoja(){CADQ=1;if(location.hash==='#/minha')route();else location.hash='#/minha'}
 function ctabDraw(){const h=A?'<button class="'+(location.hash.indexOf('#/minha')===0?'':'on')+'" onclick="go(\'pedidos\')">🛍️ Minhas compras</button><button class="'+(location.hash.indexOf('#/minha')===0?'on':'')+'" onclick="go(\'minha\')">🏪 Minha loja</button>':'';
- ['ctabC','ctabP'].forEach(i=>{const e=$(i);if(e){e.innerHTML=h;e.style.display=h?'':'none'}})}
+ ['ctabC','ctabP'].forEach(i=>{const e=$(i);if(e){e.innerHTML=h;e.style.display=h?'':'none'}});temaDraw()}
+function temaNoite(){try{return localStorage.getItem('vv_tema')==='noite'}catch(e){return false}}
+function temaDraw(){const on=temaNoite();['temaC','temaP'].forEach(i=>{const e=$(i);if(e)e.innerHTML='<label class="tema"><span>🌙 Tema noite</span><input type="checkbox" class="sw"'+(on?' checked':'')+' onchange="temaSet(this.checked)"></label>'})}
+function temaSet(on){try{localStorage.setItem('vv_tema',on?'noite':'claro')}catch(e){}document.documentElement.classList.toggle('dk',on);temaDraw()}
+document.addEventListener('focusin',e=>{const t=e.target;if(t&&(t.tagName==='TEXTAREA'||(t.tagName==='INPUT'&&!/^(checkbox|radio|button|submit|file|range|color)$/.test(t.type)))&&matchMedia('(pointer:coarse)').matches)document.body.classList.add('kbd')});
+document.addEventListener('focusout',()=>setTimeout(()=>{const a=document.activeElement;if(!a||!(a.tagName==='TEXTAREA'||a.tagName==='INPUT'))document.body.classList.remove('kbd')},150));
 function uniEntrar(e){e.preventDefault();const d=Object.fromEntries(new FormData(e.target));say('ctm','Entrando…');
  run('uniEntrar',d).then(async r=>{if(r.adm){S={email:String(d.tel).trim()};AD=await rpc('admin_listar');location.hash='#/admin';admAbrir();return}
   if(r.cli){CU=r.cli;ctaLocal();avisoSenha(1);cliBadge()}

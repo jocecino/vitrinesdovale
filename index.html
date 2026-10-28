@@ -9,7 +9,7 @@
 <link rel="manifest" href="/manifest.webmanifest"><link rel="apple-touch-icon" href="/icon-192.png">
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;800&display=swap">
-<link rel="stylesheet" href="app.css?v=__V__"></head><body>
+<link rel="stylesheet" href="app.css?v=__V__"><script>try{if(localStorage.getItem("vv_tema")==="noite")document.documentElement.classList.add("dk")}catch(e){}</script></head><body>
 <header id="hd">
  <div class="t1"><img src="/logo.webp" width="44" height="44" alt="ValeShop Sobradinho"><label class="sr"><span aria-hidden="true">🔍</span><input id="q" placeholder="Buscar em ValeShop Sobradinho" oninput="PN=1;home();qtr()"></label></div>
  <div class="loc" style="display:flex;justify-content:space-between;gap:8px"><button class="instb" id="inst" onclick="instalar()">📲 Instalar o app no celular</button><a id="hdU" href="#/pedidos" style="display:none;text-decoration:none;font-weight:800;white-space:nowrap;max-width:48vw;overflow:hidden;text-overflow:ellipsis"></a></div>
@@ -29,7 +29,7 @@
 <main id="loja" class="v"></main><main id="prod" class="v"></main><main id="cart" class="v"></main><main id="co" class="v"></main><main id="ped" class="v"></main><main id="doc" class="v"></main><main id="av" class="v"></main><main id="ns" class="v"></main>
 
 <main id="pnl" class="v">
- <div class="ctab" id="ctabP" style="display:none"></div>
+ <div class="ctab" id="ctabP" style="display:none"></div><div id="temaP"></div>
  <div id="login" style="display:none"><h2>Área do lojista</h2><div id="logMsg"></div>
   <form onsubmit="return entrar(event)">
    <label>WhatsApp ou e-mail<input name="whatsapp" type="text" inputmode="email" autocapitalize="none" autocomplete="username" required></label>
