@@ -199,22 +199,24 @@ async function notificar(tipo: string, id: string) {
     return;
   }
   const pid = Number(id);
-  const { data: p } = await db.from("pedidos").select("id,loja,loja_id,cliente,cliente_uid,itens,total,status,tipo").eq("id", pid).maybeSingle();
+  const { data: p } = await db.from("pedidos").select("id,loja,loja_id,cliente,cliente_uid,itens,total,status,tipo,servico,ag_pref,preco_def").eq("id", pid).maybeSingle();
   if (!p) return;
   if (tipo === "pedido_novo") {
     const { data: l } = await db.from("lojas").select("email").eq("id", p.loja_id).maybeSingle();
     if (!l || !l.email) return;
     const its = (Array.isArray(p.itens) ? p.itens : []) as Array<Record<string, unknown>>;
     const resumo = its.slice(0, 5).map((i) => `${Number(i.qtd || i.q || 1)}x ${String(i.titulo || "Produto")}`).join(", ") + (its.length > 5 ? "…" : "");
-    await enviarAviso("pedido_novo", l.email, `🛒 Novo pedido nº ${p.id} - ValeShop`, "Você recebeu um novo pedido!",
-      [`Pedido nº ${p.id} de ${p.cliente || "cliente"}.`, resumo ? `Itens: ${resumo}` : "", `Total: ${brl(Number(p.total))}`, "Abra o painel para aceitar o pedido e combinar a entrega."].filter(Boolean),
+    const sv = !!p.servico;
+    await enviarAviso("pedido_novo", l.email, sv ? `✂️ Novo pedido de serviço nº ${p.id} - ValeShop` : `🛒 Novo pedido nº ${p.id} - ValeShop`, sv ? "Você recebeu um pedido de serviço!" : "Você recebeu um novo pedido!",
+      [`Pedido nº ${p.id} de ${p.cliente || "cliente"}.`, resumo ? `${sv ? "Serviço" : "Itens"}: ${resumo}` : "", sv ? `Data sugerida: ${p.ag_pref || "-"}` : "", sv && !p.preco_def ? "Valor: a combinar (informe ao aceitar)" : `Total: ${brl(Number(p.total))}`, sv ? "Abra o painel, combine pelo chat e toque em Aceitar e agendar." : "Abra o painel para aceitar o pedido e combinar a entrega."].filter(Boolean),
       "Abrir meus pedidos", SITE + "#/minha", "Responda rápido: pedidos novos que ficam sem resposta expiram automaticamente.");
   } else if (tipo === "entregue") {
     if (p.status !== "entregue" || !p.cliente_uid) return;
     const { data: c } = await db.from("cliente_contas").select("email,nome").eq("user_id", p.cliente_uid).maybeSingle();
     if (!c || !c.email) return;
-    await enviarAviso("entregue", c.email, `📦 Seu pedido nº ${p.id} foi entregue - avalie!`, `Olá${c.nome ? ", " + String(c.nome).split(" ")[0] : ""}! Seu pedido foi entregue`,
-      [`A loja ${p.loja || ""} marcou o pedido nº ${p.id} como entregue.`, "Conte pra gente o que achou: dê sua nota, escreva um comentário e, se quiser, envie uma foto do produto.", "⏳ Você tem 3 dias para avaliar. Depois desse prazo a avaliação não fica mais disponível."],
+    const sv = !!p.servico;
+    await enviarAviso("entregue", c.email, sv ? `✂️ Serviço do pedido nº ${p.id} realizado - avalie!` : `📦 Seu pedido nº ${p.id} foi entregue - avalie!`, `Olá${c.nome ? ", " + String(c.nome).split(" ")[0] : ""}! ${sv ? "Seu serviço foi realizado" : "Seu pedido foi entregue"}`,
+      [`A loja ${p.loja || ""} marcou o pedido nº ${p.id} como ${sv ? "serviço realizado" : "entregue"}.`, "Conte pra gente o que achou: dê sua nota, escreva um comentário e, se quiser, envie uma foto do produto.", "⏳ Você tem 3 dias para avaliar. Depois desse prazo a avaliação não fica mais disponível."],
       "Avaliar meu pedido", `${SITE}#/avaliar/${p.id}`, "Se você ainda não recebeu o pedido, fale com a loja pelo chat na sua conta.");
   }
 }

@@ -61,20 +61,24 @@
   <div id="cmpAv"></div><div class="lbar" id="lbar"><button class="lmenu" onclick="dwr(1)" aria-label="Abrir menu"><b>☰</b><span id="lmt">Menu da loja</span><span class="nb" id="lmn" style="display:none"></span></button></div><div id="dwrBg" onclick="dwr(0)"></div><nav id="dwr" class="dwr"><div class="dwh"><b>Menu da loja</b><button onclick="dwr(0)" aria-label="Fechar">✕</button></div><button id="sgpc" onclick="sub('pc');dwr(0)"><i>🎉</i>Campanhas<span class="nb" id="cpn" style="display:none">0</span></button><button id="sgpk" onclick="sub('pk');dwr(0)"><i>📄</i>Documentos</button><button id="sgpl" class="on" onclick="sub('pl');dwr(0)"><i>🏪</i>Loja</button><button id="sgpp" onclick="sub('pp');dwr(0)"><i>📦</i>Meus produtos</button><button id="sgpd" onclick="sub('pd');dwr(0)"><i>🧾</i>Pedidos</button><button id="sgpq" onclick="sub('pq');dwr(0)"><i>💬</i>Perguntas</button><button id="sgpn" onclick="sub('pn');dwr(0)"><i>➕</i>Produto novo</button><button id="sgrl" onclick="sub('rl');dwr(0)"><i>📊</i>Resultados</button><button id="sgps" onclick="sub('ps');dwr(0)"><i>🛟</i>Suporte</button><button class="dwx" onclick="dwr(0);sair()"><i>🚪</i>Sair</button></nav>
   <div id="pn" style="display:none">
    <form novalidate onsubmit="return novoProd(event)">
-    <div class="fgrp"><b>Fotos do produto (até 6)</b><input id="pfIn" type="file" accept="image/*" multiple hidden onchange="pfAdd(this)"><div id="pfG" class="pfg"></div><small class="hint" style="margin:6px 0 0">A primeira foto é a capa. Use ◀ ▶ para mudar a ordem e ✕ para remover.</small></div>
+    <div class="tpsw" id="tpsw"><button type="button" class="on" data-t="produto" onclick="tpSet('produto')">📦 Produto</button><button type="button" data-t="servico" onclick="tpSet('servico')">✂️ Serviço</button></div><input type="hidden" name="tipo" id="ptipo" value="produto">
+    <div class="fgrp"><b id="pfT">Fotos do produto (até 6)</b><input id="pfIn" type="file" accept="image/*" multiple hidden onchange="pfAdd(this)"><div id="pfG" class="pfg"></div><small class="hint" style="margin:6px 0 0">A primeira foto é a capa. Use ◀ ▶ para mudar a ordem e ✕ para remover.</small></div>
     <label>Título<input name="titulo" required></label>
-    <label>Preço (R$)<input name="preco" inputmode="decimal" required oninput="pvw(this)"><small class="hint" style="margin:0"></small></label>
-    <label>Preço antigo, se estiver em promoção<input name="precoOriginal" inputmode="decimal" oninput="pvw(this)"><small class="hint" style="margin:0"></small></label>
-    <label>Categoria<select name="categoria" class="csel" id="pcat" onchange="catChg()"></select></label>
+    <div id="svf" style="display:none"><label>Como é o preço<select name="preco_modo" id="psm" onchange="psmChg()"><option value="fixo">Preço fixo</option><option value="apartir">A partir de (valor final ao aceitar)</option><option value="orcamento">Sob orçamento (valor ao aceitar)</option></select></label>
+    <label>Duração aproximada<select name="duracao" id="psd"></select></label>
+    <label>Onde é feito<select name="local" id="psl"><option value="loja">📍 No local da loja</option><option value="domicilio">🏠 A domicílio (taxa de deslocamento = sua taxa de entrega por bairro)</option><option value="ambos">📍 No local ou 🏠 a domicílio (o cliente escolhe)</option></select></label></div>
+    <label id="precl"><span id="precT">Preço (R$)</span><input name="preco" inputmode="decimal" required oninput="pvw(this)"><small class="hint" style="margin:0"></small></label>
+    <label id="pol">Preço antigo, se estiver em promoção<input name="precoOriginal" inputmode="decimal" oninput="pvw(this)"><small class="hint" style="margin:0"></small></label>
+    <label id="pcatl">Categoria<select name="categoria" class="csel" id="pcat" onchange="catChg()"></select></label>
     <label id="psubl" style="display:none">Subcategoria (opcional)<select name="subcategoria" id="psub" onchange="catChg()"></select></label>
-    <label>Condição<select name="condicao" id="pcond" onchange="condChg('pcond','pcdl')"><option value="novo">Novo</option><option value="seminovo">Seminovo</option><option value="usado">Usado</option></select></label>
+    <label id="pcondl">Condição<select name="condicao" id="pcond" onchange="condChg('pcond','pcdl')"><option value="novo">Novo</option><option value="seminovo">Seminovo</option><option value="usado">Usado</option></select></label>
     <label id="pcdl" style="display:none">Detalhes do estado (opcional)<input name="condicao_det" maxlength="200" placeholder="Ex.: bateria 89%, marcas leves na tampa"></label>
     <div id="tam" style="display:none"><label>Tipo de tamanho<select id="tt" onchange="tamGrid()"></select></label><p class="hint" style="margin:8px 0">Informe a quantidade de cada tamanho. Deixe em branco os que você não tem.</p><div class="tg" id="tg"></div></div>
     <label id="estl">Quantidade em estoque<input name="estoque" inputmode="numeric" placeholder="Ex.: 10" required></label>
-    <label>Marca (opcional)<input name="marca" maxlength="40"></label>
+    <label id="marl">Marca (opcional)<input name="marca" maxlength="40"></label>
     <label class="ck"><input type="checkbox" name="parcela" checked><span>Permitir parcelar este produto no cartão <small class="hint" style="display:block;margin:0">Desmarque se ele só pode ser pago à vista.</small></span></label>
-    <label>Cor (opcional)<input name="cor" maxlength="40" placeholder="Ex.: Preto"></label>
-    <label>Descrição (material, modelo, caimento…)<textarea name="descricao" id="pdesc" rows="4"></textarea></label>
+    <label id="corl">Cor (opcional)<input name="cor" maxlength="40" placeholder="Ex.: Preto"></label>
+    <label><span id="pdT">Descrição (material, modelo, caimento…)</span><textarea name="descricao" id="pdesc" rows="4"></textarea></label>
     <div id="carb"></div>
     <button class="btn" id="addBtn">Adicionar produto</button>
    </form>

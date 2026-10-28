@@ -1,5 +1,5 @@
 // Envia (ou apaga) fotos no Cloudflare R2. Gera a foto principal e a miniatura (-m) já reduzidas no aparelho.
-// produtos/logos: lojista dono de loja · banners: administrador · avaliacoes: cliente do pedido (número + WhatsApp).
+// produtos/logos: lojista dono de loja · banners: administrador · avaliacoes/servicos: cliente do pedido (número + WhatsApp).
 import { AwsClient } from 'npm:aws4fetch@1.0.20';
 const SU = Deno.env.get('SUPABASE_URL')!, SK = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
 const H = { apikey: SK, Authorization: 'Bearer ' + SK };
@@ -25,7 +25,7 @@ Deno.serve(async (req) => {
   try {
     const b = await req.json().catch(() => ({}));
     const pasta = String(b.pasta || '');
-    if (!['produtos', 'logos', 'banners', 'avaliacoes'].includes(pasta)) return out({ erro: 'Pasta inválida.' }, 400);
+    if (!['produtos', 'logos', 'banners', 'avaliacoes', 'servicos'].includes(pasta)) return out({ erro: 'Pasta inválida.' }, 400);
     const jwt = (req.headers.get('authorization') || '').replace(/^Bearer\s+/i, '');
     let uid = '';
     if (jwt) { const ur = await fetch(SU + '/auth/v1/user', { headers: { apikey: SK, Authorization: 'Bearer ' + jwt } }); if (ur.ok) { const u = await ur.json(); uid = u && u.id || ''; } }
@@ -36,6 +36,11 @@ Deno.serve(async (req) => {
     } else if (pasta === 'banners') {
       if (!uid || !(await db('admins?user_id=eq.' + uid + '&select=user_id')).length) return out({ erro: 'Sem permissão.' }, 403);
       pref = 'banners/';
+    } else if (pasta === 'servicos') {
+      const n = parseInt(b.n, 10), t = String(b.t || '').replace(/\D/g, '').slice(-8);
+      const p = n && t.length === 8 ? (await db('pedidos?id=eq.' + n + '&select=tel,status,servico'))[0] : null;
+      if (!p || !p.servico || String(p.tel || '').replace(/\D/g, '').slice(-8) !== t || p.status !== 'novo') return out({ erro: 'Pedido não encontrado.' }, 403);
+      pref = 'servicos/' + n + '/';
     } else {
       const n = parseInt(b.n, 10), t = String(b.t || '').replace(/\D/g, '').slice(-8);
       const p = n && t.length === 8 ? (await db('pedidos?id=eq.' + n + '&select=tel,status'))[0] : null;
