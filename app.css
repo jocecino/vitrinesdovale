@@ -567,3 +567,13 @@ img.e3{display:inline-block;width:1.25em;height:1.25em;object-fit:contain;vertic
 .cmaT input.sw:checked{background:#1E7D4F}.cmaT input.sw:checked::after{left:23px}
 .cmaX{text-align:right;margin-top:10px}.cmaX .lk{color:var(--red,#e5484d);font-size:13px}
 .item .rs>.st{white-space:nowrap;flex:none}
+
+/* status da loja compacto */
+.item.lstc{display:block;padding:12px 14px}
+.lsth{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.lsth>span{display:flex;align-items:center;gap:8px;flex-wrap:wrap;min-width:0}
+.lsth b{font-size:16px}
+.lsb{font-style:normal;font-size:12px;font-weight:700;padding:3px 9px;border-radius:99px;white-space:nowrap}
+.lsb.on{background:#1f9d5522;color:#2fbf6f}.lsb.off{background:#EB6A3322;color:#EB6A33}
+.btn.lstb{flex:none;width:auto;margin:0;padding:7px 12px;font-size:13px}
+.lstd{display:block;margin-top:6px;color:var(--mute)}.lstd .lk{font-size:inherit}
