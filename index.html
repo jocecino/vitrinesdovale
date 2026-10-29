@@ -29,7 +29,6 @@
 <main id="loja" class="v"></main><main id="prod" class="v"></main><main id="cart" class="v"></main><main id="co" class="v"></main><main id="ped" class="v"></main><main id="doc" class="v"></main><main id="av" class="v"></main><main id="ns" class="v"></main>
 
 <main id="pnl" class="v">
- <div class="ctab" id="ctabP" style="display:none"></div>
  <div id="login" style="display:none"><h2>Área do lojista</h2><div id="logMsg"></div>
   <form onsubmit="return entrar(event)">
    <label>WhatsApp ou e-mail<input name="whatsapp" type="text" inputmode="email" autocapitalize="none" autocomplete="username" required></label>
@@ -57,7 +56,7 @@
   <p class="msg">Você recebe a resposta no WhatsApp cadastrado. <button class="lk" onclick="cadV(0)">Já tenho cadastro</button></p>
  </div>
  <div id="painel" style="display:none">
-  <div class="lcard"><div class="lhead"><label class="lgp" for="lgFile" title="Toque para trocar a logo"><span id="lgPrev"></span><em>📷</em></label><input type="file" id="lgFile" accept="image/*" hidden onchange="trocarLogoArq(this)"><div><div class="lnm"><h2 id="lojaNome" style="margin:0"></h2><button class="nmed" onclick="renomear()" aria-label="Alterar nome da loja" title="Alterar nome da loja">✏️</button></div><small class="hint">Toque na logo para trocar</small></div></div><div id="lst"></div></div><div id="lgMsg"></div><div id="pnlMsg"></div>
+  <div class="lcard"><div class="lhead"><label class="lgp" for="lgFile" title="Toque para trocar a logo"><span id="lgPrev"></span><em>📷</em></label><input type="file" id="lgFile" accept="image/*" hidden onchange="trocarLogoArq(this)"><div><div class="lnm"><h2 id="lojaNome" style="margin:0"></h2><button class="nmed" onclick="renomear()" aria-label="Alterar nome da loja" title="Alterar nome da loja">✏️</button></div><small class="hint">Toque na logo para trocar</small></div></div><div id="lst"></div></div><div class="ctab" id="ctabP" style="display:none"></div><div id="lgMsg"></div><div id="pnlMsg"></div>
   <div id="cmpAv"></div><div class="lqk" id="lbar"><button id="qkpi" onclick="sub('pi')"><i>🏠</i>Início</button><button id="qkpd" onclick="sub('pd')"><i>🧾</i>Pedidos<span class="nb" id="qkn" style="display:none"></span></button><button id="qkpp" onclick="sub('pp')"><i>📦</i>Produtos</button><button onclick="dwr(1)" aria-label="Abrir menu"><i>☰</i>Mais<span class="nb" id="lmn" style="display:none"></span></button></div><div id="dwrBg" onclick="dwr(0)"></div><nav id="dwr" class="dwr"><div class="dwh"><b>Menu da loja</b><button onclick="dwr(0)" aria-label="Fechar">✕</button></div>
 <button id="sgpi" onclick="sub('pi');dwr(0)"><i>🏠</i>Início</button>
 <div class="dwg">Vendas</div><button id="sgpd" onclick="sub('pd');dwr(0)"><i>🧾</i>Pedidos</button><button id="sgpq" onclick="sub('pq');dwr(0)"><i>💬</i>Perguntas</button><button id="sgrl" onclick="sub('rl');dwr(0)"><i>📊</i>Resultados</button>
@@ -125,12 +124,18 @@
  <div id="aLogin"><h2>Administração</h2><div id="aMsg0"></div>
   <form onsubmit="return admEntrar(event)"><label>E-mail do administrador<input name="e" type="email" autocomplete="username" required></label><label>Senha<input name="s" type="password" autocomplete="current-password" required></label><button class="btn">Entrar</button></form></div>
  <div id="aPainel" style="display:none">
-  <div class="atop"><button class="amb" onclick="adr(1)" aria-label="Abrir menu"><span></span><span></span><span></span></button><b id="atit">Painel</b></div>
+  <div class="atop"><button class="amb" onclick="adr(1)" aria-label="Abrir menu"><span></span><span></span><span></span></button><b id="atit">Início</b></div>
+  <div class="lcard acd"><div><b>Administração</b><small>ValeShop Sobradinho</small></div><button class="btn s r" onclick="admSair()">Sair</button></div>
+  <div class="lqk" id="abar"><button id="asqi" onclick="asub('i')"><i>🏠</i>Início</button><button id="asqo" onclick="asub('o')"><i>✅</i>Aprovações<span class="nb" id="asqon" style="display:none"></span></button><button id="asqc" onclick="asub('c')"><i>🏪</i>Lojas<span class="nb" id="asqcn" style="display:none"></span></button><button onclick="adr(1)" aria-label="Abrir menu"><i>☰</i>Mais</button></div>
   <div id="adrv" class="adrv" onclick="adr(0)"></div>
   <nav id="adr" class="adr" aria-label="Menu administrativo"><div class="adh"><b>Administração</b><button onclick="adr(0)" aria-label="Fechar">✕</button></div>
-   <button id="ago" onclick="asub('o')"><i>✅</i>Aprovações</button><button id="agb" onclick="asub('b')"><i>🖼️</i>Banners</button><button id="agx" onclick="asub('x')"><i>🎉</i>Campanhas</button><button id="agm" onclick="asub('m')"><i>💰</i>Comissão</button><button id="agk" onclick="asub('k')"><i>💾</i>Cópia de segurança</button><button id="agu" onclick="asub('u')"><i><img class="cpi" src="/cupom.webp" alt="" style="margin:0"></i>Cupons</button><button id="agc" onclick="asub('c')"><i>🏪</i>Lojas</button><button id="agf" onclick="asub('f')"><i>⚡</i>Ofertas</button><button id="agg" onclick="asub('g')"><i>💳</i>Pagamentos</button><button id="agp" class="on" onclick="asub('p')"><i>📊</i>Painel</button><button id="agd" onclick="asub('d')"><i>🧾</i>Pedidos</button><button id="agr" onclick="asub('r')"><i>📦</i>Produtos</button><button id="ags" onclick="asub('s')"><i>🛟</i>Suporte</button>
+   <button id="agi" class="on" onclick="asub('i')"><i>🏠</i>Início</button>
+   <div class="dwg">Operação</div><button id="ago" onclick="asub('o')"><i>✅</i>Aprovações</button><button id="agc" onclick="asub('c')"><i>🏪</i>Lojas</button><button id="agr" onclick="asub('r')"><i>📦</i>Produtos</button><button id="agd" onclick="asub('d')"><i>🧾</i>Pedidos</button><button id="agg" onclick="asub('g')"><i>💳</i>Pagamentos</button><button id="ags" onclick="asub('s')"><i>🛟</i>Suporte</button><button id="agp" onclick="asub('p')"><i>📊</i>Relatórios</button>
+   <div class="dwg">Marketing</div><button id="agb" onclick="asub('b')"><i>🖼️</i>Banners</button><button id="agf" onclick="asub('f')"><i>⚡</i>Ofertas</button><button id="agx" onclick="asub('x')"><i>🎉</i>Campanhas</button><button id="agu" onclick="asub('u')"><i><img class="cpi" src="/cupom.webp" alt="" style="margin:0"></i>Cupons</button>
+   <div class="dwg">Configurações</div><button id="agm" onclick="asub('m')"><i>💰</i>Comissão</button><button id="agk" onclick="asub('k')"><i>💾</i>Cópia de segurança</button>
    <button class="adx" onclick="admSair()"><i>🚪</i>Sair</button></nav>
-  <div id="ap"></div>
+  <div id="ai"></div>
+  <div id="ap" style="display:none"></div>
   <div id="ac" style="display:none"><div class="pd"><input id="aq" placeholder="Buscar loja…" oninput="admRender()"></div><div class="row" id="aF" style="margin:10px 0"></div><div id="aMsg"></div><div id="aRel"></div><div id="aL"></div></div>
   <div id="ar" style="display:none"><div class="pd"><input id="apq" placeholder="Buscar produto ou loja…" oninput="clearTimeout(AT);AT=setTimeout(()=>prodA(1),400)"></div><div id="apl" style="margin-top:10px"></div></div>
   <div id="ao" style="display:none"></div>
