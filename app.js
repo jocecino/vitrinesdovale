@@ -1318,8 +1318,10 @@ async function decidir(id,acao){let motivo='';
 /* ---------- Início, instalação ---------- */
 function carregar(){loading=true;return run('getCatalogo').then(d=>{if(!d||!Array.isArray(d.lojas)||!Array.isArray(d.produtos))throw new Error('catálogo inválido');D=d;sv('vv_cat',d);FQ.k='';return Promise.all([ensureIds([...FV.p,...C.i.map(i=>i.id)]),T.campContagem().then(l=>{CTG=Array.isArray(l)?l:[]}).catch(()=>{})])}).catch(()=>{if(!D.lojas.length)$('grid').innerHTML='<p class="empty" style="color:var(--red)">Não foi possível carregar a vitrine. Tente de novo em instantes.</p>'}).finally(()=>{loading=false;if(/^#\/(loja|produto|carrinho|checkout|home|lojas)?\/?/.test(location.hash||'#/')){KS=1;route()}})}
 addEventListener('beforeinstallprompt',e=>{e.preventDefault();IP=e});
-function instalar(){tr('instalar');if(IP){IP.prompt();IP=null}else dlg({msg:'No iPhone: toque em Compartilhar e depois em "Adicionar à Tela de Início".\nNo Android: menu do navegador > "Instalar app".',cancel:false})}
-if('serviceWorker' in navigator)addEventListener('load',()=>navigator.serviceWorker.register('/sw.js').catch(()=>{}));
+function instalar(){tr('instalar');if(IP){IP.prompt();IP=null}else dlg({msg:'No iPhone: toque em Compartilhar e depois em "Adicionar à Tela de Início".\nNo Android: toque nos ⋮ (3 pontinhos) › "Adicionar à tela inicial" › "Instalar".',cancel:false})}
+addEventListener('appinstalled',()=>{IP=null;const b=$('inst');if(b)b.style.display='none';toast('✅ App instalado!')});
+if('serviceWorker' in navigator)addEventListener('load',()=>{const tinha=!!navigator.serviceWorker.controller;navigator.serviceWorker.register('/sw.js').then(r=>{document.addEventListener('visibilitychange',()=>{if(!document.hidden)r.update().catch(()=>{})});setInterval(()=>{if(!document.hidden)r.update().catch(()=>{})},30*60e3)}).catch(()=>{});
+ navigator.serviceWorker.addEventListener('controllerchange',()=>{if(!tinha||$('upb'))return;const d=document.createElement('div');d.id='upb';d.className='upb';d.innerHTML='<span>✨ Nova versão disponível</span><button onclick="location.reload()">Atualizar</button>';document.body.appendChild(d)})});
 document.querySelectorAll('.csel').forEach(s=>s.innerHTML=CATP.map(c=>'<option>'+c+'</option>').join(''));{const d=$('psd');if(d)d.innerHTML=SVD.map(x=>'<option value="'+x[0]+'"'+(x[0]===60?' selected':'')+'>'+x[1]+'</option>').join('')}
 $('cadAdr').innerHTML=adrH({},{req:1});
 $('dc').innerHTML=dEd('dc2',defH());

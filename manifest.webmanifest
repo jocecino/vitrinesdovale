@@ -1,1 +1,107 @@
-{"name":"ValeShop Sobradinho","short_name":"ValeShop","description":"Compre no comércio de Sobradinho pelo WhatsApp","start_url":"/","scope":"/","display":"standalone","background_color":"#16363F","theme_color":"#16363F","lang":"pt-BR","icons":[{"src":"/icon-192.png","sizes":"192x192","type":"image/png","purpose":"any maskable"},{"src":"/icon-512.png","sizes":"512x512","type":"image/png","purpose":"any maskable"}]}
+{
+ "id": "/",
+ "name": "ValeShop Sobradinho",
+ "short_name": "ValeShop",
+ "description": "Compre nas lojas de Sobradinho e receba em casa. Pague por Pix ou cartão pelo Mercado Pago.",
+ "start_url": "/",
+ "scope": "/",
+ "display": "standalone",
+ "orientation": "portrait",
+ "background_color": "#16363F",
+ "theme_color": "#16363F",
+ "lang": "pt-BR",
+ "dir": "ltr",
+ "categories": [
+  "shopping"
+ ],
+ "icons": [
+  {
+   "src": "/icon-192.png",
+   "sizes": "192x192",
+   "type": "image/png",
+   "purpose": "any"
+  },
+  {
+   "src": "/icon-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "any"
+  },
+  {
+   "src": "/icon-maskable-192.png",
+   "sizes": "192x192",
+   "type": "image/png",
+   "purpose": "maskable"
+  },
+  {
+   "src": "/icon-maskable-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "maskable"
+  },
+  {
+   "src": "/badge-96.png",
+   "sizes": "96x96",
+   "type": "image/png",
+   "purpose": "monochrome"
+  }
+ ],
+ "screenshots": [
+  {
+   "src": "/img/tela-1.webp",
+   "sizes": "1080x1920",
+   "type": "image/webp",
+   "form_factor": "narrow",
+   "label": "Compre nas lojas de Sobradinho"
+  },
+  {
+   "src": "/img/tela-2.webp",
+   "sizes": "1080x1920",
+   "type": "image/webp",
+   "form_factor": "narrow",
+   "label": "Pague com Pix ou cartão pelo Mercado Pago"
+  },
+  {
+   "src": "/img/tela-3.webp",
+   "sizes": "1080x1920",
+   "type": "image/webp",
+   "form_factor": "narrow",
+   "label": "Sua loja vendendo pela internet"
+  }
+ ],
+ "shortcuts": [
+  {
+   "name": "Carrinho",
+   "url": "/#/carrinho",
+   "icons": [
+    {
+     "src": "/sc-carrinho.png",
+     "sizes": "96x96",
+     "type": "image/png"
+    }
+   ]
+  },
+  {
+   "name": "Minha conta",
+   "url": "/#/conta",
+   "icons": [
+    {
+     "src": "/sc-conta.png",
+     "sizes": "96x96",
+     "type": "image/png"
+    }
+   ]
+  },
+  {
+   "name": "Minha loja",
+   "url": "/#/minha",
+   "icons": [
+    {
+     "src": "/sc-loja.png",
+     "sizes": "96x96",
+     "type": "image/png"
+    }
+   ]
+  }
+ ]
+}
