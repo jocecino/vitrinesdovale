@@ -205,8 +205,9 @@ Deno.serve(async (req: Request) => {
       return json({ ok: true, enviados: n });
     }
     if (tipo === "avaliar_lembrete") {
-      const { data: p } = await db.from("pedidos").select("id,loja,cliente,cliente_uid,status").eq("id", Number(id)).maybeSingle();
+      const { data: p } = await db.from("pedidos").select("id,loja,cliente,cliente_uid,status,adulto").eq("id", Number(id)).maybeSingle();
       if (!p || p.status !== "entregue" || !p.cliente_uid) return json({ ok: false });
+      if (p.adulto) p.loja = "loja";
       const { data: c } = await db.from("cliente_contas").select("email,nome").eq("user_id", p.cliente_uid).maybeSingle();
       const s = smtp();
       if (!s || !c?.email) return json({ ok: false });
@@ -221,9 +222,10 @@ Deno.serve(async (req: Request) => {
       return json({ ok: true });
     }
     if (tipo === "cli") {
-      const { data: p } = await db.from("pedidos").select("id,loja,loja_id,cliente_uid,total,frete,servico").eq("id", Number(id)).maybeSingle();
+      const { data: p } = await db.from("pedidos").select("id,loja,loja_id,cliente_uid,total,frete,servico,adulto").eq("id", Number(id)).maybeSingle();
       if (!p || !p.cliente_uid) return json({ ok: false });
       const k = String(b.k || ""), n = p.id, sv = !!p.servico;
+      if (p.adulto) p.loja = "A loja"; // pedido discreto: sem nome da loja nos avisos
       let m: { title: string; body: string; url?: string } | null = null;
       if (k === "frete") m = { title: `🚚 Frete definido · pedido nº ${n}`, body: `${p.loja}: frete ${brl(Number(p.frete))}. Total ${brl(Number(p.total))}. Toque para pagar.` };
       else if (k === "confirmado") m = { title: `✅ ${p.loja} confirmou seu pedido nº ${n}`, body: "Seu pedido já está sendo preparado." };
@@ -231,12 +233,19 @@ Deno.serve(async (req: Request) => {
       else if (k === "entregue") m = { title: sv ? `✂️ Serviço do pedido nº ${n} realizado` : `📦 Pedido nº ${n} entregue`, body: "Confirme o recebimento e conte como foi.", url: `/#/avaliar/${n}` };
       else if (k === "cancelado") m = { title: `Pedido nº ${n} cancelado`, body: "Se você já pagou, o valor volta pelo Mercado Pago." };
       else if (k === "avaliar") m = { title: "⭐ Como foi sua compra?", body: `Avalie o pedido nº ${n} na ${p.loja}. Leva menos de 1 minuto.`, url: `/#/avaliar/${n}` };
+      else if (k === "chat" && p.adulto) m = { title: "💬 Nova mensagem no seu pedido", body: `Pedido nº ${n}: toque para ver.` };
       else if (k === "chat") {
         const { data: ms } = await db.from("pedido_msgs").select("texto").eq("pedido_id", n).eq("de", "loja").order("id", { ascending: false }).limit(1);
         m = { title: `💬 ${p.loja} respondeu`, body: String((ms && ms[0] && ms[0].texto) || "Nova mensagem no chat do pedido.").slice(0, 120) };
       }
       if (!m) return json({ ok: false });
       const env = await enviarPushCli(p.cliente_uid, { ...m, tag: "ped-" + n + "-" + k });
+      return json({ ok: true, enviados: env });
+    }
+    if (tipo === "cli_pergunta") {
+      const { data: q } = await db.from("perguntas").select("id,cliente_uid,produto,anonima,status").eq("id", id).maybeSingle();
+      if (!q || !q.cliente_uid || q.status !== "respondida") return json({ ok: false });
+      const env = await enviarPushCli(q.cliente_uid, { title: "💬 Sua pergunta foi respondida", body: q.anonima ? "Toque para ver a resposta da loja." : `Sobre: ${String(q.produto || "produto").slice(0, 80)}`, url: "/#/pedidos", tag: "perg-" + q.id });
       return json({ ok: true, enviados: env });
     }
     if (tipo === "resumo") return json({ ok: true, ...(await resumoSemanal()) });

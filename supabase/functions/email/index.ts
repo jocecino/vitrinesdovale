@@ -25,6 +25,7 @@ const DOCS = [
   { arq: "manual-do-lojista.pdf", nome: "Manual do Lojista", desc: "como usar o painel da loja" },
   { arq: "como-funciona-a-vitrine.pdf", nome: "Como funciona a Vitrine", desc: "o caminho do cliente até a compra" },
   { arq: "termos-e-privacidade.pdf", nome: "Termos de Uso e Privacidade", desc: "regras da plataforma e LGPD" },
+  { arq: "politica-produtos-adultos.pdf", nome: "Política para Produtos Adultos", desc: "regras para vender produtos para maiores de 18" },
 ];
 
 const esc = (s: string) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]!));
@@ -217,8 +218,9 @@ async function notificar(tipo: string, id: string) {
     return;
   }
   const pid = Number(id);
-  const { data: p } = await db.from("pedidos").select("id,loja,loja_id,cliente,cliente_uid,itens,total,frete,status,tipo,servico,ag_pref,preco_def,direto,frete_combinar,frete_def,pg_status").eq("id", pid).maybeSingle();
+  const { data: p } = await db.from("pedidos").select("id,loja,loja_id,cliente,cliente_uid,itens,total,frete,status,tipo,servico,ag_pref,preco_def,direto,frete_combinar,frete_def,pg_status,adulto").eq("id", pid).maybeSingle();
   if (!p) return;
+  const lojaCli = p.adulto ? "" : String(p.loja || ""); // pedido discreto: e-mails ao cliente sem o nome da loja
   if (tipo === "pedido_novo") {
     const { data: l } = await db.from("lojas").select("email").eq("id", p.loja_id).maybeSingle();
     if (!l || !l.email) return;
@@ -233,7 +235,7 @@ async function notificar(tipo: string, id: string) {
     const { data: c } = await db.from("cliente_contas").select("email,nome").eq("user_id", p.cliente_uid).maybeSingle();
     if (!c || !c.email) return;
     await enviarAviso("frete_definido", c.email, `🚚 Frete definido - pague seu pedido nº ${p.id}`, `Olá${c.nome ? ", " + String(c.nome).split(" ")[0] : ""}! A loja definiu o frete`,
-      [`A loja ${p.loja || ""} definiu o frete do pedido nº ${p.id}: ${brl(Number(p.frete))}.`, `Total a pagar: ${brl(Number(p.total))}.`, "Pague pelo Mercado Pago (Pix, cartão ou saldo) em até 24 horas para garantir os produtos."],
+      [`A loja${lojaCli ? " " + lojaCli : ""} definiu o frete do pedido nº ${p.id}: ${brl(Number(p.frete))}.`, `Total a pagar: ${brl(Number(p.total))}.`, "Pague pelo Mercado Pago (Pix, cartão ou saldo) em até 24 horas para garantir os produtos."],
       "Pagar agora", `${SITE}#/pedidos`, "Dúvidas? Converse com a loja pelo chat do pedido.");
   } else if (tipo === "entregue") {
     if (p.status !== "entregue" || !p.cliente_uid) return;
@@ -241,7 +243,7 @@ async function notificar(tipo: string, id: string) {
     if (!c || !c.email) return;
     const sv = !!p.servico;
     await enviarAviso("entregue", c.email, sv ? `✂️ Serviço do pedido nº ${p.id} realizado - avalie!` : `📦 Seu pedido nº ${p.id} foi entregue - avalie!`, `Olá${c.nome ? ", " + String(c.nome).split(" ")[0] : ""}! ${sv ? "Seu serviço foi realizado" : "Seu pedido foi entregue"}`,
-      [`A loja ${p.loja || ""} marcou o pedido nº ${p.id} como ${sv ? "serviço realizado" : "entregue"}.`, "Conte pra gente o que achou: dê sua nota, escreva um comentário e, se quiser, envie uma foto do produto.", "⏳ Você tem 7 dias para avaliar. Depois desse prazo a avaliação não fica mais disponível."],
+      [`A loja${lojaCli ? " " + lojaCli : ""} marcou o pedido nº ${p.id} como ${sv ? "serviço realizado" : "entregue"}.`, "Conte pra gente o que achou: dê sua nota, escreva um comentário e, se quiser, envie uma foto do produto.", "⏳ Você tem 7 dias para avaliar. Depois desse prazo a avaliação não fica mais disponível."],
       "Avaliar meu pedido", `${SITE}#/avaliar/${p.id}`, "Se você ainda não recebeu o pedido, fale com a loja pelo chat na sua conta.");
   }
 }

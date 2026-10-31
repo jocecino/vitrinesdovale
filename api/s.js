@@ -16,7 +16,8 @@ module.exports = async (req, res) => {
     if (UUID.test(id)) {
       if (t === 'p') {
         const p = await rpc('get_produto', { p_id: id });
-        if (p && p.id) {
+        if (p && p.bloq) { title = 'Produto para maiores de 18 - ValeShop Sobradinho'; desc = 'Conteúdo para maiores de 18 anos. Entre na sua conta para ver.'; }
+        else if (p && p.id) {
           const l = (await rpc('get_loja', { p_id: p.lojaId })) || {};
           title = p.titulo + ' - R$ ' + Number(p.oferta ? p.oferta.preco : p.preco).toFixed(2).replace('.', ',');
           desc = 'Na loja ' + (l.nome || '') + '. Peça pelo WhatsApp.';
@@ -24,7 +25,8 @@ module.exports = async (req, res) => {
         }
       } else {
         const l = await rpc('get_loja', { p_id: id });
-        if (l && l.id) { title = l.nome + ' - ValeShop Sobradinho'; desc = (l.categoria || 'Loja') + ' em ' + (l.bairro || 'Sobradinho') + '. Veja os produtos e peça pelo WhatsApp.'; img = l.logo || img; }
+        if (l && l.adulta && !l.nome) { title = 'Loja para maiores de 18 - ValeShop Sobradinho'; desc = 'Conteúdo para maiores de 18 anos. Entre na sua conta para ver.'; }
+        else if (l && l.id) { title = l.nome + ' - ValeShop Sobradinho'; desc = (l.categoria || 'Loja') + ' em ' + (l.bairro || 'Sobradinho') + '. Veja os produtos e peça pelo WhatsApp.'; img = l.logo || img; }
       }
     }
   } catch (e) {}

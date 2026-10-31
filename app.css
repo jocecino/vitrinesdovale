@@ -682,3 +682,9 @@ a.inpi{text-decoration:none}
 /* modo escuro: barra de pagamento do chat e selo de reputação */
 :where(.dk) .chpb{background:#2a2617;border-bottom-color:#4a4024;color:#efece5}
 :where(.dk) .rpd{background:#C9A85C33;color:#E9D08A}
+/* conteúdo para maiores de 18 */
+.adb{text-align:center;padding:28px 18px}.adbi{font-size:46px;line-height:1;margin-bottom:10px}.adb b{display:block;font-size:17px;margin-bottom:6px}.adb .btn{margin-top:10px}
+.adn{margin:10px 0 4px;padding:10px 12px;border-radius:10px;background:#fdecea;border:1px solid #f3c2bd;color:#7a2a22;font-size:13px;line-height:1.4}
+:where(.dk) .adn{background:#3a1f1d;border-color:#5c2e2a;color:#f3c9c4}
+.adf{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}.adf img{width:72px;height:72px;object-fit:cover;border-radius:8px;cursor:zoom-in}
+.mbx.cpq{max-height:80vh;overflow:auto;text-align:left}.mbx.cpq .rs{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
