@@ -187,6 +187,22 @@ Deno.serve(async (req: Request) => {
       }
       return json({ ok: true, enviados: n });
     }
+    if (tipo === "avaliar_lembrete") {
+      const { data: p } = await db.from("pedidos").select("id,loja,cliente,cliente_uid,status").eq("id", Number(id)).maybeSingle();
+      if (!p || p.status !== "entregue" || !p.cliente_uid) return json({ ok: false });
+      const { data: c } = await db.from("cliente_contas").select("email,nome").eq("user_id", p.cliente_uid).maybeSingle();
+      const s = smtp();
+      if (!s || !c?.email) return json({ ok: false });
+      const ult = String(b.n || "") === "2", nome = String(c.nome || p.cliente || "").trim().split(" ")[0], link = SITE + "#/avaliar/" + p.id;
+      try {
+        await s.t.sendMail({ from: `ValeShop Sobradinho <${s.user}>`, to: c.email,
+          subject: ult ? `⏰ Último dia para avaliar sua compra na ${p.loja}` : `⭐ Como foi sua compra na ${p.loja}?`,
+          text: `Olá${nome ? ", " + nome : ""}! ${ult ? "Faltam poucos dias para avaliar" : "Conte como foi"} o seu pedido nº ${p.id} na ${p.loja}. Leva menos de 1 minuto: ${link}`,
+          html: moldura(ult ? "⏰ Ainda dá tempo de avaliar" : "⭐ Como foi sua compra?", `<p>Olá${nome ? ", " + esc(nome) : ""}!</p><p>Seu pedido nº <b>${p.id}</b> na <b>${esc(p.loja)}</b> foi entregue. Conte como foi: dê estrelas para o produto, o atendimento e a entrega.</p><p>Sua avaliação ajuda outros clientes de Sobradinho e faz as melhores lojas aparecerem primeiro.</p>`, "Avaliar agora", link, ult ? "Este é o último lembrete. O prazo para avaliar é de 7 dias após a entrega." : "Leva menos de 1 minuto. O prazo é de 7 dias após a entrega.") });
+        await logar("avaliar_lembrete", true);
+      } catch (e) { await logar("avaliar_lembrete", false, String(e)); }
+      return json({ ok: true });
+    }
     if (tipo === "resumo") return json({ ok: true, ...(await resumoSemanal()) });
     if (tipo === "resumo_teste") return json({ ok: true, ...(await resumoSemanal(id, String(b.para || ""))) });
     return json({ erro: "Tipo inválido." }, 400);

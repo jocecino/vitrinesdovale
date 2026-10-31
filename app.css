@@ -662,3 +662,18 @@ a.inpi{text-decoration:none}
 #toast{font-size:14px;line-height:1.35;text-align:center;border-radius:14px;width:max-content;max-width:calc(100% - 48px);padding:10px 16px;box-sizing:border-box}
 .lnq{margin:10px 0;padding:10px 12px;border:1px solid var(--line);border-radius:12px;display:grid;gap:6px}.lnq b{font-size:14px}.lnq .ck{margin:0;align-items:flex-start}.lnq small{display:block;color:var(--mute);font-size:12px}
 .lnq label.ck{display:flex!important;flex-direction:row!important;align-items:flex-start;gap:10px;text-align:left;font-weight:600;font-size:14px}.lnq label.ck input{width:20px!important;height:20px;flex:none;margin:1px 0 0;padding:0}.lnq label.ck span{flex:1;min-width:0;display:block}
+
+.avc{font-size:12.5px;color:var(--ink);margin:2px 0 0}.avc small{color:var(--mute)}.avc{color:#e8a30c}.avc small{font-weight:400}
+.rpb{display:inline-block;margin-left:6px;font-size:12px;font-weight:800;color:#e8a30c;vertical-align:middle}.rpb small{color:var(--mute);font-weight:500}
+.rpd{display:inline-block;margin-left:6px;padding:2px 8px;border-radius:99px;background:#C9A85C26;color:#8a6a1e;font-size:11.5px;font-weight:800;vertical-align:middle;white-space:nowrap}
+.rvv{display:inline-block;margin-left:6px;font-size:11.5px;font-weight:700;color:#1a9c5b}
+.rvr{margin:8px 0 0;padding:8px 10px;border-radius:10px;background:var(--bg);border-left:3px solid var(--gold);font-size:13.5px}
+.ljq{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:6px 0;flex-wrap:wrap}.ljq span{font-weight:600;font-size:14px}
+.rpc{margin:14px 0 0;padding:12px;border-radius:14px;border:1px solid var(--line);background:var(--card)}
+.rpn{display:flex;align-items:baseline;gap:6px;margin:6px 0 2px}.rpn b{font-size:34px;line-height:1}.rpn>span{color:var(--mute);font-weight:700}
+.rpt{margin-left:auto;font-size:12.5px;font-weight:700;color:var(--mute)}.rpt.up{color:#1a9c5b}.rpt.dn{color:#d64545}
+.rpr{margin:10px 0 0}.rpr .rs{font-size:13.5px}.rpr small{display:block;color:var(--mute);font-size:12px;margin-top:2px}
+.rpbar{height:7px;border-radius:99px;background:var(--line);overflow:hidden;margin-top:4px}.rpbar i{display:block;height:100%;border-radius:99px}
+.rpdi{margin:12px 0 8px;font-size:13.5px}
+.avc small,.rpb small{display:inline!important;font-size:inherit;margin:0}
+.ljq{flex-direction:column;align-items:flex-start;gap:2px;margin:8px 0}
