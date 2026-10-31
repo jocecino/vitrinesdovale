@@ -199,7 +199,7 @@ async function notificar(tipo: string, id: string) {
     return;
   }
   const pid = Number(id);
-  const { data: p } = await db.from("pedidos").select("id,loja,loja_id,cliente,cliente_uid,itens,total,status,tipo,servico,ag_pref,preco_def").eq("id", pid).maybeSingle();
+  const { data: p } = await db.from("pedidos").select("id,loja,loja_id,cliente,cliente_uid,itens,total,frete,status,tipo,servico,ag_pref,preco_def,direto,frete_combinar,frete_def,pg_status").eq("id", pid).maybeSingle();
   if (!p) return;
   if (tipo === "pedido_novo") {
     const { data: l } = await db.from("lojas").select("email").eq("id", p.loja_id).maybeSingle();
@@ -208,15 +208,22 @@ async function notificar(tipo: string, id: string) {
     const resumo = its.slice(0, 5).map((i) => `${Number(i.qtd || i.q || 1)}x ${String(i.titulo || "Produto")}`).join(", ") + (its.length > 5 ? "…" : "");
     const sv = !!p.servico;
     await enviarAviso("pedido_novo", l.email, sv ? `✂️ Novo pedido de serviço nº ${p.id} - ValeShop` : `🛒 Novo pedido nº ${p.id} - ValeShop`, sv ? "Você recebeu um pedido de serviço!" : "Você recebeu um novo pedido!",
-      [`Pedido nº ${p.id} de ${p.cliente || "cliente"}.`, resumo ? `${sv ? "Serviço" : "Itens"}: ${resumo}` : "", sv ? `Data sugerida: ${p.ag_pref || "-"}` : "", sv && !p.preco_def ? "Valor: a combinar (informe ao aceitar)" : `Total: ${brl(Number(p.total))}`, sv ? "Abra o painel, combine pelo chat e toque em Aceitar e agendar." : "Abra o painel para aceitar o pedido e combinar a entrega."].filter(Boolean),
-      "Abrir meus pedidos", SITE + "#/minha", "Responda rápido: pedidos novos que ficam sem resposta expiram automaticamente.");
+      [`Pedido nº ${p.id} de ${p.cliente || "cliente"}.`, resumo ? `${sv ? "Serviço" : "Itens"}: ${resumo}` : "", sv ? `Data sugerida: ${p.ag_pref || "-"}` : "", sv && !p.preco_def ? "Valor: a combinar (informe ao aceitar)" : `Total: ${brl(Number(p.total))}`, sv ? "Abra o painel, combine pelo chat e toque em Aceitar e agendar." : p.direto ? "✅ Pedido já PAGO pelo Mercado Pago. Abra o painel e toque em Confirmar e preparar." : (p.frete_combinar && !p.frete_def) ? "🚚 O cliente quer combinar o frete: responda no chat do pedido e toque em Definir frete." : "Abra o painel para aceitar o pedido e combinar a entrega."].filter(Boolean),
+      "Abrir meus pedidos", SITE + "#/minha", p.direto ? "Você tem até 36 horas para confirmar. Sem confirmação, o valor é devolvido automaticamente ao cliente." : "Responda rápido: pedidos novos que ficam sem resposta expiram automaticamente.");
+  } else if (tipo === "frete_definido") {
+    if (!p.cliente_uid) return;
+    const { data: c } = await db.from("cliente_contas").select("email,nome").eq("user_id", p.cliente_uid).maybeSingle();
+    if (!c || !c.email) return;
+    await enviarAviso("frete_definido", c.email, `🚚 Frete definido - pague seu pedido nº ${p.id}`, `Olá${c.nome ? ", " + String(c.nome).split(" ")[0] : ""}! A loja definiu o frete`,
+      [`A loja ${p.loja || ""} definiu o frete do pedido nº ${p.id}: ${brl(Number(p.frete))}.`, `Total a pagar: ${brl(Number(p.total))}.`, "Pague pelo Mercado Pago (Pix, cartão ou saldo) em até 24 horas para garantir os produtos."],
+      "Pagar agora", `${SITE}#/pedidos`, "Dúvidas? Converse com a loja pelo chat do pedido.");
   } else if (tipo === "entregue") {
     if (p.status !== "entregue" || !p.cliente_uid) return;
     const { data: c } = await db.from("cliente_contas").select("email,nome").eq("user_id", p.cliente_uid).maybeSingle();
     if (!c || !c.email) return;
     const sv = !!p.servico;
     await enviarAviso("entregue", c.email, sv ? `✂️ Serviço do pedido nº ${p.id} realizado - avalie!` : `📦 Seu pedido nº ${p.id} foi entregue - avalie!`, `Olá${c.nome ? ", " + String(c.nome).split(" ")[0] : ""}! ${sv ? "Seu serviço foi realizado" : "Seu pedido foi entregue"}`,
-      [`A loja ${p.loja || ""} marcou o pedido nº ${p.id} como ${sv ? "serviço realizado" : "entregue"}.`, "Conte pra gente o que achou: dê sua nota, escreva um comentário e, se quiser, envie uma foto do produto.", "⏳ Você tem 3 dias para avaliar. Depois desse prazo a avaliação não fica mais disponível."],
+      [`A loja ${p.loja || ""} marcou o pedido nº ${p.id} como ${sv ? "serviço realizado" : "entregue"}.`, "Conte pra gente o que achou: dê sua nota, escreva um comentário e, se quiser, envie uma foto do produto.", "⏳ Você tem 7 dias para avaliar. Depois desse prazo a avaliação não fica mais disponível."],
       "Avaliar meu pedido", `${SITE}#/avaliar/${p.id}`, "Se você ainda não recebeu o pedido, fale com a loja pelo chat na sua conta.");
   }
 }
@@ -236,7 +243,7 @@ Deno.serve(async (req: Request) => {
       const id = String(b.id || "");
       const tp = String(b.tipo);
       const uu = (tp === "loja_nova" || tp === "aviso_produto" || tp === "campanha_nova" || tp === "campanha_teste");
-      if (!id || !["pedido_novo", "entregue", "loja_nova", "aviso_produto", "campanha_nova", "campanha_teste"].includes(tp) || (!uu && !Number(id)) || (uu && !/^[0-9a-f-]{36}$/i.test(id))) return json({ erro: "Pedido inválido." }, 400);
+      if (!id || !["pedido_novo", "entregue", "frete_definido", "loja_nova", "aviso_produto", "campanha_nova", "campanha_teste"].includes(tp) || (!uu && !Number(id)) || (uu && !/^[0-9a-f-]{36}$/i.test(id))) return json({ erro: "Pedido inválido." }, 400);
       try { await notificar(tp, id); } catch (e) { console.error("notificar", String(e)); return json({ ok: false }, 200); }
       return json({ ok: true });
     }

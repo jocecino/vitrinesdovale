@@ -9,18 +9,25 @@ const db = async (path: string) => { const r = await fetch(SU + '/rest/v1/' + pa
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: CORS });
   try {
-    const jwt = (req.headers.get('authorization') || '').replace(/^Bearer\s+/i, '');
-    const ur = await fetch(SU + '/auth/v1/user', { headers: { apikey: SK, Authorization: 'Bearer ' + jwt } });
-    const user = ur.ok ? await ur.json() : null;
-    if (!user || !user.id) return out({ erro: 'Entre novamente na sua conta.' }, 401);
+    const nk = req.headers.get('x-notify-key') || '';
+    const cfg = nk ? (await db('app_cfg?chave=eq.notify_key&select=valor'))[0] : null;
+    const auto = !!(nk && cfg && cfg.valor === nk);
+    let user: any = null;
+    if (!auto) {
+      const jwt = (req.headers.get('authorization') || '').replace(/^Bearer\s+/i, '');
+      const ur = await fetch(SU + '/auth/v1/user', { headers: { apikey: SK, Authorization: 'Bearer ' + jwt } });
+      user = ur.ok ? await ur.json() : null;
+      if (!user || !user.id) return out({ erro: 'Entre novamente na sua conta.' }, 401);
+    }
     const b = await req.json().catch(() => ({}));
     const n = parseInt(b.numero, 10);
     if (!n) return out({ erro: 'Pedido inválido.' }, 400);
-    const ped = (await db('pedidos?id=eq.' + n + '&select=id,loja_id,status,pagamento,pg_status,mp_payment_id,total'))[0];
+    const ped = (await db('pedidos?id=eq.' + n + '&select=id,loja_id,status,pagamento,pg_status,mp_payment_id,total,direto,loja_ok_em'))[0];
     if (!ped) return out({ erro: 'Pedido não encontrado.' }, 404);
-    const adm = (await db('admins?user_id=eq.' + user.id + '&select=user_id')).length > 0;
+    if (auto && (!ped.direto || ped.loja_ok_em || ped.status !== 'confirmado')) return out({ erro: 'Pedido não elegível para devolução automática.' }, 400);
+    const adm = auto || (await db('admins?user_id=eq.' + user.id + '&select=user_id')).length > 0;
     const lj = (await db('lojas?id=eq.' + ped.loja_id + '&select=owner_id'))[0];
-    const dono = lj && lj.owner_id === user.id;
+    const dono = !auto && lj && lj.owner_id === user.id;
     if (!adm && !dono) return out({ erro: 'Sem permissão para este pedido.' }, 403);
     if (ped.pagamento !== 'mp' || ped.pg_status !== 'pago' || !ped.mp_payment_id) return out({ erro: 'Este pedido não tem pagamento para devolver.' }, 400);
     if (!adm && !['confirmado', 'saiu'].includes(ped.status)) return out({ erro: 'Pedido entregue: para devolver, fale com o suporte.' }, 400);
@@ -35,7 +42,7 @@ Deno.serve(async (req) => {
       const saldo = /2031|available money|enough|insufficient/i.test(JSON.stringify(j));
       return out({ erro: saldo ? 'A conta Mercado Pago da loja está sem saldo disponível para devolver. Coloque saldo na conta (por exemplo, por Pix) ou aguarde a liberação do dinheiro das vendas e tente de novo.' : 'O Mercado Pago não aceitou a devolução agora. Tente de novo mais tarde.' }, 502);
     }
-    await fetch(SU + '/rest/v1/rpc/mp_reembolso_registrar', { method: 'POST', headers: H, body: JSON.stringify({ p_pedido: n, p_por: adm && !dono ? 'admin' : 'loja' }) });
+    await fetch(SU + '/rest/v1/rpc/mp_reembolso_registrar', { method: 'POST', headers: H, body: JSON.stringify({ p_pedido: n, p_por: auto ? 'auto' : adm && !dono ? 'admin' : 'loja' }) });
     return out({ ok: true });
   } catch (x) { console.error('falha', String(x)); return out({ erro: 'Erro inesperado. Tente de novo.' }, 500); }
 });
