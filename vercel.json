@@ -16,7 +16,7 @@
   },
   {
    "source": "/_tmp_sb2.js",
-   "destination": "https://unpkg.com/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"
+   "destination": "https://unpkg.com/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"
   }
  ],
  "headers": [
