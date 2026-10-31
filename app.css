@@ -655,6 +655,6 @@ a.inpi{text-decoration:none}
 .upb button{flex:none;padding:8px 16px;border-radius:10px;border:0;background:#C9A85C;color:#16363F;font-weight:800}
 
 .bfs.oi{background:#3483FA}
-.bfs svg path:first-child{stroke:#fff}
+.bfs svg{width:16px;height:16px;stroke:#fff;fill:none;stroke-width:1.7}
 .bfs.in{margin:0 6px 8px 0}
 .cmpo{display:block;color:#3483FA;font-size:12px;margin-top:2px}
