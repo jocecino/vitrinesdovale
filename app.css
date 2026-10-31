@@ -653,3 +653,8 @@ a.inpi{text-decoration:none}
 
 .upb{position:fixed;left:12px;right:12px;bottom:calc(76px + env(safe-area-inset-bottom));z-index:3000;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 12px 10px 16px;border-radius:14px;background:#16363F;color:#fff;font-weight:700;font-size:14px;box-shadow:0 6px 24px #0005;max-width:520px;margin:0 auto}
 .upb button{flex:none;padding:8px 16px;border-radius:10px;border:0;background:#C9A85C;color:#16363F;font-weight:800}
+
+.bfs.oi{background:#3483FA}
+.bfs svg path:first-child{stroke:#fff}
+.bfs.in{margin:0 6px 8px 0}
+.cmpo{display:block;color:#3483FA;font-size:12px;margin-top:2px}
