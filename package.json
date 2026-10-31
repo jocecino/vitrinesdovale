@@ -1,0 +1,8 @@
+{
+  "private": true,
+  "name": "valeshop-sobradinho",
+  "description": "Só usado no deploy da Vercel para compactar app.js e app.css.",
+  "devDependencies": {
+    "esbuild": "0.24.0"
+  }
+}

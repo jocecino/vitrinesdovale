@@ -6,6 +6,8 @@ async function aparar(){try{const c=await caches.open(IMG),k=await c.keys();if(k
 self.addEventListener('fetch',e=>{const r=e.request,u=new URL(r.url);
  if(r.method==='GET'&&(r.url.startsWith(R2)||(u.pathname.indexOf('/storage/v1/object/public/')>-1&&/supabase\.co$/.test(u.hostname)))){e.respondWith(caches.open(IMG).then(c=>c.match(r).then(m=>m||fetch(r).then(x=>{if(x.ok||x.type==='opaque'){c.put(r,x.clone());aparar()}return x}))));return}
  if(r.method!=='GET'||u.origin!==location.origin||u.pathname.startsWith('/api/'))return;
+ // arquivos com versão no endereço (app.js?v=…, biblioteca, ícones, imagens) não mudam: abre direto do aparelho
+ if(/[?&]v=/.test(u.search)||u.pathname.startsWith('/vendor/')||u.pathname.startsWith('/ic/')||/\.(webp|png|jpg|svg|woff2?)$/.test(u.pathname)){e.respondWith(caches.open(V).then(c=>c.match(r).then(m=>m||fetch(r).then(x=>{if(x.ok)c.put(r,x.clone());return x}))));return}
  e.respondWith(fetch(r).then(x=>{const c=x.clone();caches.open(V).then(h=>h.put(r,c));return x}).catch(()=>caches.match(r).then(m=>m||caches.match('/'))))});
 
 self.addEventListener('push',e=>{let d={};try{d=e.data?e.data.json():{}}catch(x){d={title:'ValeShop',body:e.data?e.data.text():''}}
