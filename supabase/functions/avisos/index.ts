@@ -41,6 +41,23 @@ async function enviarPush(lojaId: string, p: { title: string; body: string; url?
   return ok;
 }
 
+async function enviarPushCli(uid: string, p: { title: string; body: string; url?: string; tag?: string }) {
+  if (!(await vapid())) return 0;
+  const { data: subs } = await db.from("push_cli").select("id,endpoint,p256dh,auth").eq("cliente_uid", uid);
+  let ok = 0;
+  for (const s of (subs || []) as Array<{ id: number; endpoint: string; p256dh: string; auth: string }>) {
+    try {
+      await webpush.sendNotification({ endpoint: s.endpoint, keys: { p256dh: s.p256dh, auth: s.auth } }, JSON.stringify({ url: "/#/pedidos", ...p }), { TTL: 3600 * 12, urgency: "high" });
+      ok++;
+    } catch (e) {
+      const sc = (e as { statusCode?: number }).statusCode;
+      if (sc === 404 || sc === 410) await db.from("push_cli").delete().eq("id", s.id);
+      else console.error("pushcli", sc, String(e).slice(0, 200));
+    }
+  }
+  return ok;
+}
+
 function smtp() {
   const user = Deno.env.get("GMAIL_USER"), pass = Deno.env.get("GMAIL_APP_PASSWORD");
   if (!user || !pass) return null;
@@ -202,6 +219,25 @@ Deno.serve(async (req: Request) => {
         await logar("avaliar_lembrete", true);
       } catch (e) { await logar("avaliar_lembrete", false, String(e)); }
       return json({ ok: true });
+    }
+    if (tipo === "cli") {
+      const { data: p } = await db.from("pedidos").select("id,loja,loja_id,cliente_uid,total,frete,servico").eq("id", Number(id)).maybeSingle();
+      if (!p || !p.cliente_uid) return json({ ok: false });
+      const k = String(b.k || ""), n = p.id, sv = !!p.servico;
+      let m: { title: string; body: string; url?: string } | null = null;
+      if (k === "frete") m = { title: `🚚 Frete definido · pedido nº ${n}`, body: `${p.loja}: frete ${brl(Number(p.frete))}. Total ${brl(Number(p.total))}. Toque para pagar.` };
+      else if (k === "confirmado") m = { title: `✅ ${p.loja} confirmou seu pedido nº ${n}`, body: "Seu pedido já está sendo preparado." };
+      else if (k === "saiu") m = { title: `🛵 Seu pedido nº ${n} saiu para entrega`, body: `${p.loja} já está a caminho.` };
+      else if (k === "entregue") m = { title: sv ? `✂️ Serviço do pedido nº ${n} realizado` : `📦 Pedido nº ${n} entregue`, body: "Confirme o recebimento e conte como foi.", url: `/#/avaliar/${n}` };
+      else if (k === "cancelado") m = { title: `Pedido nº ${n} cancelado`, body: "Se você já pagou, o valor volta pelo Mercado Pago." };
+      else if (k === "avaliar") m = { title: "⭐ Como foi sua compra?", body: `Avalie o pedido nº ${n} na ${p.loja}. Leva menos de 1 minuto.`, url: `/#/avaliar/${n}` };
+      else if (k === "chat") {
+        const { data: ms } = await db.from("pedido_msgs").select("texto").eq("pedido_id", n).eq("de", "loja").order("id", { ascending: false }).limit(1);
+        m = { title: `💬 ${p.loja} respondeu`, body: String((ms && ms[0] && ms[0].texto) || "Nova mensagem no chat do pedido.").slice(0, 120) };
+      }
+      if (!m) return json({ ok: false });
+      const env = await enviarPushCli(p.cliente_uid, { ...m, tag: "ped-" + n + "-" + k });
+      return json({ ok: true, enviados: env });
     }
     if (tipo === "resumo") return json({ ok: true, ...(await resumoSemanal()) });
     if (tipo === "resumo_teste") return json({ ok: true, ...(await resumoSemanal(id, String(b.para || ""))) });

@@ -184,6 +184,24 @@ async function notificar(tipo: string, id: string) {
     }
     return;
   }
+  if (tipo === "admin_otp") {
+    const { data: o } = await db.from("admin_otp").select("user_id,codigo,usado").eq("id", id).maybeSingle();
+    if (!o || !o.codigo || o.usado) return;
+    const { data: u } = await db.auth.admin.getUserById(o.user_id);
+    const e = u?.user?.email;
+    if (!e) return;
+    await enviar("admin_otp", e, "Código de acesso da administração - ValeShop", "Confirme que é você", "Use o código abaixo para entrar no painel da administração da ValeShop Sobradinho. Se não foi você, troque sua senha.", o.codigo);
+    await db.from("admin_otp").update({ codigo: null }).eq("id", id);
+    return;
+  }
+  if (tipo === "admin_alerta") {
+    const { data: a } = await db.from("admin_alertas").select("tipo,texto").eq("id", id).maybeSingle();
+    if (!a) return;
+    for (const to of await emailsAdmin()) {
+      try { await enviarAviso("admin_alerta", to, `⚠️ Alerta ValeShop: ${a.tipo}`, "Algo precisa da sua atenção", [a.texto], "Abrir a administração", SITE + "#/admin", "Aviso automático da plataforma ValeShop."); } catch (e) { console.error("alerta", String(e)); }
+    }
+    return;
+  }
   if (tipo === "loja_nova") {
     const { data: l } = await db.from("lojas").select("nome,responsavel,sobrenome,bairro,categoria,status,email").eq("id", id).maybeSingle();
     if (!l || l.status !== "pendente") return;
@@ -242,8 +260,8 @@ Deno.serve(async (req: Request) => {
       if (!k || !cfg || cfg.valor !== k) return json({ erro: "Não autorizado." }, 401);
       const id = String(b.id || "");
       const tp = String(b.tipo);
-      const uu = (tp === "loja_nova" || tp === "aviso_produto" || tp === "campanha_nova" || tp === "campanha_teste");
-      if (!id || !["pedido_novo", "entregue", "frete_definido", "loja_nova", "aviso_produto", "campanha_nova", "campanha_teste"].includes(tp) || (!uu && !Number(id)) || (uu && !/^[0-9a-f-]{36}$/i.test(id))) return json({ erro: "Pedido inválido." }, 400);
+      const uu = (tp === "loja_nova" || tp === "aviso_produto" || tp === "campanha_nova" || tp === "campanha_teste" || tp === "admin_otp" || tp === "admin_alerta");
+      if (!id || !["pedido_novo", "entregue", "frete_definido", "admin_otp", "admin_alerta", "loja_nova", "aviso_produto", "campanha_nova", "campanha_teste"].includes(tp) || (!uu && !Number(id)) || (uu && !/^[0-9a-f-]{36}$/i.test(id))) return json({ erro: "Pedido inválido." }, 400);
       try { await notificar(tp, id); } catch (e) { console.error("notificar", String(e)); return json({ ok: false }, 200); }
       return json({ ok: true });
     }
