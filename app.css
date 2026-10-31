@@ -658,3 +658,7 @@ a.inpi{text-decoration:none}
 .bfs svg{width:16px;height:16px;stroke:#fff;fill:none;stroke-width:1.7}
 .bfs.in{margin:0 6px 8px 0}
 .cmpo{display:block;color:#3483FA;font-size:12px;margin-top:2px}
+
+#toast{font-size:14px;line-height:1.35;text-align:center;border-radius:14px;width:max-content;max-width:calc(100% - 48px);padding:10px 16px;box-sizing:border-box}
+.lnq{margin:10px 0;padding:10px 12px;border:1px solid var(--line);border-radius:12px;display:grid;gap:6px}.lnq b{font-size:14px}.lnq .ck{margin:0;align-items:flex-start}.lnq small{display:block;color:var(--mute);font-size:12px}
+.lnq label.ck{display:flex!important;flex-direction:row!important;align-items:flex-start;gap:10px;text-align:left;font-weight:600;font-size:14px}.lnq label.ck input{width:20px!important;height:20px;flex:none;margin:1px 0 0;padding:0}.lnq label.ck span{flex:1;min-width:0;display:block}
