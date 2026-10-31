@@ -9,6 +9,10 @@
   {
    "source": "/l/:id",
    "destination": "/api/s?t=l&id=:id"
+  },
+  {
+   "source": "/_tmp_sb.js",
+   "destination": "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"
   }
  ],
  "headers": [
