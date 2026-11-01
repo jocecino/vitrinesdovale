@@ -155,6 +155,14 @@ async function notificar(tipo: string, id: string) {
         sus ? "Falar no WhatsApp" : "Abrir meu painel", sus ? "https://wa.me/5574988079171" : SITE + "#/minha", sus ? `Dúvidas? Fale com a administração pelo WhatsApp ${WPP} ou pelo e-mail ${CONTATO}.` : `Dúvidas? Fale com a administração pelo e-mail ${CONTATO}.`);
       return;
     }
+    if (a.acao === "penalidade") {
+      await enviarAviso("penalidade", l.email, `🔴 Penalidade na reputação da sua loja - ValeShop`, "Sua loja recebeu uma penalidade",
+        [`Loja: ${l.nome}`, `Onde: ${a.produto_titulo || "-"}`, `Motivo: ${a.motivo || "-"}`, a.obs ? `Observação da administração: ${a.obs}` : "",
+          "Passar telefone, WhatsApp, redes sociais ou outro contato para vender fora da plataforma não é permitido. O contato foi bloqueado e não apareceu para o cliente.",
+          "A penalidade vale por 90 dias. Repetir a prática pode levar à suspensão da loja."].filter(Boolean),
+        "Abrir meu painel", SITE + "#/minha", `Achou que foi um engano? Fale com a administração pelo WhatsApp ${WPP} ou pelo e-mail ${CONTATO}.`);
+      return;
+    }
     const rem = a.acao === "removido", pau = a.acao === "pausado";
     await enviarAviso("aviso_produto", l.email, `⚠️ Aviso da administração sobre seu produto - ValeShop`,
       rem ? "Um produto seu foi removido" : pau ? "Um produto seu foi pausado" : "Atenção: seu produto pode violar nossas políticas",
