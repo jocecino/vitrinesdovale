@@ -698,7 +698,7 @@ function bnRender(force){const e=$('bnr');if(!e)return;const PB=new Set(BN.filte
   if(N<2||Date.now()-BNP<8000)return;const w=c.clientWidth,i=(Math.round(c.scrollLeft/w)+1)%N;c.scrollTo({left:i*w,behavior:'smooth'})},(SLT||5)*1000)}
 function bnDot(c){const i=Math.round(c.scrollLeft/Math.max(1,c.clientWidth));document.querySelectorAll('#bnd i').forEach((d,k)=>d.classList.toggle('on',k===i))}
 function bnGo(i){const b=BN.find(x=>x.id===i);if(!b||b.t==='none')return;try{sb.rpc('banner_clique',{p_id:b.id,p_dev:dev}).then(()=>{},()=>{})}catch(e){}
- if(b.t==='produto')clk(b.v);else if(b.t==='loja')go('loja/'+b.v);else if(b.t==='url')window.open(b.v,'_blank','noopener')}
+ if(b.t==='produto')clk(b.v);else if(b.t==='loja')go('loja/'+b.v);else if(b.t==='url')window.open(b.v,'_blank','noopener');else if(b.t==='categoria'){if(location.hash.replace(/^#\/?/,''))go('');catIr(b.v)}}
 /* ---- admin banners ---- */
 let BNA=[],BNF=null,BNE=null;
 let BSQ=[];
