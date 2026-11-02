@@ -744,3 +744,6 @@ a.inpi{text-decoration:none}
 .mlbx .mltb{margin:0}.mlbd{flex:1;overflow-y:auto;padding:14px 16px calc(24px + env(safe-area-inset-bottom))}
 .mlds{white-space:normal;line-height:1.55;font-size:14.5px;margin:0}
 .mlch{margin:0 0 18px}.mlch>b{display:block;font-size:15px;font-weight:600;margin:4px 0 10px}.mlch table{width:100%;border-collapse:collapse;border-radius:8px;overflow:hidden;font-size:14px}.mlch tr:nth-child(odd){background:var(--bg)}.mlch th{width:45%;text-align:left;font-weight:600;padding:11px 12px;vertical-align:top}.mlch td{padding:11px 12px;vertical-align:top;line-height:1.35}
+.bfs{white-space:nowrap}
+@media (max-width:359px){.pbd .bfs{font-size:10.5px;padding:4px 7px;gap:4px;letter-spacing:0}.pbd .bfs svg,.pbd .bfs img{width:13px;height:13px}}
+.card .ct small{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
