@@ -171,6 +171,40 @@ async function notificar(tipo: string, id: string) {
       "Abrir meu painel", SITE + "#/minha", `Dúvidas? Fale com a administração pelo e-mail ${CONTATO}.`);
     return;
   }
+  if (tipo === "email_troca") {
+    const { data: t } = await db.from("email_trocas").select("tipo,nome,email_antigo,email_novo,origem,status,decisao").eq("id", id).maybeSingle();
+    if (!t || t.status === "cancelado") return;
+    const lj = t.tipo === "loja";
+    const conta = lj ? `Loja: ${t.nome || "-"}` : `Conta: ${t.nome || "-"}`;
+    const link = SITE + (lj ? "#/minha" : "#/pedidos"), bt = lj ? "Abrir meu painel" : "Abrir minha conta";
+    const ajuda = `Não reconhece isso? Fale agora com a administração pelo WhatsApp ${WPP} ou pelo e-mail ${CONTATO}.`;
+    const ant = t.email_antigo && t.email_antigo !== t.email_novo ? t.email_antigo : null;
+    if (t.status === "pendente") {
+      if (ant) await enviarAviso("email_troca_pedido", ant, "🔐 Pedido para trocar o e-mail da sua conta - ValeShop", "Recebemos um pedido para trocar o seu e-mail",
+        [conta, `Novo e-mail informado: ${mask(t.email_novo)}`, "A troca só acontece depois que a administração conferir e aprovar o pedido.", "Se foi você, não precisa fazer nada. Se não foi, avise a administração para o pedido ser recusado."],
+        "Falar no WhatsApp", "https://wa.me/5574988079171", ajuda);
+      return;
+    }
+    if (t.status === "aprovado") {
+      const adm = t.origem === "admin";
+      try {
+        await enviarAviso("email_troca_novo", t.email_novo, "✉️ Este é o novo e-mail da sua conta - ValeShop", "E-mail atualizado com sucesso",
+          [conta, adm ? "A administração da ValeShop alterou o e-mail da sua conta para este endereço." : "A administração aprovou o seu pedido e este passou a ser o e-mail da sua conta.",
+            "A partir de agora, use este e-mail para recuperar a senha e receber os avisos da plataforma."],
+          bt, link, `Dúvidas? Fale com a administração pelo WhatsApp ${WPP} ou pelo e-mail ${CONTATO}.`);
+      } catch (e) { console.error("email_troca_novo", String(e)); }
+      if (ant) await enviarAviso("email_troca_antigo", ant, "⚠️ O e-mail da sua conta foi alterado - ValeShop", "O e-mail da sua conta foi alterado",
+        [conta, `Novo e-mail: ${mask(t.email_novo)}`, "Este endereço não recebe mais os avisos nem a recuperação de senha da conta."],
+        "Falar no WhatsApp", "https://wa.me/5574988079171", ajuda);
+      return;
+    }
+    if (t.status === "recusado" && ant) {
+      await enviarAviso("email_troca_recusado", ant, "Pedido de troca de e-mail não aprovado - ValeShop", "Seu pedido de troca de e-mail não foi aprovado",
+        [conta, `E-mail pedido: ${mask(t.email_novo)}`, t.decisao ? `Motivo: ${t.decisao}` : "", "O e-mail da sua conta continua o mesmo. Você pode fazer um novo pedido ou falar com a administração."].filter(Boolean),
+        bt, link, `Dúvidas? Fale com a administração pelo WhatsApp ${WPP} ou pelo e-mail ${CONTATO}.`);
+    }
+    return;
+  }
   if (tipo === "campanha_nova" || tipo === "campanha_teste") {
     const tst = tipo === "campanha_teste";
     const { data: c } = await db.from("campanhas").select("nome,tag,inicio,fim,modo,desc_pct,desc_max,regra_com,com_pct,ativo,status,teste_loja").eq("id", id).maybeSingle();
@@ -270,8 +304,8 @@ Deno.serve(async (req: Request) => {
       if (!k || !cfg || cfg.valor !== k) return json({ erro: "Não autorizado." }, 401);
       const id = String(b.id || "");
       const tp = String(b.tipo);
-      const uu = (tp === "loja_nova" || tp === "aviso_produto" || tp === "campanha_nova" || tp === "campanha_teste" || tp === "admin_otp" || tp === "admin_alerta");
-      if (!id || !["pedido_novo", "entregue", "frete_definido", "admin_otp", "admin_alerta", "loja_nova", "aviso_produto", "campanha_nova", "campanha_teste"].includes(tp) || (!uu && !Number(id)) || (uu && !/^[0-9a-f-]{36}$/i.test(id))) return json({ erro: "Pedido inválido." }, 400);
+      const uu = (tp === "loja_nova" || tp === "aviso_produto" || tp === "campanha_nova" || tp === "campanha_teste" || tp === "admin_otp" || tp === "admin_alerta" || tp === "email_troca");
+      if (!id || !["pedido_novo", "entregue", "frete_definido", "admin_otp", "admin_alerta", "loja_nova", "aviso_produto", "campanha_nova", "campanha_teste", "email_troca"].includes(tp) || (!uu && !Number(id)) || (uu && !/^[0-9a-f-]{36}$/i.test(id))) return json({ erro: "Pedido inválido." }, 400);
       try { await notificar(tp, id); } catch (e) { console.error("notificar", String(e)); return json({ ok: false }, 200); }
       return json({ ok: true });
     }
