@@ -693,3 +693,18 @@ a.inpi{text-decoration:none}
 
 .bfs.sv{background:#16363F;color:#fff}.bfs.sv img{width:16px;height:16px;flex:none}.ct .bfs.sv{margin:0 0 4px}.svinf .bfs.sv{margin:0}
 .fimok{position:fixed;inset:0;z-index:9999;background:rgba(10,20,24,.55);display:grid;place-items:center;padding:20px}.fimc{background:var(--card);color:var(--ink);border-radius:18px;padding:22px 20px;max-width:360px;width:100%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.35)}.fimi{font-size:40px;line-height:1;margin-bottom:8px}.fimc b{display:block;font-size:19px}.fimc p{margin:8px 0 14px;color:var(--mute)}.fimb{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:8px}
+.svinf{align-items:center}.bfs.sv.sm{font-size:10.5px;padding:4px 7px;gap:4px;border-radius:6px;letter-spacing:.4px}.bfs.sv.sm img{width:13px;height:13px}
+.mxw{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden;margin:0 0 12px}
+.mxi{border-top:1px solid var(--line)}.mxi:first-child{border-top:0}
+.mxi>summary{list-style:none;display:flex;gap:10px;align-items:flex-start;padding:11px 12px;cursor:pointer}
+.mxi>summary::-webkit-details-marker{display:none}
+.mxic{flex:none;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:var(--bg);font-size:15px}
+.mxt{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px}
+.mxl{display:flex;justify-content:space-between;gap:8px}.mxl b{font-weight:600;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.mxl small{flex:none;color:var(--mute);font-size:12px}
+.mxs{font-size:13.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mxp{display:flex;gap:6px;align-items:center;font-size:12.5px;color:var(--mute);min-width:0}.mxp>span:last-child{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mxi.un .mxl b,.mxi.un .mxs{font-weight:800}.mxi.un .mxic{background:#E9D08A}
+.mxg{flex:none;font-size:10.5px;font-weight:800;padding:2px 6px;border-radius:5px;background:var(--bg);color:var(--mute)}.mxg.p{background:#fdf0d5;color:#8a5a00}.mxg.r{background:#fde2df;color:#b42318}
+.mxi[open]>summary{background:var(--bg)}.mxi[open] .mxs,.mxi[open] .mxp>span:last-child{white-space:normal}
+.mxb{padding:4px 14px 14px 52px}.mxb small{display:block}
+.mxv{margin:8px 12px 12px}
