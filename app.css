@@ -733,3 +733,7 @@ a.inpi{text-decoration:none}
 .rvm{display:block;margin:10px 0 0;font-weight:700}
 .rvall{position:fixed;inset:0;z-index:9000;background:var(--bg);overflow-y:auto}.rvall .rvlst{padding:8px 14px 30px}
 #prod .card .pr{font-size:18px}#prod .card .old{display:none}
+.dcl{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin:0}
+.chl .rs:nth-child(n+3){display:none}
+.dvm{display:block;margin:10px 0 0;font-weight:700}
+.cht{border:1px solid var(--line);border-radius:10px;overflow:hidden}.cht .rs{padding:10px 12px;margin:0;gap:12px}.cht .rs:nth-child(odd){background:var(--bg)}.cht .rs span{flex:0 0 42%}.cht .rs b{flex:1;text-align:left;font-weight:600}
