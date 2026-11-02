@@ -690,3 +690,6 @@ a.inpi{text-decoration:none}
 .mbx.cpq{max-height:80vh;overflow:auto;text-align:left}.mbx.cpq .rs{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
 /* ícone de Minha conta (silhueta): contorno claro no modo escuro para não sumir */
 :where(.dk) img.e3[alt="👥"],.dk .bar .icconta,.dk .bar button.on .icconta{filter:invert(.82) brightness(1.05)}
+
+.bfs.sv{background:#16363F;color:#fff}.bfs.sv img{width:16px;height:16px;flex:none}.ct .bfs.sv{margin:0 0 4px}.svinf .bfs.sv{margin:0}
+.fimok{position:fixed;inset:0;z-index:9999;background:rgba(10,20,24,.55);display:grid;place-items:center;padding:20px}.fimc{background:var(--card);color:var(--ink);border-radius:18px;padding:22px 20px;max-width:360px;width:100%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.35)}.fimi{font-size:40px;line-height:1;margin-bottom:8px}.fimc b{display:block;font-size:19px}.fimc p{margin:8px 0 14px;color:var(--mute)}.fimb{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:8px}
