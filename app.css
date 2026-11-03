@@ -747,3 +747,14 @@ a.inpi{text-decoration:none}
 .bfs{white-space:nowrap}
 @media (max-width:359px){.pbd .bfs{font-size:10.5px;padding:4px 7px;gap:4px;letter-spacing:0}.pbd .bfs svg,.pbd .bfs img{width:13px;height:13px}}
 .card .ct small{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+.cmn:not(:empty){background:var(--red);color:#fff;border-radius:99px;padding:0 7px;margin-left:6px;font-size:12px;line-height:18px;display:inline-block}
+.pop .popb{background:var(--card);color:var(--ink);border-radius:18px;width:100%;max-width:420px;max-height:88vh;overflow:auto;position:relative;box-shadow:0 20px 50px #0007}
+.pop .popb img{width:100%;display:block;border-radius:18px 18px 0 0;cursor:pointer}
+.pop .popx{position:absolute;top:8px;right:8px;width:36px;height:36px;border-radius:50%;background:#0009;color:#fff;font-size:17px;display:grid;place-items:center;z-index:1}
+.pop .popt{padding:14px 16px 16px}.pop .popt p{margin:0 0 12px;white-space:pre-wrap}
+.msav{display:flex;align-items:center;gap:8px;width:calc(100% - 28px);margin:0 14px 10px;padding:12px 14px;border-radius:14px;background:var(--navy);color:var(--head);font-weight:700;text-align:left}
+.msav b{margin-left:auto;white-space:nowrap}
+.cnl{display:grid;gap:6px;max-height:240px;overflow:auto;padding:4px 2px;margin:4px 0 8px}
+.cnl label{display:flex;gap:8px;align-items:center;font-weight:500;margin:0}
+.cnp img{max-width:100%;max-height:260px;border-radius:12px;display:block;margin-top:8px}

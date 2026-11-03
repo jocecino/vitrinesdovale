@@ -248,6 +248,20 @@ Deno.serve(async (req: Request) => {
       const env = await enviarPushCli(q.cliente_uid, { title: "💬 Sua pergunta foi respondida", body: q.anonima ? "Toque para ver a resposta da loja." : `Sobre: ${String(q.produto || "produto").slice(0, 80)}`, url: "/#/pedidos", tag: "perg-" + q.id });
       return json({ ok: true, enviados: env });
     }
+    if (tipo === "comunicado") {
+      const { data: c } = await db.from("comunicados").select("id,publico,titulo,texto,push,apagado").eq("id", id).maybeSingle();
+      if (!c || !c.push || c.apagado) return json({ ok: false });
+      const m = { title: `📬 ${String(c.titulo).slice(0, 80)}`, body: String(c.texto || "Toque para ler a mensagem da ValeShop.").slice(0, 120), tag: "com-" + c.id };
+      let n = 0;
+      if (c.publico === "lojas") {
+        const { data: ds } = await db.from("comunicado_dest").select("loja_id").eq("com_id", c.id).not("loja_id", "is", null);
+        for (const d of (ds || []) as Array<{ loja_id: string }>) n += await enviarPush(d.loja_id, { ...m, url: "/#/minha" });
+      } else if (c.publico === "clientes") {
+        const subs = await pegarTudo<{ cliente_uid: string }>((a, z) => db.from("push_cli").select("cliente_uid").range(a, z));
+        for (const u of [...new Set(subs.map((s) => s.cliente_uid))]) n += await enviarPushCli(u, { ...m, url: "/#/pedidos" });
+      }
+      return json({ ok: true, enviados: n });
+    }
     if (tipo === "resumo") return json({ ok: true, ...(await resumoSemanal()) });
     if (tipo === "resumo_teste") return json({ ok: true, ...(await resumoSemanal(id, String(b.para || ""))) });
     return json({ erro: "Tipo inválido." }, 400);
