@@ -1,0 +1,12 @@
+01|https://pub-c1cbf15f15c14757a0192ce3ea39d547.r2.dev/migr/logos/13d72608-9896-41c0-86aa-4690058b21ae/logo-1792775811639.jpg
+02|https://pub-c1cbf15f15c14757a0192ce3ea39d547.r2.dev/migr/logos/699cc1d2-c7f5-4ba5-80b5-978d09de54f1/logo-1792778226815.jpg
+03|https://pub-c1cbf15f15c14757a0192ce3ea39d547.r2.dev/migr/logos/aece2d68-e05c-46ae-bba1-82ecef1cd1f5/logo-1792857286102.jpg
+04|https://kxyqozqnlhfszokboata.supabase.co/storage/v1/object/public/logos/96790ea6-f89b-412b-8ef8-edd6bb0be0df/logo-1793044601816.jpg
+05|https://kxyqozqnlhfszokboata.supabase.co/storage/v1/object/public/logos/816044cc-5804-489a-8e6c-11b499c9e502/logo-1793050881986.jpg
+06|https://kxyqozqnlhfszokboata.supabase.co/storage/v1/object/public/logos/bd1b48b5-ae86-4604-b93b-72a5990a5826/logo-1793131166515.jpg
+07|https://kxyqozqnlhfszokboata.supabase.co/storage/v1/object/public/logos/bc32b3dc-4d44-4021-8d2f-c808335fc26e/logo-1793150504912.jpg
+08|https://kxyqozqnlhfszokboata.supabase.co/storage/v1/object/public/logos/1c26b0c1-abc3-41d0-9463-278a651d680c/logo-1793210195375.jpg
+09|https://kxyqozqnlhfszokboata.supabase.co/storage/v1/object/public/logos/54a667d3-815c-4521-ab1c-6a7be27319c2/logo-1793296863612.jpg
+10|https://kxyqozqnlhfszokboata.supabase.co/storage/v1/object/public/logos/97aa7210-509f-4a38-a7ce-d9763b339c88/logo-1793308809155.jpg
+11|https://kxyqozqnlhfszokboata.supabase.co/storage/v1/object/public/logos/8513a25f-8186-4d64-b473-4dc1025b2e2d/logo-1793415209217.jpg
+12|https://kxyqozqnlhfszokboata.supabase.co/storage/v1/object/public/logos/10e00199-67b0-4e92-a9cc-991292a79d67/logo-1793731094620.jpg

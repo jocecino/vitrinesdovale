@@ -1,0 +1,17 @@
+name: logos
+on:
+  push:
+    branches: [arte-logos]
+permissions:
+  contents: write
+jobs:
+  baixar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          mkdir -p logos
+          while IFS='|' read -r n u; do curl -sSL -m 30 -o "logos/$n.jpg" "$u" || echo "falhou $n"; done < lista.txt
+          ls -la logos
+          git config user.name bot && git config user.email bot@users.noreply.github.com
+          git add logos && git commit -m "logos" && git push
