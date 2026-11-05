@@ -773,3 +773,9 @@ a.inpi{text-decoration:none}
 .cmpvf{display:block;margin-top:4px;font-size:11px;font-weight:700;opacity:.8}
 .cmpvl{display:block;margin-top:4px;font-size:10.5px;opacity:.6}
 @media(max-width:340px){.cmaB{flex-direction:column}.cmpv{align-self:center}}
+
+.mpfr{display:flex;flex-wrap:wrap;align-items:center;gap:6px;width:100%;margin-top:8px}
+.mpfr>span{font-weight:700;font-size:13px;margin-right:2px}
+.mpfr .btn{opacity:.6}.mpfr .btn.on{opacity:1;box-shadow:0 0 0 2px var(--gold) inset}
+.mpb{display:inline-block;font-size:11.5px;font-weight:800;border-radius:999px;padding:2px 8px;vertical-align:2px;white-space:nowrap}
+.mpb.ok{background:rgba(31,157,85,.14);color:#1f9d55}.mpb.no{background:rgba(217,58,58,.12);color:#d93a3a}
