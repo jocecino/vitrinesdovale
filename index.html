@@ -50,6 +50,8 @@
    <div><div class="h3" style="margin-top:0">Dias e horários de funcionamento</div><div id="dc"></div></div>
    <label>Crie uma senha (mín. 6 caracteres)<input name="senha" type="password" minlength="6" autocomplete="new-password" required></label>
    <label>Confirme a senha<input name="senha2" type="password" minlength="6" autocomplete="new-password" required></label>
+   <div class="mpwarn">⚠️ <b>Importante:</b> sua loja só aparece na vitrine depois de <b>conectar sua conta do Mercado Pago</b>. É por ele que você recebe as vendas, direto na sua conta. Leva cerca de 2 minutos, depois da aprovação.</div>
+   <label class="ck"><input type="checkbox" name="mpok" required><span>Entendi que meus produtos só aparecem na vitrine depois de conectar o Mercado Pago.</span></label>
    <label class="ck"><input type="checkbox" name="aceite" required><span>Li e aceito os <a href="#/termos">Termos de uso</a> e a <a href="#/privacidade">Política de privacidade</a>.</span></label>
    <button class="btn" id="cadBtn">Enviar cadastro</button>
   </form>
@@ -57,7 +59,7 @@
  </div>
  <div id="painel" style="display:none">
   <div class="lcard"><div class="lhead"><label class="lgp" for="lgFile" title="Toque para trocar a logo"><span id="lgPrev"></span><em>📷</em></label><input type="file" id="lgFile" accept="image/*" hidden onchange="trocarLogoArq(this)"><div><div class="lnm"><h2 id="lojaNome" style="margin:0"></h2><button class="nmed" onclick="renomear()" aria-label="Alterar nome da loja" title="Alterar nome da loja">✏️</button></div><small class="hint">Toque na logo para trocar</small></div></div><div id="lst"></div></div><div class="ctab" id="ctabP" style="display:none"></div><div id="lgMsg"></div><div id="pnlMsg"></div>
-  <div id="msAv"></div><div id="cmpAv"></div><div class="lqk" id="lbar"><button id="qkpi" onclick="sub('pi')"><i>🏠</i>Início</button><button id="qkpd" onclick="sub('pd')"><i>🧾</i>Pedidos<span class="nb" id="qkn" style="display:none"></span></button><button id="qkpp" onclick="sub('pp')"><i>📦</i>Produtos</button><button onclick="dwr(1)" aria-label="Abrir menu"><i>☰</i>Mais<span class="nb" id="lmn" style="display:none"></span></button></div><div id="dwrBg" onclick="dwr(0)"></div><nav id="dwr" class="dwr"><div class="dwh"><b>Menu da loja</b><button onclick="dwr(0)" aria-label="Fechar">✕</button></div>
+  <div id="mpAv"></div><div id="msAv"></div><div id="cmpAv"></div><div class="lqk" id="lbar"><button id="qkpi" onclick="sub('pi')"><i>🏠</i>Início</button><button id="qkpd" onclick="sub('pd')"><i>🧾</i>Pedidos<span class="nb" id="qkn" style="display:none"></span></button><button id="qkpp" onclick="sub('pp')"><i>📦</i>Produtos</button><button onclick="dwr(1)" aria-label="Abrir menu"><i>☰</i>Mais<span class="nb" id="lmn" style="display:none"></span></button></div><div id="dwrBg" onclick="dwr(0)"></div><nav id="dwr" class="dwr"><div class="dwh"><b>Menu da loja</b><button onclick="dwr(0)" aria-label="Fechar">✕</button></div>
 <button id="sgpi" onclick="sub('pi');dwr(0)"><i>🏠</i>Início</button><button id="sgpm" onclick="sub('pm');dwr(0)"><i>📬</i>Mensagens<span class="nb" id="msn" style="display:none">0</span></button>
 <div class="dwg">Vendas</div><button id="sgpd" onclick="sub('pd');dwr(0)"><i>🧾</i>Pedidos</button><button id="sgpq" onclick="sub('pq');dwr(0)"><i>💬</i>Perguntas</button><button id="sgrl" onclick="sub('rl');dwr(0)"><i>📊</i>Resultados</button>
 <div class="dwg">Catálogo</div><button id="sgpp" onclick="sub('pp');dwr(0)"><i>📦</i>Meus produtos</button><button id="sgpc" onclick="sub('pc');dwr(0)"><i>🎉</i>Campanhas<span class="nb" id="cpn" style="display:none">0</span></button><button id="sgpn" style="display:none" onclick="sub('pn');dwr(0)"><i>➕</i>Adicionar</button>
@@ -90,7 +92,7 @@
   </div>
   <div id="pi" style="display:none"></div>
   <div id="pp">
-   <div class="pph"><h2>Meus produtos</h2><button class="btn s" onclick="sub('pn')">＋ Adicionar</button></div><div id="ed"></div><div id="meus"></div>
+   <div class="pph"><h2>Meus produtos</h2><button class="btn s" onclick="sub('pn')">＋ Adicionar</button></div><div id="mpPp"></div><div id="ed"></div><div id="meus"></div>
   </div>
   <div id="pd" style="display:none"><div id="plist"></div></div>
   <div id="ps" class="psw" style="display:none"><h2>🛟 Suporte</h2><p class="hint">Fale direto com a equipe do ValeShop. Respondemos por aqui.</p><div class="sch" id="psc"></div><div id="psm"></div><form class="sfm" onsubmit="return psEnv(event)"><textarea id="pst" maxlength="1000" placeholder="Escreva sua mensagem…" required></textarea><button class="btn s" type="submit">Enviar</button></form></div>
