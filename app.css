@@ -777,12 +777,15 @@ a.inpi{text-decoration:none}
 .mpfr{display:flex;flex-wrap:wrap;align-items:center;gap:6px;width:100%;margin-top:8px}
 .mpfr>span{font-weight:700;font-size:13px;margin-right:2px}
 .mpfr .btn{opacity:.6}.mpfr .btn.on{opacity:1;box-shadow:0 0 0 2px var(--gold) inset}
-.mpb{display:inline-block;font-size:11.5px;font-weight:800;border-radius:999px;padding:2px 8px;vertical-align:2px;white-space:nowrap}
-.mpb.ok{background:rgba(31,157,85,.14);color:#1f9d55}.mpb.no{background:rgba(217,58,58,.12);color:#d93a3a}
+.mpbg{display:inline-block;font-size:11.5px;font-weight:800;border-radius:999px;padding:2px 8px;vertical-align:2px;white-space:nowrap}
+.mpbg.ok{background:rgba(31,157,85,.14);color:#1f9d55}.mpbg.no{background:rgba(217,58,58,.12);color:#d93a3a}
 
-.mpb{display:inline-flex;align-items:center;gap:4px;padding:3px 9px 3px 5px}
+.mpbg{display:inline-flex;align-items:center;gap:4px;padding:3px 9px 3px 5px}
 .mpi{width:18px;height:18px;object-fit:contain;vertical-align:middle}.mpi[src$="mp.webp"]{width:24px;height:17px}
 .mpfr .btn{display:inline-flex;align-items:center;gap:4px}
 .mpl{width:26px;height:18px;object-fit:contain;vertical-align:-4px;margin-right:5px}
 
 .tpi{display:block}.tpx{opacity:.7;border-left:5px solid #EB6A33}.tpr{display:flex;align-items:center;gap:10px}.tpr em{font-style:normal;font-weight:800;font-size:18px;min-width:30px;color:var(--brand,#1f8f4e)}.tpr img,.tpn{width:52px;height:52px;border-radius:10px;object-fit:cover;flex:none;display:grid;place-items:center;background:#0001;font-style:normal}.tpr span{display:flex;flex-direction:column;min-width:0}.tpr b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.tpv{color:#888;font-style:italic}.tpw{color:#c0392b;font-weight:700}.tpb{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}.tpe{margin-top:10px;padding:10px;border-radius:12px;background:#0000000a}.tpe label{display:block;margin-bottom:8px}.tps{display:flex!important;align-items:center;gap:10px;width:100%;text-align:left}.tps img{width:44px;height:44px;border-radius:8px;object-fit:cover;flex:none}.tps span{display:flex;flex-direction:column;min-width:0}
+
+#ax>p.hint,#ax>.btn,#au>.btn{margin-left:14px!important;margin-right:14px!important;width:calc(100% - 28px)}
+@media(max-width:420px){.mpav{flex-wrap:wrap}.mpav>span{flex:1 1 calc(100% - 40px)}.mpav>b{margin:2px 0 0;width:100%;text-align:center;padding:9px 12px}}
