@@ -177,8 +177,8 @@ const EV=[];let LK=null,QT,PN=1,AT,AP=7,RD=7,APD=1,AS='',LR=null;const DET={};
 function flush(){if(!EV.length)return;const b=JSON.stringify({p_dev:dev,p_sess:sess,p_evs:EV.splice(0,40)});try{fetch(SUPA_URL+'/rest/v1/rpc/registrar_eventos',{method:'POST',keepalive:true,headers:{apikey:SUPA_KEY,Authorization:'Bearer '+SUPA_KEY,'Content-Type':'application/json'},body:b}).catch(()=>{})}catch(e){}}
 function tr(t,i,x){if(A||S)return;EV.push({t:t,i:i||'',x:x||''});if(EV.length>=15)flush()}
 setInterval(flush,20000);addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')flush()});addEventListener('pagehide',flush);
-function qtr(){clearTimeout(QT);QT=setTimeout(()=>{const v=nrm($('q').value).trim();if(v.length>=3)tr('busca','',v)},1200)}
-function clk(id){tr('clique_produto',id,location.hash.replace(/^#\/?/,'').split('/')[0]||'home');go('produto/'+id)}
+function qtr(){clearTimeout(QT);QT=setTimeout(()=>{const v=nrm($('q').value).trim();if(v.length>=3){bqAdd(v);tr('busca','',v)}},1200)}
+function clk(id){pvAdd(id);tr('clique_produto',id,location.hash.replace(/^#\/?/,'').split('/')[0]||'home');go('produto/'+id)}
 function dt(id){run('getProduto',id).then(d=>{DET[id]=d;if(CK.id===id&&/^#\/produto\//.test(location.hash)){KS=1;abrir(id)}}).catch(()=>{DET[id]={}})}
 const wa=(n,t)=>'https://wa.me/'+n+(t?'?text='+encodeURIComponent(t):'');
 const J=s=>{try{return JSON.parse(s)||{}}catch(e){return{}}};
@@ -277,7 +277,7 @@ function home(){
  const fp=(()=>{const vs=new Set();return D.produtos.filter(p=>ofa(p)&&p.oferta.dest&&!p.adulto).sort((x,y)=>x.oferta.ate-y.oferta.ate).filter(p=>{const k=p.cores?p.lojaId+'|'+p.titulo:p.id;if(vs.has(k))return false;vs.add(k);return true})})();$('fls').innerHTML='';hmSl(fp);
  const ls=cat==='Adultos'?D.lojas.filter(l=>l.adulta):D.lojas.filter(l=>!l.adulta&&(!fv||FV.l.indexOf(l.id)>-1));
  $('lj').innerHTML=ls.length?ls.map(l=>'<button class="av" onclick="go(\'loja/'+l.id+'\')"><i>'+lg(l)+'</i><span>'+esc(l.nome)+vb(l)+repB(l)+'</span></button>').join(''):'<p class="hint">'+(fv?'Toque no ♡ de uma loja ou produto para guardar aqui.':loading?'Carregando…':'As lojas aparecem aqui assim que forem aprovadas.')+'</p>';
- const ps=D.produtos.filter(p=>(fv||p.capa!==false)&&(cat==='Adultos'?!!p.adulto:(fv||!p.adulto)&&(cat==='Tudo'||fv||p.categoria===cat||(String(cat).indexOf('camp:')===0&&cpa(p)&&'camp:'+p.camp.id===cat)))&&(!scat||fv||p.sub===scat)&&(!fv||FV.p.indexOf(p.id)>-1)&&nrm(p.titulo+' '+LJ(p.lojaId).nome+' '+p.categoria+' '+(p.cond||'')).includes(q)).sort((a,b)=>(a.estoque===0)-(b.estoque===0));
+ let ps=D.produtos.filter(p=>(fv||p.capa!==false)&&(cat==='Adultos'?!!p.adulto:(fv||!p.adulto)&&(cat==='Tudo'||fv||p.categoria===cat||(String(cat).indexOf('camp:')===0&&cpa(p)&&'camp:'+p.camp.id===cat)))&&(!scat||fv||p.sub===scat)&&(!fv||FV.p.indexOf(p.id)>-1)&&nrm(p.titulo+' '+LJ(p.lojaId).nome+' '+p.categoria+' '+(p.cond||'')).includes(q)).sort((a,b)=>(a.estoque===0)-(b.estoque===0));if(cat==='Tudo'&&!fv&&!q&&!scat){const tp=topoL(),ki=p=>p.cores?p.lojaId+'|'+p.titulo:p.id,ks=new Set(tp.map(ki));ps=tp.concat(ps.filter(p=>!ks.has(ki(p))))}
  {const cc=String(cat).indexOf('camp:')===0&&campAtivas().find(x=>'camp:'+x.id===cat);$('gt').textContent=fv?'Meus favoritos':cat==='Adultos'?'🔞 Produtos para maiores de 18':cc?cc.tag+' · '+cc.nome:'🔥 Mais vendidos e procurados';const fx=$('cmf');if(fx){const ct=!cc&&cat==='Tudo'&&!q?CTG.filter(c=>c.fim>NOW()).sort((a,b)=>(b.bf?1:0)-(a.bf?1:0)):[];fx.innerHTML=cc?czwH(Object.assign({inicio:0},CTG.find(c=>c.id===cc.id)||{},cc,{n:1}),1):ct.map(c=>czwH(c,0)).join('');if(cc||ct.length)tick()}}
  $('grid').innerHTML=ps.length?ps.slice(0,PN*12).map(card).join(''):'<p class="empty">'+(loading?'Carregando vitrine…':'Nenhum produto por aqui ainda.')+'</p>';HC=ps.length;$('mais').innerHTML=ps.length>PN*12||temMais()?(FQ.err?'<button class="btn s" onclick="FQ.err=0;maisProd()">Tentar de novo</button>':'<div class="ldm" data-a="h">Carregando mais produtos…</div>'):ps.length>12?'<p class="ldf">Você viu todos os produtos</p>':'';obsM();
  $('ll').innerHTML=(D.lojas.some(l=>l.verificada)?'<label class="ck vfl"><input type="checkbox"'+(VF?' checked':'')+' onchange="VF=this.checked;home()"><span>Só lojas verificadas <img class="vsel" src="selo.webp" alt=""></span></label>':'')+D.lojas.filter(l=>!l.adulta&&(!VF||l.verificada)).map(l=>'<button class="item" style="width:calc(100% - 28px)" onclick="go(\'loja/'+l.id+'\')"><div class="av"><i>'+lg(l)+'</i></div><div class="g" style="text-align:left"><b>'+esc(l.nome)+vb(l)+repB(l)+'</b><small>'+esc(l.categoria)+' · '+esc(l.bairro)+'</small><small>'+stTxt(l)+'</small></div></button>').join('')||'<p class="msg">Nenhuma loja aprovada ainda.</p>'}
@@ -768,6 +768,15 @@ let PSN=-1,ADIR='',LNP=-1;
 
 let CPL=[],CPE=null;
 let OFL=[];
+// ===== Topo da vitrine: 6 destaques do admin, depois recomendados pela última busca e pelos últimos produtos vistos =====
+const RC={k:'',ids:[]};
+function bqAdd(v){const L=ld('vs_bq',[]).filter(x=>typeof x==='string'&&x!==v&&v.indexOf(x)!==0&&x.indexOf(v)!==0);sv('vs_bq',[v].concat(L).slice(0,3))}
+function pvAdd(id){const p=PD(id);if(!p||p.adulto)return;sv('vs_pv',[{id:p.id,c:p.categoria,s:p.sub||''}].concat(ld('vs_pv',[]).filter(x=>x&&x.id!==p.id)).slice(0,3))}
+function recoChk(){const T3=ld('vs_bq',[]).filter(x=>typeof x==='string'&&x.length>=3).slice(0,2),k=T3.join('|');if(k===RC.k)return;RC.k=k;RC.ids=[];if(!k)return;
+ Promise.all(T3.map(t=>run('listarProdutos',1,'Tudo',t,'','').then(r=>(r&&r.itens)||[]).catch(()=>[]))).then(Ls=>{if(RC.k!==k)return;const a=Ls[0]||[],b=Ls[1]||[];mergeP(a.concat(b));RC.ids=a.slice(0,4).concat(b.slice(0,2),a.slice(4)).map(p=>p.id);if(cat==='Tudo'&&!location.hash.replace(/^#\/?/,'')){KS=1;home()}})}
+function topoL(){const out=[],ids=new Set(),ks=new Set(),add=(p,n)=>{if(!p||p.adulto||p.estoque===0||ids.has(p.id)||out.length>=n)return;const k=p.cores?p.lojaId+'|'+p.titulo:p.id;if(ks.has(k))return;ids.add(p.id);ks.add(k);out.push(p)};
+ (Array.isArray(D.topo)?D.topo:[]).forEach(id=>add(PD(id),6));const nt=out.length;recoChk();RC.ids.forEach(id=>add(PD(id),nt+6));
+ const pv=ld('vs_pv',[]).filter(x=>x&&x.c),vi=new Set(pv.map(x=>x.id));if(out.length<nt+6&&pv.length)pv.forEach(v=>D.produtos.filter(p=>p.capa!==false&&!vi.has(p.id)&&p.categoria===v.c&&(!v.s||p.sub===v.s)).slice(0,3).forEach(p=>add(p,nt+6)));return out}
 // ===== Comunicados: mensagens (loja/cliente) e aviso na vitrine =====
 const ETQ={instrucao:['📘','Instrução',''],promocao:['🎉','Promoção',' p'],importante:['⚠️','Importante',' r']},MSG={};
 function msgH(m,tp){MSG[m.id]=Object.assign({tp:tp},m);const e=ETQ[m.etiqueta]||ETQ.instrucao;
@@ -785,7 +794,7 @@ let POPV=0;function popChk(){if(POPV||location.hash.replace(/^#\/?/,''))return;P
  const fx=()=>m.remove();m.onclick=ev=>{if(ev.target===m)fx()};m.querySelector('.popx').onclick=fx;const b=m.querySelector('.popt .btn'),im=m.querySelector('img'),gt=()=>{rpc('comunicado_vitrine_evento',{p_id:c.id,p_k:'c'}).catch(()=>{});fx();cmGo(c.acao_t,c.acao_v)};if(b)b.onclick=gt;if(c.acao_t!=='none')im.onclick=gt;
  document.body.appendChild(m);rpc('comunicado_vitrine_evento',{p_id:c.id,p_k:'v'}).catch(()=>{})}).catch(()=>{})}
 
-const ATIT={n:'Comunicados',w:'Reputação das lojas',i:'Início',x:'Campanhas',p:'Relatórios',c:'Lojas',r:'Produtos',d:'Pedidos',o:'Aprovações',u:'Cupons',f:'Ofertas',b:'Banners',s:'Suporte',m:'Comissão',g:'Pagamentos',k:'Cópia de segurança'};
+const ATIT={t:'Topo da vitrine',n:'Comunicados',w:'Reputação das lojas',i:'Início',x:'Campanhas',p:'Relatórios',c:'Lojas',r:'Produtos',d:'Pedidos',o:'Aprovações',u:'Cupons',f:'Ofertas',b:'Banners',s:'Suporte',m:'Comissão',g:'Pagamentos',k:'Cópia de segurança'};
 let APL=[];
 const MOT=['Produto proibido pela plataforma','Foto imprópria ou que não é do produto','Preço enganoso','Descrição enganosa','Falsificação ou cópia de marca','Conteúdo ofensivo ou impróprio','Outro motivo'];
 
