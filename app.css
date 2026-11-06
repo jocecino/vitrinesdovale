@@ -789,3 +789,10 @@ a.inpi{text-decoration:none}
 
 #ax>p.hint,#ax>.btn,#au>.btn{margin-left:14px!important;margin-right:14px!important;width:calc(100% - 28px)}
 @media(max-width:420px){.mpav{flex-wrap:wrap}.mpav>span{flex:1 1 calc(100% - 40px)}.mpav>b{margin:2px 0 0;width:100%;text-align:center;padding:9px 12px}}
+
+.bni.of.cpn{background:var(--cc);background:linear-gradient(135deg,var(--cc),color-mix(in srgb,var(--cc) 55%,#000))}
+.bni.of.cpn .flh{color:#fff}.cph{display:flex;align-items:center;gap:8px;min-width:0}.cph b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:800}
+.cph .ctg{background:#fff!important;color:var(--cc)!important;flex:none}
+.bni.of.cpn .flcd{background:#fff;color:#141414;flex:none}
+.bni.of.cpn .flp{background:var(--cc);color:#fff}
+.cph .ctg{max-width:none;display:inline-flex;align-items:center;gap:5px;overflow:visible}.cph .ctg svg{width:15px;height:15px;flex:none}.cph .ctg svg{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
