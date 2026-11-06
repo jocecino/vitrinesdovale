@@ -798,3 +798,5 @@ a.inpi{text-decoration:none}
 .cph .ctg{max-width:none;display:inline-flex;align-items:center;gap:5px;overflow:visible}.cph .ctg svg{width:15px;height:15px;flex:none}.cph .ctg svg{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
 
 .ebv{color:#1565C0;font-weight:700}.ebm b{display:block;color:#1565C0;font-size:16px;margin-bottom:4px}
+.item.ebl{background:#f1f1f1;border-color:#e4e4e4}.ebl i{filter:grayscale(1);opacity:.5}.item.ebl b{color:#8a8a8a}.item.ebl small{color:#9a9a9a}
+#lj .ebl span{color:#9a9a9a}#lj .ebl .ebv{display:block;font-style:normal;font-size:11px}
