@@ -260,17 +260,17 @@ async function notificar(tipo: string, id: string) {
     return;
   }
   const pid = Number(id);
-  const { data: p } = await db.from("pedidos").select("id,loja,loja_id,cliente,cliente_uid,itens,total,frete,status,tipo,servico,ag_pref,preco_def,direto,frete_combinar,frete_def,pg_status,adulto").eq("id", pid).maybeSingle();
+  const { data: p } = await db.from("pedidos").select("id,loja,loja_id,cliente,cliente_uid,itens,total,frete,status,tipo,servico,ag_pref,preco_def,direto,frete_combinar,frete_def,pg_status,adulto,frete_servico,cep").eq("id", pid).maybeSingle();
   if (!p) return;
   const lojaCli = p.adulto ? "" : String(p.loja || ""); // pedido discreto: e-mails ao cliente sem o nome da loja
   if (tipo === "pedido_novo") {
-    const { data: l } = await db.from("lojas").select("email").eq("id", p.loja_id).maybeSingle();
+    const { data: l } = await db.from("lojas").select("email,postagem_dias").eq("id", p.loja_id).maybeSingle();
     if (!l || !l.email) return;
     const its = (Array.isArray(p.itens) ? p.itens : []) as Array<Record<string, unknown>>;
     const resumo = its.slice(0, 5).map((i) => `${Number(i.qtd || i.q || 1)}x ${String(i.titulo || "Produto")}`).join(", ") + (its.length > 5 ? "…" : "");
     const sv = !!p.servico;
     await enviarAviso("pedido_novo", l.email, sv ? `🛠️ Novo pedido de serviço nº ${p.id} - Eita Vale` : `🛒 Novo pedido nº ${p.id} - Eita Vale`, sv ? "Você recebeu um pedido de serviço!" : "Você recebeu um novo pedido!",
-      [`Pedido nº ${p.id} de ${p.cliente || "cliente"}.`, resumo ? `${sv ? "Serviço" : "Itens"}: ${resumo}` : "", sv ? `Data sugerida: ${p.ag_pref || "-"}` : "", sv && !p.preco_def ? "Valor: a combinar (informe ao aceitar)" : `Total: ${brl(Number(p.total))}`, sv ? "Abra o painel, combine pelo chat e toque em Aceitar e agendar." : p.direto ? "✅ Pedido já PAGO pelo Mercado Pago. Abra o painel e toque em Confirmar e preparar." : (p.frete_combinar && !p.frete_def) ? "🚚 O cliente quer combinar o frete: responda no chat do pedido e toque em Definir frete." : "Abra o painel para aceitar o pedido e combinar a entrega."].filter(Boolean),
+      [`Pedido nº ${p.id} de ${p.cliente || "cliente"}.`, resumo ? `${sv ? "Serviço" : "Itens"}: ${resumo}` : "", sv ? `Data sugerida: ${p.ag_pref || "-"}` : "", p.frete_servico ? `📦 Enviar por ${p.frete_servico} para o CEP ${String(p.cep || "").replace(/^(\d{5})(\d{3})$/, "$1-$2")} (frete de ${brl(Number(p.frete))} incluído no total). Poste em até ${l.postagem_dias || 2} dias úteis.` : "", sv && !p.preco_def ? "Valor: a combinar (informe ao aceitar)" : `Total: ${brl(Number(p.total))}`, sv ? "Abra o painel, combine pelo chat e toque em Aceitar e agendar." : p.direto ? "✅ Pedido já PAGO pelo Mercado Pago. Abra o painel e toque em Confirmar e preparar." : (p.frete_combinar && !p.frete_def) ? "🚚 O cliente quer combinar o frete: responda no chat do pedido e toque em Definir frete." : "Abra o painel para aceitar o pedido e combinar a entrega."].filter(Boolean),
       "Abrir meus pedidos", SITE + "#/minha", p.direto ? "Você tem até 36 horas para confirmar. Sem confirmação, o valor é devolvido automaticamente ao cliente." : "Responda rápido: pedidos novos que ficam sem resposta expiram automaticamente.");
   } else if (tipo === "frete_definido") {
     if (!p.cliente_uid) return;
