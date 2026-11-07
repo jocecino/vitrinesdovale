@@ -222,14 +222,14 @@ Deno.serve(async (req: Request) => {
       return json({ ok: true });
     }
     if (tipo === "cli") {
-      const { data: p } = await db.from("pedidos").select("id,loja,loja_id,cliente_uid,total,frete,servico,adulto").eq("id", Number(id)).maybeSingle();
+      const { data: p } = await db.from("pedidos").select("id,loja,loja_id,cliente_uid,total,frete,servico,adulto,rastreio,frete_servico").eq("id", Number(id)).maybeSingle();
       if (!p || !p.cliente_uid) return json({ ok: false });
       const k = String(b.k || ""), n = p.id, sv = !!p.servico;
       if (p.adulto) p.loja = "A loja"; // pedido discreto: sem nome da loja nos avisos
       let m: { title: string; body: string; url?: string } | null = null;
       if (k === "frete") m = { title: `🚚 Frete definido · pedido nº ${n}`, body: `${p.loja}: frete ${brl(Number(p.frete))}. Total ${brl(Number(p.total))}. Toque para pagar.` };
       else if (k === "confirmado") m = { title: `✅ ${p.loja} confirmou seu pedido nº ${n}`, body: "Seu pedido já está sendo preparado." };
-      else if (k === "saiu") m = { title: `🛵 Seu pedido nº ${n} saiu para entrega`, body: `${p.loja} já está a caminho.` };
+      else if (k === "saiu") m = p.rastreio ? { title: `📦 Pedido nº ${n} postado${p.frete_servico ? " (" + p.frete_servico + ")" : ""}`, body: `Código de rastreio ${p.rastreio}. Toque para acompanhar.` } : { title: `🛵 Seu pedido nº ${n} saiu para entrega`, body: `${p.loja} já está a caminho.` };
       else if (k === "entregue") m = { title: sv ? `🛠️ Serviço do pedido nº ${n} realizado` : `📦 Pedido nº ${n} entregue`, body: "Confirme o recebimento e conte como foi.", url: `/#/avaliar/${n}` };
       else if (k === "cancelado") m = { title: `Pedido nº ${n} cancelado`, body: "Se você já pagou, o valor volta pelo Mercado Pago." };
       else if (k === "avaliar") m = { title: "⭐ Como foi sua compra?", body: `Avalie o pedido nº ${n} na ${p.loja}. Leva menos de 1 minuto.`, url: `/#/avaliar/${n}` };

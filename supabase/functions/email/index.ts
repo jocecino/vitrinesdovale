@@ -260,7 +260,7 @@ async function notificar(tipo: string, id: string) {
     return;
   }
   const pid = Number(id);
-  const { data: p } = await db.from("pedidos").select("id,loja,loja_id,cliente,cliente_uid,itens,total,frete,status,tipo,servico,ag_pref,preco_def,direto,frete_combinar,frete_def,pg_status,adulto,frete_servico,cep").eq("id", pid).maybeSingle();
+  const { data: p } = await db.from("pedidos").select("id,loja,loja_id,cliente,cliente_uid,itens,total,frete,status,tipo,servico,ag_pref,preco_def,direto,frete_combinar,frete_def,pg_status,adulto,frete_servico,cep,rastreio").eq("id", pid).maybeSingle();
   if (!p) return;
   const lojaCli = p.adulto ? "" : String(p.loja || ""); // pedido discreto: e-mails ao cliente sem o nome da loja
   if (tipo === "pedido_novo") {
@@ -279,6 +279,14 @@ async function notificar(tipo: string, id: string) {
     await enviarAviso("frete_definido", c.email, `🚚 Frete definido - pague seu pedido nº ${p.id}`, `Olá${c.nome ? ", " + String(c.nome).split(" ")[0] : ""}! A loja definiu o frete`,
       [`A loja${lojaCli ? " " + lojaCli : ""} definiu o frete do pedido nº ${p.id}: ${brl(Number(p.frete))}.`, `Total a pagar: ${brl(Number(p.total))}.`, "Pague pelo Mercado Pago (Pix, cartão ou saldo) em até 24 horas para garantir os produtos."],
       "Pagar agora", `${SITE}#/pedidos`, "Dúvidas? Converse com a loja pelo chat do pedido.");
+  } else if (tipo === "enviado") {
+    if (!p.rastreio || !p.cliente_uid) return;
+    const { data: c } = await db.from("cliente_contas").select("email,nome").eq("user_id", p.cliente_uid).maybeSingle();
+    if (!c || !c.email) return;
+    const link = `https://melhorrastreio.com.br/rastreio/${encodeURIComponent(p.rastreio)}`;
+    await enviarAviso("enviado", c.email, `📦 Seu pedido nº ${p.id} foi postado!`, `Olá${c.nome ? ", " + String(c.nome).split(" ")[0] : ""}! Seu pedido está a caminho`,
+      [`A loja${lojaCli ? " " + lojaCli : ""} postou o pedido nº ${p.id}${p.frete_servico ? " pelo " + p.frete_servico : ""}.`, `Código de rastreio: ${p.rastreio}`, "Acompanhe a entrega pelo botão abaixo. O código pode levar algumas horas para aparecer no rastreio depois da postagem."],
+      "Acompanhar entrega", link, "Dúvidas? Converse com a loja pelo chat do pedido, na sua conta.");
   } else if (tipo === "entregue") {
     if (p.status !== "entregue" || !p.cliente_uid) return;
     const { data: c } = await db.from("cliente_contas").select("email,nome").eq("user_id", p.cliente_uid).maybeSingle();
@@ -305,7 +313,7 @@ Deno.serve(async (req: Request) => {
       const id = String(b.id || "");
       const tp = String(b.tipo);
       const uu = (tp === "loja_nova" || tp === "aviso_produto" || tp === "campanha_nova" || tp === "campanha_teste" || tp === "admin_otp" || tp === "admin_alerta" || tp === "email_troca");
-      if (!id || !["pedido_novo", "entregue", "frete_definido", "admin_otp", "admin_alerta", "loja_nova", "aviso_produto", "campanha_nova", "campanha_teste", "email_troca"].includes(tp) || (!uu && !Number(id)) || (uu && !/^[0-9a-f-]{36}$/i.test(id))) return json({ erro: "Pedido inválido." }, 400);
+      if (!id || !["pedido_novo", "entregue", "frete_definido", "admin_otp", "admin_alerta", "loja_nova", "aviso_produto", "campanha_nova", "campanha_teste", "email_troca", "enviado"].includes(tp) || (!uu && !Number(id)) || (uu && !/^[0-9a-f-]{36}$/i.test(id))) return json({ erro: "Pedido inválido." }, 400);
       try { await notificar(tp, id); } catch (e) { console.error("notificar", String(e)); return json({ ok: false }, 200); }
       return json({ ok: true });
     }
