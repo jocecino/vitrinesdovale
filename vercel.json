@@ -63,5 +63,18 @@
     }
    ]
   }
+ ],
+ "redirects": [
+  {
+   "source": "/:path*",
+   "has": [
+    {
+     "type": "host",
+     "value": "valeshop-sobradinho.vercel.app"
+    }
+   ],
+   "destination": "https://eitavale.com.br/:path*",
+   "permanent": true
+  }
  ]
 }
