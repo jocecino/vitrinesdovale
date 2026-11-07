@@ -814,3 +814,6 @@ a.inpi{text-decoration:none}
 #foraM:empty{display:none}#foraM{margin:4px 0 10px;font-size:14px;line-height:1.4}
 .cepdl input{width:100%;font-size:18px;letter-spacing:1px}.cepdl .lk{font-size:14px}
 html.dk .adr2 input[readonly]{background:rgba(255,255,255,.06)}
+.embp{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 10px}.embp .chip{font-size:13px;padding:6px 10px}.embp .chip small{opacity:.7;font-size:11px;margin-left:2px}
+.embd{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.embd label{font-size:13px}.embd input{min-width:0}
+.embx{color:#b45309;font-weight:700}
