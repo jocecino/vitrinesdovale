@@ -1,7 +1,7 @@
 {
  "id": "/",
- "name": "ValeShop Sobradinho",
- "short_name": "ValeShop",
+ "name": "Eita Vale",
+ "short_name": "Eita Vale",
  "description": "Compre nas lojas de Sobradinho e receba em casa. Pague por Pix ou cartão pelo Mercado Pago.",
  "start_url": "/",
  "scope": "/",
@@ -71,7 +71,7 @@
  ],
  "shortcuts": [
   {
-   "name": "Carrinho",
+   "name": "Sacolinha",
    "url": "/#/carrinho",
    "icons": [
     {

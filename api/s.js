@@ -10,13 +10,13 @@ async function rpc(f, body) {
 }
 module.exports = async (req, res) => {
   const t = req.query.t === 'p' ? 'p' : 'l', id = String(req.query.id || '');
-  let title = 'ValeShop Sobradinho', desc = 'Compre no comércio de Sobradinho com pagamento seguro pelo Mercado Pago. Receba em casa ou retire na loja.';
-  let img = 'https://' + req.headers.host + '/icon-512.png';
+  let title = 'Eita Vale', desc = 'Compre no comércio de Sobradinho com pagamento seguro pelo Mercado Pago. Receba em casa ou retire na loja.';
+  let img = 'https://' + req.headers.host + '/og-eitavale.png';
   try {
     if (UUID.test(id)) {
       if (t === 'p') {
         const p = await rpc('get_produto', { p_id: id });
-        if (p && p.bloq) { title = 'Produto para maiores de 18 - ValeShop Sobradinho'; desc = 'Conteúdo para maiores de 18 anos. Entre na sua conta para ver.'; }
+        if (p && p.bloq) { title = 'Produto para maiores de 18 - Eita Vale'; desc = 'Conteúdo para maiores de 18 anos. Entre na sua conta para ver.'; }
         else if (p && p.id) {
           const l = (await rpc('get_loja', { p_id: p.lojaId })) || {};
           title = p.titulo + ' - R$ ' + Number(p.oferta ? p.oferta.preco : p.preco).toFixed(2).replace('.', ',');
@@ -25,8 +25,8 @@ module.exports = async (req, res) => {
         }
       } else {
         const l = await rpc('get_loja', { p_id: id });
-        if (l && l.adulta && !l.nome) { title = 'Loja para maiores de 18 - ValeShop Sobradinho'; desc = 'Conteúdo para maiores de 18 anos. Entre na sua conta para ver.'; }
-        else if (l && l.id) { title = l.nome + ' - ValeShop Sobradinho'; desc = (l.categoria || 'Loja') + ' em ' + (l.bairro || 'Sobradinho') + '. Veja os produtos e compre com pagamento seguro.'; img = l.logo || img; }
+        if (l && l.adulta && !l.nome) { title = 'Loja para maiores de 18 - Eita Vale'; desc = 'Conteúdo para maiores de 18 anos. Entre na sua conta para ver.'; }
+        else if (l && l.id) { title = l.nome + ' - Eita Vale'; desc = (l.categoria || 'Loja') + ' em ' + (l.bairro || 'Sobradinho') + '. Veja os produtos e compre com pagamento seguro.'; img = l.logo || img; }
       }
     }
   } catch (e) {}
