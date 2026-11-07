@@ -1,4 +1,4 @@
-// Cria a cobrança (Checkout Pro) na conta da loja, com a comissão do ValeShop (marketplace_fee).
+// Cria a cobrança (Checkout Pro) na conta da loja, com a comissão do Eita Vale (marketplace_fee).
 // Também verifica um pagamento (acao: 'verificar') caso o aviso do Mercado Pago atrase.
 const APP = 'https://valeshop-sobradinho.vercel.app/';
 const SU = Deno.env.get('SUPABASE_URL')!, SK = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
@@ -52,14 +52,14 @@ Deno.serve(async (req) => {
     let inst = Math.max(1, Math.min(18, Number(lj.parcelas_max || 1)));
     for (const x of pr as any[]) inst = x.parcela === false ? 1 : Math.min(inst, Math.max(1, Number(x.parcelas_max || inst)));
     const pref: any = {
-      items: [{ id: 'pedido-' + n, title: ('Pedido nº ' + n + ' · ' + (lj.nome || 'ValeShop')).slice(0, 250), quantity: 1, unit_price: total, currency_id: 'BRL' }],
+      items: [{ id: 'pedido-' + n, title: ('Pedido nº ' + n + ' · ' + (lj.nome || 'Eita Vale')).slice(0, 250), quantity: 1, unit_price: total, currency_id: 'BRL' }],
       marketplace_fee: Math.round(fee * 100) / 100,
       external_reference: String(n),
       notification_url: SU + '/functions/v1/mp-webhook?loja=' + ped.loja_id,
       back_urls: { success: APP + '?mppag=ok&n=' + n + '#/pedidos', pending: APP + '?mppag=pend&n=' + n + '#/pedidos', failure: APP + '?mppag=erro&n=' + n + '#/pedidos' },
       auto_return: 'approved',
       payment_methods: { installments: inst, excluded_payment_types: [{ id: 'ticket' }, { id: 'atm' }] },
-      statement_descriptor: 'VALESHOP',
+      statement_descriptor: 'EITAVALE',
       payer: { name: String(ped.cliente || '').slice(0, 60) },
     };
     if (ped.pag_ate) { pref.expires = true; pref.expiration_date_to = bahia(ped.pag_ate); }

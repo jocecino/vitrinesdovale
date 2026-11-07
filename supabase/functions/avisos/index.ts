@@ -19,7 +19,7 @@ async function vapid() {
   if (vapidOk) return true;
   const [pub, priv, sub] = await Promise.all([cfg("vapid_public"), cfg("vapid_private"), cfg("vapid_subject")]);
   if (!pub || !priv) return false;
-  webpush.setVapidDetails(sub || "mailto:valeshopsobradinho@gmail.com", pub, priv);
+  webpush.setVapidDetails(sub || "mailto:contato.eitavale@gmail.com", pub, priv);
   vapidOk = true;
   return true;
 }
@@ -72,7 +72,7 @@ function moldura(titulo: string, corpo: string, botao: string, link: string, rod
   return `<div style="font-family:Arial,sans-serif;max-width:480px;margin:auto;padding:20px">
 <h2 style="margin:0 0 12px;color:#16363F">${esc(titulo)}</h2>${corpo}
 <p style="text-align:center;margin:22px 0"><a href="${esc(link)}" style="background:#16363F;color:#E9D08A;text-decoration:none;font-weight:bold;padding:13px 22px;border-radius:8px;display:inline-block">${esc(botao)}</a></p>
-<p style="color:#666;font-size:13px">${esc(rodape)}</p><p style="color:#999;font-size:12px">ValeShop Sobradinho</p></div>`;
+<p style="color:#666;font-size:13px">${esc(rodape)}</p><p style="color:#999;font-size:12px">Eita Vale</p></div>`;
 }
 
 async function pegarTudo<T>(q: (a: number, b: number) => PromiseLike<{ data: T[] | null }>): Promise<T[]> {
@@ -122,7 +122,7 @@ async function resumoSemanal(only?: string, para?: string) {
 ${lista("🔥 Mais vistos", topV)}${lista("🏆 Mais vendidos", topS)}
 ${vazio ? '<p style="margin:14px 0;color:#333">Semana tranquila por aqui. Dica: ative uma <b>oferta relâmpago</b>, cadastre novas cores e confira se as fotos estão bonitas. Isso ajuda a atrair mais clientes.</p>' : ""}`;
     try {
-      await s.t.sendMail({ from: `ValeShop Sobradinho <${s.user}>`, to: dest, subject: `${para ? "[TESTE] " : ""}📊 Seu resumo da semana - ${l.nome}`,
+      await s.t.sendMail({ from: `Eita Vale <${s.user}>`, to: dest, subject: `${para ? "[TESTE] " : ""}📊 Seu resumo da semana - ${l.nome}`,
         text: `Resumo da semana de ${l.nome}\nPedidos: ${mp.length}\nVendido: ${brl(total)}\nVisitas na loja: ${visitas}\n${topV.length ? "Mais vistos: " + topV.join(", ") + "\n" : ""}${topS.length ? "Mais vendidos: " + topS.join(", ") + "\n" : ""}Abrir painel: ${SITE}#/minha`,
         html: moldura("📊 Seu resumo da semana", corpo, "Abrir meu painel", SITE + "#/minha", "Para parar de receber este e-mail, desligue a opção em Menu da loja > Loja.") });
       await logar("resumo", true); enviados++;
@@ -171,7 +171,7 @@ Deno.serve(async (req: Request) => {
     if (tipo === "suporte_admin") {
       const { data: m } = await db.from("suporte_msgs").select("id,loja_id,texto").eq("id", Number(id)).maybeSingle();
       if (!m) return json({ ok: false });
-      const n = await enviarPush(m.loja_id, { title: "🛟 O ValeShop respondeu seu suporte", body: String(m.texto || "").slice(0, 100), url: "/#/minha", tag: "suporte-" + m.id });
+      const n = await enviarPush(m.loja_id, { title: "🛟 O Eita Vale respondeu seu suporte", body: String(m.texto || "").slice(0, 100), url: "/#/minha", tag: "suporte-" + m.id });
       return json({ ok: true, enviados: n });
     }
     if (tipo === "suporte_lojista") {
@@ -181,7 +181,7 @@ Deno.serve(async (req: Request) => {
       const s = smtp();
       if (s) {
         try {
-          await s.t.sendMail({ from: `ValeShop Sobradinho <${s.user}>`, to: s.user, subject: `🛟 Suporte: mensagem de ${l?.nome || "loja"}`,
+          await s.t.sendMail({ from: `Eita Vale <${s.user}>`, to: s.user, subject: `🛟 Suporte: mensagem de ${l?.nome || "loja"}`,
             text: `${l?.nome || "Loja"} escreveu no suporte:\n\n${m.texto}\n\nResponder: ${SITE}#/admin`,
             html: moldura("🛟 Nova mensagem no suporte", `<p><b>${esc(l?.nome || "Loja")}</b> escreveu:</p><p style="background:#f3f1ea;border-radius:10px;padding:12px;white-space:pre-wrap">${esc(m.texto)}</p>`, "Abrir o suporte", SITE + "#/admin", "Responda pelo painel do administrador, em Suporte.") });
           await logar("suporte", true);
@@ -196,7 +196,7 @@ Deno.serve(async (req: Request) => {
       const s = smtp();
       if (s && l.email) {
         try {
-          await s.t.sendMail({ from: `ValeShop Sobradinho <${s.user}>`, to: l.email, subject: "🟢 Sua loja voltou ao ar - ValeShop",
+          await s.t.sendMail({ from: `Eita Vale <${s.user}>`, to: l.email, subject: "🟢 Sua loja voltou ao ar - Eita Vale",
             text: `A data de volta chegou e a loja ${l.nome} já está no ar. Abrir painel: ${SITE}#/minha`,
             html: moldura("Sua loja voltou ao ar!", `<p>A data de volta que você escolheu chegou. A loja <b>${esc(l.nome)}</b> já aparece na vitrine e pode receber pedidos novamente.</p>`, "Abrir meu painel", SITE + "#/minha", "Você pode tirar a loja do ar de novo quando quiser, pelo painel.") });
           await logar("loja_voltou", true);
@@ -213,7 +213,7 @@ Deno.serve(async (req: Request) => {
       if (!s || !c?.email) return json({ ok: false });
       const ult = String(b.n || "") === "2", nome = String(c.nome || p.cliente || "").trim().split(" ")[0], link = SITE + "#/avaliar/" + p.id;
       try {
-        await s.t.sendMail({ from: `ValeShop Sobradinho <${s.user}>`, to: c.email,
+        await s.t.sendMail({ from: `Eita Vale <${s.user}>`, to: c.email,
           subject: ult ? `⏰ Último dia para avaliar sua compra na ${p.loja}` : `⭐ Como foi sua compra na ${p.loja}?`,
           text: `Olá${nome ? ", " + nome : ""}! ${ult ? "Faltam poucos dias para avaliar" : "Conte como foi"} o seu pedido nº ${p.id} na ${p.loja}. Leva menos de 1 minuto: ${link}`,
           html: moldura(ult ? "⏰ Ainda dá tempo de avaliar" : "⭐ Como foi sua compra?", `<p>Olá${nome ? ", " + esc(nome) : ""}!</p><p>Seu pedido nº <b>${p.id}</b> na <b>${esc(p.loja)}</b> foi entregue. Conte como foi: dê estrelas para o produto, o atendimento e a entrega.</p><p>Sua avaliação ajuda outros clientes de Sobradinho e faz as melhores lojas aparecerem primeiro.</p>`, "Avaliar agora", link, ult ? "Este é o último lembrete. O prazo para avaliar é de 7 dias após a entrega." : "Leva menos de 1 minuto. O prazo é de 7 dias após a entrega.") });
@@ -251,7 +251,7 @@ Deno.serve(async (req: Request) => {
     if (tipo === "comunicado") {
       const { data: c } = await db.from("comunicados").select("id,publico,titulo,texto,push,apagado").eq("id", id).maybeSingle();
       if (!c || !c.push || c.apagado) return json({ ok: false });
-      const m = { title: `📬 ${String(c.titulo).slice(0, 80)}`, body: String(c.texto || "Toque para ler a mensagem da ValeShop.").slice(0, 120), tag: "com-" + c.id };
+      const m = { title: `📬 ${String(c.titulo).slice(0, 80)}`, body: String(c.texto || "Toque para ler a mensagem do Eita Vale.").slice(0, 120), tag: "com-" + c.id };
       let n = 0;
       if (c.publico === "lojas") {
         const { data: ds } = await db.from("comunicado_dest").select("loja_id").eq("com_id", c.id).not("loja_id", "is", null);

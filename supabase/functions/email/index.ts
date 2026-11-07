@@ -48,10 +48,10 @@ async function enviar(acao: string, to: string, assunto: string, titulo: string,
 <h2 style="margin:0 0 12px">${esc(titulo)}</h2><p>${esc(texto)}</p>
 <p style="font-size:32px;letter-spacing:8px;font-weight:bold;background:#f3f3f3;padding:14px;text-align:center;border-radius:8px">${esc(codigo)}</p>
 <p style="color:#666;font-size:13px">O código vale 30 minutos. Se você não pediu, ignore este e-mail.</p>
-<p style="color:#999;font-size:12px">ValeShop Sobradinho</p></div>`;
+<p style="color:#999;font-size:12px">Eita Vale</p></div>`;
   try {
     await s.t.sendMail({
-      from: `ValeShop Sobradinho <${s.user}>`, to, subject: assunto,
+      from: `Eita Vale <${s.user}>`, to, subject: assunto,
       text: `${titulo}\n\n${texto}\n\nCódigo: ${codigo}\n\nO código vale 30 minutos. Se você não pediu, ignore este e-mail.`, html,
     });
     await registrar(acao, true);
@@ -68,9 +68,9 @@ async function enviarAviso(acao: string, to: string, assunto: string, titulo: st
   const html = `<div style="font-family:Arial,sans-serif;max-width:460px;margin:auto;padding:20px">
 <h2 style="margin:0 0 12px">${esc(titulo)}</h2>${linhas.map((l) => `<p style="margin:6px 0">${esc(l)}</p>`).join("")}
 <p style="text-align:center;margin:22px 0"><a href="${esc(link)}" style="background:#16363F;color:#E9D08A;text-decoration:none;font-weight:bold;padding:13px 22px;border-radius:8px;display:inline-block">${esc(botao)}</a></p>
-<p style="color:#666;font-size:13px">${esc(rodape)}</p><p style="color:#999;font-size:12px">ValeShop Sobradinho</p></div>`;
+<p style="color:#666;font-size:13px">${esc(rodape)}</p><p style="color:#999;font-size:12px">Eita Vale</p></div>`;
   try {
-    await s.t.sendMail({ from: `ValeShop Sobradinho <${s.user}>`, to, subject: assunto, text: `${titulo}\n\n${linhas.join("\n")}\n\n${botao}: ${link}\n\n${rodape}`, html });
+    await s.t.sendMail({ from: `Eita Vale <${s.user}>`, to, subject: assunto, text: `${titulo}\n\n${linhas.join("\n")}\n\n${botao}: ${link}\n\n${rodape}`, html });
     await registrar(acao, true);
   } catch (e) {
     await registrar(acao, false, String(e));
@@ -86,26 +86,26 @@ async function enviarBoasVindas(to: string, loja: string, responsavel: string) {
   for (const d of DOCS) {
     try {
       const r = await fetch(SITE + "docs/" + d.arq);
-      if (r.ok) anexos.push({ filename: "ValeShop - " + d.nome + ".pdf", content: Buffer.from(new Uint8Array(await r.arrayBuffer())), contentType: "application/pdf" });
+      if (r.ok) anexos.push({ filename: "Eita Vale - " + d.nome + ".pdf", content: Buffer.from(new Uint8Array(await r.arrayBuffer())), contentType: "application/pdf" });
       else console.error("doc", d.arq, r.status);
     } catch (e) { console.error("doc", d.arq, String(e)); }
   }
   const ola = responsavel ? `Olá, ${responsavel}!` : "Olá!";
   const lis = DOCS.map((d) => `<li style="margin:6px 0"><a href="${SITE}docs/${d.arq}" style="color:#16363F;font-weight:bold">${esc(d.nome)}</a> <span style="color:#666">— ${esc(d.desc)}</span></li>`).join("");
   const html = `<div style="font-family:Arial,sans-serif;max-width:520px;margin:auto;padding:20px;color:#1F2A2E">
-<div style="background:#16363F;color:#E9D08A;padding:16px 18px;border-radius:10px 10px 0 0;font-weight:bold;letter-spacing:.04em">VALESHOP SOBRADINHO</div>
+<div style="background:#16363F;color:#E9D08A;padding:16px 18px;border-radius:10px 10px 0 0;font-weight:bold;letter-spacing:.04em">EITA VALE</div>
 <div style="border:1px solid #E6E0D2;border-top:0;border-radius:0 0 10px 10px;padding:18px">
 <h2 style="margin:0 0 10px;color:#16363F">Recebemos o cadastro da sua loja!</h2>
-<p>${esc(ola)} O cadastro da loja <b>${esc(loja)}</b> foi enviado e está <b>em análise</b> pela administração da ValeShop. A resposta chega no WhatsApp informado.</p>
+<p>${esc(ola)} O cadastro da loja <b>${esc(loja)}</b> foi enviado e está <b>em análise</b> pela administração do Eita Vale. A resposta chega no WhatsApp informado.</p>
 <p><b>Próximo passo:</b> depois da aprovação, entre no painel da loja e conecte a sua conta do Mercado Pago em <i>Loja › Receber pelo Mercado Pago</i>. A loja só aparece na vitrine depois dessa conexão.</p>
-<p>Para você conhecer como a plataforma funciona, enviamos em anexo os documentos da ValeShop. Também é possível abrir pelo navegador:</p>
+<p>Para você conhecer como a plataforma funciona, enviamos em anexo os documentos do Eita Vale. Também é possível abrir pelo navegador:</p>
 <ul style="padding-left:18px">${lis}</ul>
 <p style="text-align:center;margin:22px 0"><a href="${SITE}#/minha" style="background:#16363F;color:#E9D08A;text-decoration:none;font-weight:bold;padding:13px 22px;border-radius:8px;display:inline-block">Abrir o painel da loja</a></p>
 <p style="color:#666;font-size:13px">Dúvidas? Fale com a administração pelo WhatsApp ${WPP} ou pelo e-mail ${CONTATO}.</p></div>
-<p style="color:#999;font-size:12px;text-align:center">ValeShop Sobradinho · ${SITE.replace(/^https:\/\//, "").replace(/\/$/, "")}</p></div>`;
-  const text = `Recebemos o cadastro da sua loja!\n\n${ola} O cadastro da loja ${loja} foi enviado e está em análise pela administração da ValeShop. A resposta chega no WhatsApp informado.\n\nPróximo passo: depois da aprovação, entre no painel da loja e conecte a sua conta do Mercado Pago em Loja > Receber pelo Mercado Pago.\n\nDocumentos da ValeShop (também em anexo):\n${DOCS.map((d) => `- ${d.nome}: ${SITE}docs/${d.arq}`).join("\n")}\n\nDúvidas? WhatsApp ${WPP} ou ${CONTATO}.`;
+<p style="color:#999;font-size:12px;text-align:center">Eita Vale · ${SITE.replace(/^https:\/\//, "").replace(/\/$/, "")}</p></div>`;
+  const text = `Recebemos o cadastro da sua loja!\n\n${ola} O cadastro da loja ${loja} foi enviado e está em análise pela administração do Eita Vale. A resposta chega no WhatsApp informado.\n\nPróximo passo: depois da aprovação, entre no painel da loja e conecte a sua conta do Mercado Pago em Loja > Receber pelo Mercado Pago.\n\nDocumentos do Eita Vale (também em anexo):\n${DOCS.map((d) => `- ${d.nome}: ${SITE}docs/${d.arq}`).join("\n")}\n\nDúvidas? WhatsApp ${WPP} ou ${CONTATO}.`;
   try {
-    await s.t.sendMail({ from: `ValeShop Sobradinho <${s.user}>`, to, subject: "Recebemos o cadastro da sua loja – ValeShop", text, html, attachments: anexos });
+    await s.t.sendMail({ from: `Eita Vale <${s.user}>`, to, subject: "Recebemos o cadastro da sua loja – Eita Vale", text, html, attachments: anexos });
     await registrar("loja_boas_vindas", true, anexos.length < DOCS.length ? `anexos ${anexos.length}/${DOCS.length}` : undefined);
   } catch (e) {
     await registrar("loja_boas_vindas", false, String(e));
@@ -148,7 +148,7 @@ async function notificar(tipo: string, id: string) {
     if (!l || !l.email) return;
     if (a.acao === "loja_suspensa" || a.acao === "loja_reativada") {
       const sus = a.acao === "loja_suspensa";
-      await enviarAviso(a.acao, l.email, sus ? `🔒 Sua loja foi suspensa - ValeShop` : `🟢 Sua loja voltou ao ar - ValeShop`,
+      await enviarAviso(a.acao, l.email, sus ? `🔒 Sua loja foi suspensa - Eita Vale` : `🟢 Sua loja voltou ao ar - Eita Vale`,
         sus ? "Sua loja foi suspensa pela administração" : "Sua loja voltou ao ar!",
         sus ? [`Loja: ${l.nome}`, `Motivo: ${a.motivo || "-"}`, "Enquanto estiver suspensa, a loja e os produtos não aparecem na vitrine e não recebem pedidos novos. Pedidos já feitos continuam normalmente.", "Somente a administração pode reativar a loja. Fale conosco para resolver.", `💬 WhatsApp da administração: ${WPP}`]
             : [`Loja: ${l.nome}`, "A administração reativou a sua loja. Ela já aparece na vitrine e pode receber pedidos novamente."],
@@ -156,7 +156,7 @@ async function notificar(tipo: string, id: string) {
       return;
     }
     if (a.acao === "penalidade") {
-      await enviarAviso("penalidade", l.email, `🔴 Penalidade na reputação da sua loja - ValeShop`, "Sua loja recebeu uma penalidade",
+      await enviarAviso("penalidade", l.email, `🔴 Penalidade na reputação da sua loja - Eita Vale`, "Sua loja recebeu uma penalidade",
         [`Loja: ${l.nome}`, `Onde: ${a.produto_titulo || "-"}`, `Motivo: ${a.motivo || "-"}`, a.obs ? `Observação da administração: ${a.obs}` : "",
           "Passar telefone, WhatsApp, redes sociais ou outro contato para vender fora da plataforma não é permitido. O contato foi bloqueado e não apareceu para o cliente.",
           "A penalidade vale por 90 dias. Repetir a prática pode levar à suspensão da loja."].filter(Boolean),
@@ -164,7 +164,7 @@ async function notificar(tipo: string, id: string) {
       return;
     }
     const rem = a.acao === "removido", pau = a.acao === "pausado";
-    await enviarAviso("aviso_produto", l.email, `⚠️ Aviso da administração sobre seu produto - ValeShop`,
+    await enviarAviso("aviso_produto", l.email, `⚠️ Aviso da administração sobre seu produto - Eita Vale`,
       rem ? "Um produto seu foi removido" : pau ? "Um produto seu foi pausado" : "Atenção: seu produto pode violar nossas políticas",
       [`Produto: ${a.produto_titulo || "-"}`, `Motivo: ${a.motivo || "-"}`, a.obs ? `Observação da administração: ${a.obs}` : "",
         rem ? "O produto foi removido da plataforma. Se achar que foi um engano, fale com a administração." : pau ? "O produto saiu da vitrine. Corrija o anúncio e fale com a administração para pedir a reativação." : "Corrija o anúncio o quanto antes para evitar que ele seja pausado ou removido."].filter(Boolean),
@@ -180,7 +180,7 @@ async function notificar(tipo: string, id: string) {
     const ajuda = `Não reconhece isso? Fale agora com a administração pelo WhatsApp ${WPP} ou pelo e-mail ${CONTATO}.`;
     const ant = t.email_antigo && t.email_antigo !== t.email_novo ? t.email_antigo : null;
     if (t.status === "pendente") {
-      if (ant) await enviarAviso("email_troca_pedido", ant, "🔐 Pedido para trocar o e-mail da sua conta - ValeShop", "Recebemos um pedido para trocar o seu e-mail",
+      if (ant) await enviarAviso("email_troca_pedido", ant, "🔐 Pedido para trocar o e-mail da sua conta - Eita Vale", "Recebemos um pedido para trocar o seu e-mail",
         [conta, `Novo e-mail informado: ${mask(t.email_novo)}`, "A troca só acontece depois que a administração conferir e aprovar o pedido.", "Se foi você, não precisa fazer nada. Se não foi, avise a administração para o pedido ser recusado."],
         "Falar no WhatsApp", "https://wa.me/5574988079171", ajuda);
       return;
@@ -188,18 +188,18 @@ async function notificar(tipo: string, id: string) {
     if (t.status === "aprovado") {
       const adm = t.origem === "admin";
       try {
-        await enviarAviso("email_troca_novo", t.email_novo, "✉️ Este é o novo e-mail da sua conta - ValeShop", "E-mail atualizado com sucesso",
-          [conta, adm ? "A administração da ValeShop alterou o e-mail da sua conta para este endereço." : "A administração aprovou o seu pedido e este passou a ser o e-mail da sua conta.",
+        await enviarAviso("email_troca_novo", t.email_novo, "✉️ Este é o novo e-mail da sua conta - Eita Vale", "E-mail atualizado com sucesso",
+          [conta, adm ? "A administração do Eita Vale alterou o e-mail da sua conta para este endereço." : "A administração aprovou o seu pedido e este passou a ser o e-mail da sua conta.",
             "A partir de agora, use este e-mail para recuperar a senha e receber os avisos da plataforma."],
           bt, link, `Dúvidas? Fale com a administração pelo WhatsApp ${WPP} ou pelo e-mail ${CONTATO}.`);
       } catch (e) { console.error("email_troca_novo", String(e)); }
-      if (ant) await enviarAviso("email_troca_antigo", ant, "⚠️ O e-mail da sua conta foi alterado - ValeShop", "O e-mail da sua conta foi alterado",
+      if (ant) await enviarAviso("email_troca_antigo", ant, "⚠️ O e-mail da sua conta foi alterado - Eita Vale", "O e-mail da sua conta foi alterado",
         [conta, `Novo e-mail: ${mask(t.email_novo)}`, "Este endereço não recebe mais os avisos nem a recuperação de senha da conta."],
         "Falar no WhatsApp", "https://wa.me/5574988079171", ajuda);
       return;
     }
     if (t.status === "recusado" && ant) {
-      await enviarAviso("email_troca_recusado", ant, "Pedido de troca de e-mail não aprovado - ValeShop", "Seu pedido de troca de e-mail não foi aprovado",
+      await enviarAviso("email_troca_recusado", ant, "Pedido de troca de e-mail não aprovado - Eita Vale", "Seu pedido de troca de e-mail não foi aprovado",
         [conta, `E-mail pedido: ${mask(t.email_novo)}`, t.decisao ? `Motivo: ${t.decisao}` : "", "O e-mail da sua conta continua o mesmo. Você pode fazer um novo pedido ou falar com a administração."].filter(Boolean),
         bt, link, `Dúvidas? Fale com a administração pelo WhatsApp ${WPP} ou pelo e-mail ${CONTATO}.`);
     }
@@ -217,7 +217,7 @@ async function notificar(tipo: string, id: string) {
     for (const l of (ls || []) as Array<{ email: string; nome: string }>) {
       if (!l.email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(l.email)) continue;
       try {
-        await enviarAviso(tipo, l.email, `${tst ? "🧪 TESTE · " : ""}${c.tag} Nova campanha na ValeShop: ${c.nome}`, `${tst ? "🧪 TESTE · " : ""}${c.tag} Sua loja está convidada: ${c.nome}`,
+        await enviarAviso(tipo, l.email, `${tst ? "🧪 TESTE · " : ""}${c.tag} Nova campanha no Eita Vale: ${c.nome}`, `${tst ? "🧪 TESTE · " : ""}${c.tag} Sua loja está convidada: ${c.nome}`,
           [`Período: ${dt(c.inicio)} até ${dt(c.fim)}`, `Desconto: ${desc}`, `Comissão nas vendas da campanha: ${com}`,
             "Os produtos que participam ganham a tag, o preço com desconto e uma aba própria na vitrine.",
             "Para participar, abra o painel da loja em Minha conta › Minha loja › 🎉 Campanhas e escolha os produtos.",
@@ -233,7 +233,7 @@ async function notificar(tipo: string, id: string) {
     const { data: u } = await db.auth.admin.getUserById(o.user_id);
     const e = u?.user?.email;
     if (!e) return;
-    await enviar("admin_otp", e, "Código de acesso da administração - ValeShop", "Confirme que é você", "Use o código abaixo para entrar no painel da administração da ValeShop Sobradinho. Se não foi você, troque sua senha.", o.codigo);
+    await enviar("admin_otp", e, "Código de acesso da administração - Eita Vale", "Confirme que é você", "Use o código abaixo para entrar no painel da administração do Eita Vale. Se não foi você, troque sua senha.", o.codigo);
     await db.from("admin_otp").update({ codigo: null }).eq("id", id);
     return;
   }
@@ -241,7 +241,7 @@ async function notificar(tipo: string, id: string) {
     const { data: a } = await db.from("admin_alertas").select("tipo,texto").eq("id", id).maybeSingle();
     if (!a) return;
     for (const to of await emailsAdmin()) {
-      try { await enviarAviso("admin_alerta", to, `⚠️ Alerta ValeShop: ${a.tipo}`, "Algo precisa da sua atenção", [a.texto], "Abrir a administração", SITE + "#/admin", "Aviso automático da plataforma ValeShop."); } catch (e) { console.error("alerta", String(e)); }
+      try { await enviarAviso("admin_alerta", to, `⚠️ Alerta Eita Vale: ${a.tipo}`, "Algo precisa da sua atenção", [a.texto], "Abrir a administração", SITE + "#/admin", "Aviso automático da plataforma Eita Vale."); } catch (e) { console.error("alerta", String(e)); }
     }
     return;
   }
@@ -269,7 +269,7 @@ async function notificar(tipo: string, id: string) {
     const its = (Array.isArray(p.itens) ? p.itens : []) as Array<Record<string, unknown>>;
     const resumo = its.slice(0, 5).map((i) => `${Number(i.qtd || i.q || 1)}x ${String(i.titulo || "Produto")}`).join(", ") + (its.length > 5 ? "…" : "");
     const sv = !!p.servico;
-    await enviarAviso("pedido_novo", l.email, sv ? `🛠️ Novo pedido de serviço nº ${p.id} - ValeShop` : `🛒 Novo pedido nº ${p.id} - ValeShop`, sv ? "Você recebeu um pedido de serviço!" : "Você recebeu um novo pedido!",
+    await enviarAviso("pedido_novo", l.email, sv ? `🛠️ Novo pedido de serviço nº ${p.id} - Eita Vale` : `🛒 Novo pedido nº ${p.id} - Eita Vale`, sv ? "Você recebeu um pedido de serviço!" : "Você recebeu um novo pedido!",
       [`Pedido nº ${p.id} de ${p.cliente || "cliente"}.`, resumo ? `${sv ? "Serviço" : "Itens"}: ${resumo}` : "", sv ? `Data sugerida: ${p.ag_pref || "-"}` : "", sv && !p.preco_def ? "Valor: a combinar (informe ao aceitar)" : `Total: ${brl(Number(p.total))}`, sv ? "Abra o painel, combine pelo chat e toque em Aceitar e agendar." : p.direto ? "✅ Pedido já PAGO pelo Mercado Pago. Abra o painel e toque em Confirmar e preparar." : (p.frete_combinar && !p.frete_def) ? "🚚 O cliente quer combinar o frete: responda no chat do pedido e toque em Definir frete." : "Abra o painel para aceitar o pedido e combinar a entrega."].filter(Boolean),
       "Abrir meus pedidos", SITE + "#/minha", p.direto ? "Você tem até 36 horas para confirmar. Sem confirmação, o valor é devolvido automaticamente ao cliente." : "Responda rápido: pedidos novos que ficam sem resposta expiram automaticamente.");
   } else if (tipo === "frete_definido") {
@@ -318,7 +318,7 @@ Deno.serve(async (req: Request) => {
       const { data: cod, error } = await db.rpc("email_codigo_criar", { p_email: email, p_dev: dev });
       if (error) return json({ erro: error.message }, 400);
       try {
-        await enviar("verif", email, "Seu código de confirmação - ValeShop", "Confirme seu e-mail", "Use o código abaixo para confirmar o seu e-mail na ValeShop Sobradinho:", cod as string);
+        await enviar("verif", email, "Seu código de confirmação - Eita Vale", "Confirme seu e-mail", "Use o código abaixo para confirmar o seu e-mail no Eita Vale:", cod as string);
       } catch (e) {
         console.error("smtp", String(e));
         return json({ erro: String(e).includes("SEM_CONFIG") ? "O envio de e-mail ainda não foi configurado." : "Não foi possível enviar o e-mail agora. Confira o endereço e tente de novo." }, 503);
@@ -339,7 +339,7 @@ Deno.serve(async (req: Request) => {
       const r = data as { chave: string; via: string; email?: string; nome?: string; codigo?: string };
       if (r.via === "email" && r.email && r.codigo) {
         try {
-          await enviar("senha", r.email, "Código para criar nova senha - ValeShop", "Nova senha", `Olá${r.nome ? ", " + r.nome : ""}! Use o código abaixo para criar uma nova senha na ValeShop Sobradinho:`, r.codigo);
+          await enviar("senha", r.email, "Código para criar nova senha - Eita Vale", "Nova senha", `Olá${r.nome ? ", " + r.nome : ""}! Use o código abaixo para criar uma nova senha no Eita Vale:`, r.codigo);
           return json({ chave: r.chave, via: "email", email: mask(r.email) });
         } catch (e) {
           console.error("smtp", String(e));
