@@ -4,7 +4,7 @@ import nodemailer from "npm:nodemailer@6.9.16";
 import webpush from "npm:web-push@3.6.7";
 
 const json = (o: unknown, s = 200) => new Response(JSON.stringify(o), { status: s, headers: { "Content-Type": "application/json" } });
-const SITE = "https://valeshop-sobradinho.vercel.app/";
+const SITE = "https://eitavale.com.br/";
 const db = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!, { auth: { persistSession: false } });
 const esc = (s: unknown) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]!));
 const brl = (n: number) => "R$ " + Number(n || 0).toFixed(2).replace(".", ",");

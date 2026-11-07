@@ -144,7 +144,7 @@ let VF=false;
 const lg=l=>l.logo?imgM(l.logo):ini(l.nome);
 const estB=(p,c,full)=>{const n=p.estoque;if(!(n>=1&&n<=5)||fl(p))return'';return '<span class="est'+(n===1?' u':'')+(c?' '+c:'')+'"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12.5 2c.6 3-.9 4.6-2.2 6.2C9 9.8 7.5 11.4 7.5 14a5 5 0 0010 0c0-1.8-.8-3.2-1.7-4.3-.3 1.2-.9 1.9-1.9 2.2.7-3.2.1-6.700-1.400-9.900z"/></svg>'+(full?(n===1?'ÚLTIMA UNIDADE':'ÚLTIMAS '+n+' UNIDADES'):(n===1?'ÚLTIMA!':'ÚLTIMAS '+n))+'</span>'};
 const thumb=p=>(p.fotos&&p.fotos[0])?imgM(p.fotos[0]):(ICO[p.categoria]||'🛍️');
-const SITE='https://valeshop-sobradinho.vercel.app/';
+const SITE='https://eitavale.com.br/';
 let OFS=0;const NOW=()=>Date.now()+OFS;
 function syncHora(){try{const t0=Date.now();sb.rpc('hora_servidor').then(r=>{if(r&&typeof r.data==='number'){OFS=r.data-(t0+Date.now())/2}},()=>{})}catch(e){}}
 const ofa=p=>!!(p.oferta&&p.oferta.ate>NOW());

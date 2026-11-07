@@ -12,7 +12,7 @@ const json = (o: unknown, s = 200) =>
   new Response(JSON.stringify(o), { status: s, headers: { ...CORS, "Content-Type": "application/json" } });
 
 const URL_ = Deno.env.get("SUPABASE_URL")!;
-const SITE = "https://valeshop-sobradinho.vercel.app/";
+const SITE = "https://eitavale.com.br/";
 const CONTATO = "contato.eitavale@gmail.com";
 const WPP = "(74) 98807-9171";
 const db = createClient(URL_, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!, { auth: { persistSession: false } });

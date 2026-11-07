@@ -1,6 +1,6 @@
 // Cria a cobrança (Checkout Pro) na conta da loja, com a comissão do Eita Vale (marketplace_fee).
 // Também verifica um pagamento (acao: 'verificar') caso o aviso do Mercado Pago atrase.
-const APP = 'https://valeshop-sobradinho.vercel.app/';
+const APP = 'https://eitavale.com.br/';
 const SU = Deno.env.get('SUPABASE_URL')!, SK = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
 const H = { apikey: SK, Authorization: 'Bearer ' + SK, 'Content-Type': 'application/json' };
 const CORS = { 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type', 'Access-Control-Allow-Methods': 'POST, OPTIONS' };

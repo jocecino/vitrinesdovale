@@ -1,7 +1,7 @@
 // Conexão da loja com o Mercado Pago (OAuth).
 //  ?start=<state>  -> redireciona para a tela de autorização do Mercado Pago (aplicação real ou de teste)
 //  ?code=..&state=.. -> retorno do Mercado Pago: troca o código pelas chaves e guarda tudo protegido
-const APP = 'https://valeshop-sobradinho.vercel.app/';
+const APP = 'https://eitavale.com.br/';
 const SU = Deno.env.get('SUPABASE_URL')!, SK = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
 const CRED = (teste: boolean) => teste
   ? { id: (Deno.env.get('MP_TESTE_CLIENT_ID') || '').trim(), sec: (Deno.env.get('MP_TESTE_CLIENT_SECRET') || '').trim() }
