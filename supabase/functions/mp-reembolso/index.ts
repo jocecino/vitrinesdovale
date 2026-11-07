@@ -22,13 +22,15 @@ Deno.serve(async (req) => {
     const b = await req.json().catch(() => ({}));
     const n = parseInt(b.numero, 10);
     if (!n) return out({ erro: 'Pedido inválido.' }, 400);
-    const ped = (await db('pedidos?id=eq.' + n + '&select=id,loja_id,status,pagamento,pg_status,mp_payment_id,total,direto,loja_ok_em'))[0];
+    const ped = (await db('pedidos?id=eq.' + n + '&select=id,loja_id,status,pagamento,pg_status,mp_payment_id,total,direto,loja_ok_em,me_etiqueta,me_status'))[0];
     if (!ped) return out({ erro: 'Pedido não encontrado.' }, 404);
     if (auto && (!ped.direto || ped.loja_ok_em || ped.status !== 'confirmado')) return out({ erro: 'Pedido não elegível para devolução automática.' }, 400);
     const adm = auto || (await db('admins?user_id=eq.' + user.id + '&select=user_id')).length > 0;
     const lj = (await db('lojas?id=eq.' + ped.loja_id + '&select=owner_id'))[0];
     const dono = !auto && lj && lj.owner_id === user.id;
     if (!adm && !dono) return out({ erro: 'Sem permissão para este pedido.' }, 403);
+    // etiqueta dos Correios ativa: a loja cancela a etiqueta antes (senão perde o valor pago no Melhor Envio)
+    if ((auto || !(adm && !dono)) && ped.me_etiqueta && ['carrinho', 'pago', 'gerada'].includes(ped.me_status)) return out({ erro: 'Este pedido tem etiqueta dos Correios. Primeiro toque em "Cancelar etiqueta" no pedido (o valor volta para o saldo do Melhor Envio) e depois cancele o pedido.' }, 400);
     if (ped.pagamento !== 'mp' || ped.pg_status !== 'pago' || !ped.mp_payment_id) return out({ erro: 'Este pedido não tem pagamento para devolver.' }, 400);
     if (!adm && !['confirmado', 'saiu'].includes(ped.status)) return out({ erro: 'Pedido entregue: para devolver, fale com o suporte.' }, 400);
     const ct = (await db('mp_contas?loja_id=eq.' + ped.loja_id + '&select=access_token'))[0];

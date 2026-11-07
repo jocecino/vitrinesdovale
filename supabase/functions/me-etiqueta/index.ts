@@ -52,6 +52,8 @@ async function gerar(ped: any, lj: any, nf: string) {
   const e = ped.end_json || {};
   if (!ped.cpf_dest || !e.rua || !ped.cep) throw new Erro('Este pedido não tem os dados completos do destinatário (CPF/endereço). Use "Copiar dados" e gere a etiqueta direto no site do Melhor Envio.');
   const c = await conta(lj.id);
+  // gerar etiqueta = a loja assumiu o pedido (evita a devolução automática de 36 h)
+  await patch('pedidos?id=eq.' + ped.id + '&loja_ok_em=is.null', { loja_ok_em: new Date().toISOString() });
   if (ped.me_status === 'gerada' && ped.me_etiqueta) return { ok: true, url: await imprimir(c, ped.me_etiqueta), tracking: ped.me_tracking || null };
   // medidas de cada item vêm do banco
   const its = Array.isArray(ped.itens) ? ped.itens : [];
