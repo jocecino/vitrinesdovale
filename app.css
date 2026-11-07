@@ -800,3 +800,13 @@ a.inpi{text-decoration:none}
 .ebv{color:#1565C0;font-weight:700}.ebm b{display:block;color:#1565C0;font-size:16px;margin-bottom:4px}
 .item.ebl{background:#f1f1f1;border-color:#e4e4e4}.ebl i{filter:grayscale(1);opacity:.5}.item.ebl b{color:#8a8a8a}.item.ebl small{color:#9a9a9a}
 #lj .ebl span{color:#9a9a9a}#lj .ebl .ebv{display:block;font-style:normal;font-size:11px}
+/* CEP (Fase 1 do frete) */
+.cepl{padding:0 2px 6px}.cepb{background:none;border:0;padding:0;font:inherit;font-size:13px;font-weight:600;color:inherit;cursor:pointer;text-align:left;line-height:1.35;max-width:100%}.cepb b{font-weight:800}.cepb u{text-underline-offset:3px}
+.cepr{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.cepr input{flex:1 1 140px;min-width:0;max-width:200px}.cepr .lk{font-size:13px;white-space:nowrap}
+.cepm{display:block;margin:-4px 0 2px;min-height:0}
+.adr2{display:grid;grid-template-columns:1fr 72px;gap:10px}.adr2 input[readonly]{background:rgba(0,0,0,.04);color:inherit;cursor:default}
+.cepi{display:flex;gap:8px;margin:6px 0}.cepi input{flex:1;min-width:0}
+.frx{background:rgba(217,58,58,.08);border:1px solid rgba(217,58,58,.4);border-radius:10px;padding:10px 12px;font-size:14px;line-height:1.4;margin:6px 0}
+#foraM:empty{display:none}#foraM{margin:4px 0 10px;font-size:14px;line-height:1.4}
+.cepdl input{width:100%;font-size:18px;letter-spacing:1px}.cepdl .lk{font-size:14px}
+html.dk .adr2 input[readonly]{background:rgba(255,255,255,.06)}
