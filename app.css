@@ -801,7 +801,11 @@ a.inpi{text-decoration:none}
 .item.ebl{background:#f1f1f1;border-color:#e4e4e4}.ebl i{filter:grayscale(1);opacity:.5}.item.ebl b{color:#8a8a8a}.item.ebl small{color:#9a9a9a}
 #lj .ebl span{color:#9a9a9a}#lj .ebl .ebv{display:block;font-style:normal;font-size:11px}
 /* CEP (Fase 1 do frete) */
-.cepl{padding:0 2px 6px}.cepb{background:none;border:0;padding:0;font:inherit;font-size:13px;font-weight:600;color:inherit;cursor:pointer;text-align:left;line-height:1.35;max-width:100%}.cepb b{font-weight:800}.cepb u{text-underline-offset:3px}
+.hrow{display:flex;justify-content:space-between;align-items:center;gap:10px;white-space:nowrap}.hrow .instb{flex:0 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis}
+.hdr{display:flex;align-items:center;gap:0;margin-left:auto;min-width:0;flex:0 0 auto;max-width:62%}
+@media(max-width:400px){.hrow .ix{display:none}}
+.cepb{background:none;border:0;padding:0;font:inherit;font-weight:800;color:inherit;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;max-width:40vw;text-decoration:underline;text-underline-offset:3px}
+#hdU{text-decoration:none;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:24vw;color:inherit}#hdU::before{content:'·';margin:0 6px;display:inline-block}
 .cepr{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.cepr input{flex:1 1 140px;min-width:0;max-width:200px}.cepr .lk{font-size:13px;white-space:nowrap}
 .cepm{display:block;margin:-4px 0 2px;min-height:0}
 .adr2{display:grid;grid-template-columns:1fr 72px;gap:10px}.adr2 input[readonly]{background:rgba(0,0,0,.04);color:inherit;cursor:default}
