@@ -824,3 +824,4 @@ html.dk .adr2 input[readonly]{background:rgba(255,255,255,.06)}
 .envb{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}.envb .btn{flex:1 1 auto;text-align:center;text-decoration:none}
 .envi{display:flex;gap:8px;margin-top:6px}.envi input{flex:1;min-width:0;text-transform:uppercase}.envr{margin-top:6px}
 .envi input::placeholder{text-transform:none}
+.envm{margin-top:6px}.envm summary{cursor:pointer;font-size:.85em;color:#555;padding:4px 0}#cpfW{margin:8px 0}#cpfW input{width:100%}
