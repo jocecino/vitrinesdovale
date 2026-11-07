@@ -13,7 +13,7 @@ const json = (o: unknown, s = 200) =>
 
 const URL_ = Deno.env.get("SUPABASE_URL")!;
 const SITE = "https://valeshop-sobradinho.vercel.app/";
-const CONTATO = "valeshopsobradinho@gmail.com";
+const CONTATO = "contato.eitavale@gmail.com";
 const WPP = "(74) 98807-9171";
 const db = createClient(URL_, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!, { auth: { persistSession: false } });
 
