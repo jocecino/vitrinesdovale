@@ -146,6 +146,22 @@ Deno.serve(async (req: Request) => {
       const n = await enviarPush(p.loja_id, { title: `🛒 Novo pedido nº ${p.id}`, body: `${p.cliente || "Cliente"} · ${brl(Number(p.total))}`, url: "/#/minha", tag: "pedido-" + p.id });
       return json({ ok: true, enviados: n });
     }
+    if (tipo === "postagem_lembrete") {
+      const { data: p } = await db.from("pedidos").select("id,loja_id,cliente,frete_servico,rastreio,status").eq("id", Number(id)).maybeSingle();
+      if (!p || p.rastreio || p.status !== "confirmado") return json({ ok: false });
+      const n = await enviarPush(p.loja_id, { title: `📦 Pedido nº ${p.id} aguardando postagem`, body: `${p.cliente || "Cliente"} · ${p.frete_servico || "Correios"}. Poste o pacote e informe o rastreio no painel.`, url: "/#/minha", tag: "postar-" + p.id });
+      const { data: l } = await db.from("lojas").select("nome,email").eq("id", p.loja_id).maybeSingle();
+      const s = smtp();
+      if (s && l?.email) {
+        try {
+          await s.t.sendMail({ from: `Eita Vale <${s.user}>`, to: l.email, subject: `📦 Pedido nº ${p.id} aguardando postagem - Eita Vale`,
+            text: `O pedido nº ${p.id} (${p.frete_servico || "Correios"}) foi confirmado há mais de 1 dia e ainda não foi postado. Poste o pacote e informe o rastreio no painel: ${SITE}#/minha`,
+            html: moldura("📦 Pedido aguardando postagem", `<p>O pedido nº <b>${p.id}</b> da loja <b>${esc(l.nome)}</b> (${esc(p.frete_servico || "Correios")}) foi confirmado há mais de 1 dia e ainda não foi postado.</p><p>Leve o pacote à agência ou ponto de coleta e informe o rastreio no painel. Se gerou a etiqueta pelo Melhor Envio, o rastreio entra sozinho.</p>`, "Abrir meu painel", SITE + "#/minha", "Este aviso é enviado uma única vez por pedido.") });
+          await logar("postagem_lembrete", true);
+        } catch (e) { await logar("postagem_lembrete", false, String(e)); }
+      }
+      return json({ ok: true, enviados: n });
+    }
     if (tipo === "campanha_nova") {
       const { data: c } = await db.from("campanhas").select("id,nome,tag,ativo").eq("id", id).maybeSingle();
       if (!c || !c.ativo) return json({ ok: false });
@@ -216,7 +232,7 @@ Deno.serve(async (req: Request) => {
         await s.t.sendMail({ from: `Eita Vale <${s.user}>`, to: c.email,
           subject: ult ? `⏰ Último dia para avaliar sua compra na ${p.loja}` : `⭐ Como foi sua compra na ${p.loja}?`,
           text: `Olá${nome ? ", " + nome : ""}! ${ult ? "Faltam poucos dias para avaliar" : "Conte como foi"} o seu pedido nº ${p.id} na ${p.loja}. Leva menos de 1 minuto: ${link}`,
-          html: moldura(ult ? "⏰ Ainda dá tempo de avaliar" : "⭐ Como foi sua compra?", `<p>Olá${nome ? ", " + esc(nome) : ""}!</p><p>Seu pedido nº <b>${p.id}</b> na <b>${esc(p.loja)}</b> foi entregue. Conte como foi: dê estrelas para o produto, o atendimento e a entrega.</p><p>Sua avaliação ajuda outros clientes de Sobradinho e faz as melhores lojas aparecerem primeiro.</p>`, "Avaliar agora", link, ult ? "Este é o último lembrete. O prazo para avaliar é de 7 dias após a entrega." : "Leva menos de 1 minuto. O prazo é de 7 dias após a entrega.") });
+          html: moldura(ult ? "⏰ Ainda dá tempo de avaliar" : "⭐ Como foi sua compra?", `<p>Olá${nome ? ", " + esc(nome) : ""}!</p><p>Seu pedido nº <b>${p.id}</b> na <b>${esc(p.loja)}</b> foi entregue. Conte como foi: dê estrelas para o produto, o atendimento e a entrega.</p><p>Sua avaliação ajuda outros clientes do Vale e faz as melhores lojas aparecerem primeiro.</p>`, "Avaliar agora", link, ult ? "Este é o último lembrete. O prazo para avaliar é de 7 dias após a entrega." : "Leva menos de 1 minuto. O prazo é de 7 dias após a entrega.") });
         await logar("avaliar_lembrete", true);
       } catch (e) { await logar("avaliar_lembrete", false, String(e)); }
       return json({ ok: true });

@@ -10,7 +10,7 @@ async function rpc(f, body) {
 }
 module.exports = async (req, res) => {
   const t = req.query.t === 'p' ? 'p' : 'l', id = String(req.query.id || '');
-  let title = 'Eita Vale', desc = 'Compre no comércio de Sobradinho com pagamento seguro pelo Mercado Pago. Receba em casa ou retire na loja.';
+  let title = 'Eita Vale', desc = 'Compre no comércio do Vale do São Francisco com pagamento seguro pelo Mercado Pago. Receba em casa ou retire na loja.';
   let img = 'https://' + req.headers.host + '/og-eitavale.png';
   try {
     if (UUID.test(id)) {
