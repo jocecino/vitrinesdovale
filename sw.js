@@ -1,4 +1,14 @@
 const V='vv-__V__';
+// Endereço antigo (antes de virar Eita Vale): apaga a cópia guardada, desliga e leva para o domínio novo.
+const OLD=location.hostname==='valeshop-sobradinho.vercel.app';
+if(OLD){
+ self.addEventListener('install',()=>self.skipWaiting());
+ self.addEventListener('activate',e=>e.waitUntil((async()=>{try{for(const k of await caches.keys())await caches.delete(k)}catch(x){}
+  try{await self.registration.unregister()}catch(x){}
+  try{for(const c of await self.clients.matchAll({type:'window',includeUncontrolled:true})){const u=new URL(c.url);c.navigate('https://eitavale.com.br'+u.pathname+u.search+u.hash)}}catch(x){}})()));
+ self.addEventListener('fetch',e=>{const r=e.request;if(r.mode==='navigate'){const u=new URL(r.url);e.respondWith(Response.redirect('https://eitavale.com.br'+u.pathname+u.search,302))}});
+}
+if(!OLD){
 self.addEventListener('install',e=>{e.waitUntil(caches.open(V).then(c=>c.addAll(['/','/manifest.webmanifest','/icon-192.png','/logo.webp'])));self.skipWaiting()});
 const IMG='vv-img-1',R2='https://pub-c1cbf15f15c14757a0192ce3ea39d547.r2.dev/';
 self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(k=>Promise.all(k.filter(x=>x!==V&&x!==IMG).map(x=>caches.delete(x)))));self.clients.claim()});
@@ -14,3 +24,4 @@ self.addEventListener('push',e=>{let d={};try{d=e.data?e.data.json():{}}catch(x)
  e.waitUntil(self.registration.showNotification(d.title||'Eita Vale',{body:d.body||'',icon:'/icon-192.png',badge:'/badge-96.png',tag:d.tag||undefined,data:{url:d.url||'/#/minha'}}))});
 self.addEventListener('notificationclick',e=>{e.notification.close();const u=(e.notification.data&&e.notification.data.url)||'/#/minha';
  e.waitUntil(clients.matchAll({type:'window',includeUncontrolled:true}).then(L=>{for(const c of L){if('focus' in c){c.navigate&&c.navigate(u);return c.focus()}}return clients.openWindow(u)}))});
+}

@@ -66,14 +66,14 @@
  ],
  "redirects": [
   {
-   "source": "/:path*",
+   "source": "/:path((?!sw\\.js$).*)",
    "has": [
     {
      "type": "host",
      "value": "valeshop-sobradinho.vercel.app"
     }
    ],
-   "destination": "https://eitavale.com.br/:path*",
+   "destination": "https://eitavale.com.br/:path",
    "permanent": true
   }
  ]
