@@ -876,3 +876,5 @@ html.dk .bar img.icconta{filter:brightness(0) invert(1)!important;opacity:1}
 @keyframes splLd{0%{transform:translateX(-100%)}100%{transform:translateX(250%)}}
 @keyframes splOut{to{opacity:0;transform:scale(1.08);visibility:hidden}}
 @media (prefers-reduced-motion:reduce){#spl{animation:splOut .3s ease .4s forwards}#spl *{animation-duration:.01s!important;animation-delay:0s!important;animation-iteration-count:1!important}}
+#spl.pwa .bag{animation:splPop .6s cubic-bezier(.3,1.5,.5,1) both,splSw 1s ease-in-out .6s both}#spl.pwa .sh{animation:splFd .3s ease both}
+@keyframes splPop{0%{transform:scale(1)}35%{transform:scale(1.1,.9)}65%{transform:translateY(-10px) scale(.96,1.05)}100%{transform:none}}
