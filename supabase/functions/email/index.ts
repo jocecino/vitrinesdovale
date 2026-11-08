@@ -207,14 +207,16 @@ async function notificar(tipo: string, id: string) {
   }
   if (tipo === "campanha_nova" || tipo === "campanha_teste") {
     const tst = tipo === "campanha_teste";
-    const { data: c } = await db.from("campanhas").select("nome,tag,inicio,fim,modo,desc_pct,desc_max,regra_com,com_pct,ativo,status,teste_loja").eq("id", id).maybeSingle();
+    const { data: c } = await db.from("campanhas").select("nome,tag,inicio,fim,modo,desc_pct,desc_max,regra_com,com_pct,ativo,status,teste_loja,cidades").eq("id", id).maybeSingle();
     if (!c || (!tst && !c.ativo) || (tst && (!c.teste_loja || c.status === "lancada"))) return;
     const dt = (v: string) => new Date(v).toLocaleString("pt-BR", { timeZone: "America/Bahia", day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" });
     const desc = c.modo === "fixo" ? `${Number(c.desc_pct)}% de desconto` : `de ${Number(c.desc_pct)}% a ${Number(c.desc_max)}% de desconto (você escolhe)`;
     const com = c.regra_com === "fixo" ? `${Number(c.com_pct)}% fixo` : c.regra_com === "extra" ? `tabela normal + ${Number(c.com_pct)}%` : "tabela normal";
-    const q = db.from("lojas").select("email,nome");
+    const q = db.from("lojas").select("email,nome,cidade");
     const { data: ls } = tst ? await q.eq("id", c.teste_loja) : await q.eq("status", "ativa");
-    for (const l of (ls || []) as Array<{ email: string; nome: string }>) {
+    const cs = (c.cidades || []) as string[];
+    for (const l of (ls || []) as Array<{ email: string; nome: string; cidade: string | null }>) {
+      if (!tst && cs.length && !cs.some((x) => x.trim().toLowerCase() === String(l.cidade || "").trim().toLowerCase())) continue;
       if (!l.email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(l.email)) continue;
       try {
         await enviarAviso(tipo, l.email, `${tst ? "🧪 TESTE · " : ""}${c.tag} Nova campanha no Eita Vale: ${c.nome}`, `${tst ? "🧪 TESTE · " : ""}${c.tag} Sua loja está convidada: ${c.nome}`,

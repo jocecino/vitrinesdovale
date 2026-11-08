@@ -7,6 +7,8 @@ const json = (o: unknown, s = 200) => new Response(JSON.stringify(o), { status: 
 const SITE = "https://eitavale.com.br/";
 const db = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!, { auth: { persistSession: false } });
 const esc = (s: unknown) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]!));
+// campanha só de algumas cidades (lista vazia = todas)
+const cidOk = (cs: string[] | null, cid: string | null) => !cs || !cs.length || cs.some((x) => x.trim().toLowerCase() === String(cid || "").trim().toLowerCase());
 const brl = (n: number) => "R$ " + Number(n || 0).toFixed(2).replace(".", ",");
 
 async function cfg(k: string) {
@@ -163,11 +165,12 @@ Deno.serve(async (req: Request) => {
       return json({ ok: true, enviados: n });
     }
     if (tipo === "campanha_nova") {
-      const { data: c } = await db.from("campanhas").select("id,nome,tag,ativo").eq("id", id).maybeSingle();
+      const { data: c } = await db.from("campanhas").select("id,nome,tag,ativo,cidades").eq("id", id).maybeSingle();
       if (!c || !c.ativo) return json({ ok: false });
-      const { data: ls } = await db.from("lojas").select("id").eq("status", "ativa");
+      const { data: ls } = await db.from("lojas").select("id,cidade").eq("status", "ativa");
       let n = 0;
-      for (const l of (ls || []) as Array<{ id: string }>) {
+      for (const l of (ls || []) as Array<{ id: string; cidade: string | null }>) {
+        if (!cidOk(c.cidades, l.cidade)) continue;
         n += await enviarPush(l.id, { title: `🎉 Nova campanha: ${c.tag}`, body: `${c.nome} · toque para escolher os produtos que vão participar.`, url: "/#/minha", tag: "campanha-" + c.id });
       }
       return json({ ok: true, enviados: n });
