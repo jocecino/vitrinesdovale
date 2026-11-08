@@ -10,6 +10,11 @@
 <meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@300..800&display=swap" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@300..800&display=swap"></noscript>
 <link rel="stylesheet" href="app.css?v=__V__"><script>try{if(localStorage.getItem("vv_tema")==="noite")document.documentElement.classList.add("dk")}catch(e){}</script></head><body>
+<div id="spl" aria-hidden="true"><div class="halo"></div><div class="ring"></div><div class="bag"><img src="/ic/carrinho-vale.webp" alt=""></div><div class="sh"></div><b class="nm">EITA VALE</b><small>Compre no Vale do São Francisco</small><div class="ld"><i></i></div></div>
+<script>(function(){var s=document.getElementById('spl');try{if(sessionStorage.getItem('vv_spl')){s.remove();return}sessionStorage.setItem('vv_spl','1')}catch(e){}
+var t='';for(var i=0;i<14;i++)t+='<i class="sp" style="--a:'+(i*360/14+Math.random()*12)+'deg;--d:'+(70+Math.random()*50)+'px;animation-delay:'+(.6+Math.random()*.15)+'s"></i>';s.insertAdjacentHTML('afterbegin',t);
+var n=s.querySelector('.nm'),w=n.textContent;n.innerHTML=w.split('').map(function(c,i){return '<span style="animation-delay:'+(1+i*.05)+'s">'+(c===' '?'&nbsp;':c)+'</span>'}).join('');
+s.addEventListener('animationend',function(e){if(e.target===s)s.remove()});setTimeout(function(){if(s.parentNode)s.remove()},4500)})();</script>
 <header id="hd">
  <div class="t1"><img src="/logo.webp" width="44" height="44" alt="Eita Vale"><label class="sr"><span aria-hidden="true">🔍</span><input id="q" placeholder="Buscar no Eita Vale" oninput="PN=1;home();qtr()"></label></div>
  <div class="loc hrow"><button class="instb" id="inst" onclick="instalar()">Instalar o app<span class="ix"> no celular</span></button><span class="hdr"><button type="button" class="cepb" id="cepB" onclick="cepAsk()"></button></span></div>

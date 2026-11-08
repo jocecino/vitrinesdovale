@@ -291,7 +291,7 @@ async function cepIn(i){cepMask(i);const v=cepD(i.value),w=i.closest('.adw'),m=w
  i.setCustomValidity('');i.dataset.ok=v;const mud=f('cidade').value!==r.cidade||f('uf').value!==r.uf;f('cidade').value=r.cidade;f('uf').value=r.uf;
  if(mud||(!ehSob(r.cidade,r.uf)&&r.bairro))w.querySelector('.bwr').innerHTML=bairroH({cidade:r.cidade,uf:r.uf,bairro:mud?r.bairro:(f('bairro').value||r.bairro)},{},w.dataset.req?' required':'');
  if(r.rua&&(mud||!f('rua').value.trim()))f('rua').value=r.rua;else if(mud)f('rua').value='';
- m.textContent='📍 '+r.cidade+'-'+r.uf+(r.rua?' · '+r.rua:'')+(r.bairro?' · '+r.bairro:'');if(mud&&i.closest('#cadAdr')&&$('cnome')&&$('cnome').value.trim())chkNome();
+ m.textContent='';if(mud&&i.closest('#cadAdr')&&$('cnome')&&$('cnome').value.trim())chkNome();
  const fm=i.form;if(fm)fm.dispatchEvent(new Event('input',{bubbles:true}))}
 function cepErr(w){const i=w&&w.querySelector('[name=cep]');return i&&i.validationMessage&&cepD(i.value).length?i.validationMessage:''}
 function adrOk(a){return !!(cepD(a.cep).length===8&&a.cidade&&a.bairro&&a.rua&&a.num&&a.ref)}
