@@ -828,3 +828,6 @@ html.dk .adr2 input[readonly]{background:rgba(255,255,255,.06)}
 .envi{display:flex;gap:8px;margin-top:6px}.envi input{flex:1;min-width:0;text-transform:uppercase}.envr{margin-top:6px}
 .envi input::placeholder{text-transform:none}
 .envm{margin-top:6px}.envm summary{cursor:pointer;font-size:.85em;color:#555;padding:4px 0}#cpfW{margin:8px 0}#cpfW input{width:100%}
+
+.bpk.bpsel{cursor:pointer;caret-color:transparent;background-image:linear-gradient(45deg,transparent 50%,#888 50%),linear-gradient(135deg,#888 50%,transparent 50%);background-position:calc(100% - 18px) 55%,calc(100% - 13px) 55%;background-size:5px 5px,5px 5px;background-repeat:no-repeat;padding-right:32px}
+.bpdl{width:min(560px,100%);max-height:86vh;display:flex;flex-direction:column}.bphd{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;font-size:17px}.bpdl .cpb{font-size:16px}.bpL{max-height:none;flex:1;min-height:0;overflow:auto}
