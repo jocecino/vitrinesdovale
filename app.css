@@ -940,5 +940,11 @@ html.dk .ofrim{background:#ffffff14}
 
 .edmt{display:block;margin:6px 0 0;font-size:13.5px;font-weight:700}
 
-.cpr{display:block;margin:0 0 14px;border-left:5px solid var(--gold)}.cprf{display:grid;grid-template-columns:90px minmax(0,1fr);gap:10px}.cprf label{margin:0}
+.cpr{display:block;margin:0 0 14px;border-left:5px solid var(--gold)}.cprf{display:grid;grid-template-columns:84px minmax(0,1fr);gap:10px}.cprf label{min-width:0}.cprf label{margin:0}
 .item>.lca{margin-top:10px}
+
+/* campo de data cabe na largura (Safari do iPhone tem largura mínima própria) */
+input[type=date]{-webkit-appearance:none;appearance:none;display:block;width:100%;max-width:100%;min-width:0;box-sizing:border-box;text-align:left}
+input[type=date]::-webkit-date-and-time-value{text-align:left}
+@supports (-webkit-touch-callout:none){input[type=date]:not(.dtv)::before{content:attr(placeholder);color:var(--mute)}
+input[type=date]:focus::before,input[type=date].dtv::before{content:none}}
