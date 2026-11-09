@@ -163,6 +163,13 @@ async function notificar(tipo: string, id: string) {
         "Abrir meu painel", SITE + "#/minha", `Achou que foi um engano? Fale com a administração pelo WhatsApp ${WPP} ou pelo e-mail ${CONTATO}.`);
       return;
     }
+    if (a.acao === "tipo_alterado") {
+      await enviarAviso("tipo_alterado", l.email, `🔁 Seu anúncio foi ajustado pela administração - Eita Vale`, "Seu anúncio foi ajustado pela administração",
+        [`Loja: ${l.nome}`, a.motivo || "", a.obs ? `Observação da administração: ${a.obs}` : "",
+          "Fotos, título, descrição, preço, curtidas, avaliações e perguntas continuam iguais. Isto não é uma penalidade."].filter(Boolean),
+        "Abrir meu painel", SITE + "#/minha", `Dúvidas? Fale com a administração pelo e-mail ${CONTATO}.`);
+      return;
+    }
     const rem = a.acao === "removido", pau = a.acao === "pausado";
     await enviarAviso("aviso_produto", l.email, `⚠️ Aviso da administração sobre seu produto - Eita Vale`,
       rem ? "Um produto seu foi removido" : pau ? "Um produto seu foi pausado" : "Atenção: seu produto pode violar nossas políticas",
