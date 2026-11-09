@@ -911,3 +911,4 @@ html.dk .bar img.icconta{filter:brightness(0) invert(1)!important;opacity:1}
 .ahl{display:flex;justify-content:space-between;align-items:center;padding:6px 16px 2px}.ahl b{font-size:15px}.ahl .ahs{color:var(--red);font-weight:700;font-size:14px}
 
 .lcd{scroll-margin-top:76px}.lcx:empty{display:none}.lcx{margin-top:12px;padding-top:12px;border-top:1px solid var(--line)}.lcxh{font-weight:800;font-size:15px;margin:0 0 6px}.lcx .aedf>b{display:none}
+@keyframes swl{from{transform:translateX(36px);opacity:.3}to{transform:none;opacity:1}}@keyframes swr{from{transform:translateX(-36px);opacity:.3}to{transform:none;opacity:1}}.swl{animation:swl .22s ease-out}.swr{animation:swr .22s ease-out}
