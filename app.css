@@ -927,3 +927,4 @@ html.dk .ofrim{background:#ffffff14}
 @media(min-width:700px){.ofrh b{font-size:15px}}
 
 .cmsd{display:block;margin:0 0 12px;border-left:5px solid var(--gold)}.cmsr{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 0;border-top:1px solid var(--line);margin-top:8px}.cmsr span{min-width:0}.cmsr small{display:block;color:var(--mute)}.cmsr .btn{flex:none}
+.cmpi .cmpv{display:flex!important;align-items:center;gap:4px;width:auto;pointer-events:auto;font-weight:800;flex:none}.cmpi .cmpv input{width:64px;text-align:center;pointer-events:auto}
