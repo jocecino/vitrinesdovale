@@ -912,3 +912,14 @@ html.dk .bar img.icconta{filter:brightness(0) invert(1)!important;opacity:1}
 
 .lcd{scroll-margin-top:76px}.lcx:empty{display:none}.lcx{margin-top:12px;padding-top:12px;border-top:1px solid var(--line)}.lcxh{font-weight:800;font-size:15px;margin:0 0 6px}.lcx .aedf>b{display:none}
 @keyframes swl{from{transform:translateX(36px);opacity:.3}to{transform:none;opacity:1}}@keyframes swr{from{transform:translateX(-36px);opacity:.3}to{transform:none;opacity:1}}.swl{animation:swl .22s ease-out}.swr{animation:swr .22s ease-out}
+
+/* caixa Ofertas relâmpago na vitrine */
+.ofr{background:linear-gradient(160deg,#C9A85C,#E9D08A);border-radius:12px;padding:9px 6px 6px;display:flex;flex-direction:column;min-width:0;box-shadow:0 1px 3px #0001}.ofr.g2{grid-row:span 2}
+.ofrh{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:5px 4px;padding:0 4px 8px;color:#16363F}.ofrh b{font-size:13.5px;font-weight:900;line-height:1.05;letter-spacing:.2px}
+.ofrc.cdb{display:flex;align-items:center;gap:2px;margin:0;padding:0;border:0;font-size:11px;font-weight:800;color:#16363F;white-space:nowrap}.ofrc.cdb b{background:#16363F;color:#E9D08A;border-radius:5px;padding:2px 4px;font-size:11px;font-variant-numeric:tabular-nums}.ofrc .cdd{margin-right:1px}
+.ofrl{background:var(--card);border-radius:10px;padding:2px 4px;flex:1;display:flex;flex-direction:column;justify-content:space-around}
+.ofri{display:flex;gap:8px;align-items:center;width:100%;padding:7px 2px;border:0;border-bottom:1px solid var(--line);background:none;font:inherit;color:inherit;text-align:left;cursor:pointer}.ofri:last-child{border-bottom:0}
+.ofrim{flex:none;width:min(76px,40%);aspect-ratio:1;border-radius:8px;background:#f2f2f2;overflow:hidden;display:grid;place-items:center;font-size:30px}.ofrim img{width:100%;height:100%;object-fit:cover;display:block}
+.ofrt{min-width:0;display:flex;flex-direction:column;align-items:flex-start}.ofrt em{font-style:normal;background:#E9D08A;color:#16363F;font-weight:800;font-size:11px;padding:1px 5px;border-radius:4px}.ofrt s{color:var(--mute);font-size:11.5px;margin-top:2px}.ofrt .pr{font-size:16px;margin:0;white-space:nowrap}
+.ofrv{border:0;background:none;font:inherit;font-weight:800;color:#16363F;padding:8px 0 2px;font-size:12.5px;cursor:pointer}
+html.dk .ofrim{background:#ffffff14}
