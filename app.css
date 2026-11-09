@@ -923,3 +923,5 @@ html.dk .bar img.icconta{filter:brightness(0) invert(1)!important;opacity:1}
 .ofrt{min-width:0;display:flex;flex-direction:column;align-items:flex-start}.ofrt em{font-style:normal;background:#E9D08A;color:#16363F;font-weight:800;font-size:11px;padding:1px 5px;border-radius:4px}.ofrt s{color:var(--mute);font-size:11.5px;margin-top:2px}.ofrt .pr{font-size:16px;margin:0;white-space:nowrap}
 .ofrv{border:0;background:none;font:inherit;font-weight:800;color:#16363F;padding:8px 0 2px;font-size:12.5px;cursor:pointer}
 html.dk .ofrim{background:#ffffff14}
+.ofrh b{white-space:nowrap;font-size:clamp(10px,3.3vw,16px);letter-spacing:0;line-height:1.1;width:100%}
+@media(min-width:700px){.ofrh b{font-size:15px}}
