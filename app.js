@@ -133,7 +133,7 @@ const vizOk=(l,a)=>{a=a||CEPX;return !!(l&&a&&a.cidade&&(l.viz||[]).some(x=>nrm(
 const redeHide=l=>!!(CEPX&&CEPX.cidade&&l.rede&&!mesmaCid(l)&&(D.lojas||[]).some(o=>o.id!==l.id&&o.rede===l.rede&&mesmaCid(o)));
 const redeLoc=l=>(D.lojas||[]).find(o=>o.id!==l.id&&o.rede&&o.rede===l.rede&&mesmaCid(o));
 const redeMsg=l=>{const o=redeLoc(l);return o?'Em '+esc(CEPX.cidade)+', compre na unidade daqui: <button class="lk" onclick="go(\'loja/'+o.id+'\')">'+esc(o.nome)+'</button>':''};
-const lojaVis=l=>!l||!CEPX||(!redeHide(l)&&(mesmaCid(l)||vizOk(l)||(l.entrega==='fora'&&l.fora_n!==0))),pVis=p=>{const l=LJ(p.lojaId);return lojaVis(l)&&(!CEPX||mesmaCid(l)||vizOk(l)||(p.tipo==='servico'?(p.loc||'loja')==='loja':p.env!==false))};
+const lojaVis=l=>!l||!CEPX||(!redeHide(l)&&(mesmaCid(l)||vizOk(l)||(l.entrega==='fora'&&l.fora_n!==0))),pVis=p=>{const l=LJ(p.lojaId);return lojaVis(l)&&(!CEPX||mesmaCid(l)||(vizOk(l)&&(p.tipo!=='servico'||(p.loc||'loja')==='loja'))||(p.tipo==='servico'?(p.loc||'loja')==='loja':p.env!==false))};
 const foraCid=(l,a)=>!!(a&&a.cidade)&&!mesmaCid(l,a);
 async function cepBusca(c){c=cepD(c);if(c.length!==8)return null;if(CEPC[c])return CEPC[c];let r=null,nf=false;
  try{const j=await (await fetch('https://viacep.com.br/ws/'+c+'/json/')).json();if(j.erro)nf=true;else if(j.localidade)r={cep:c,cidade:j.localidade,uf:j.uf,bairro:j.bairro||'',rua:j.logradouro||''}}catch(e){}
