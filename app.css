@@ -909,3 +909,5 @@ html.dk .bar img.icconta{filter:brightness(0) invert(1)!important;opacity:1}
 .mpfx{display:flex;justify-content:space-between;align-items:center;gap:8px;width:calc(100% - 28px);margin:0 14px 8px;padding:9px 12px;border-radius:10px;border:0;background:#d93a3a1c;color:var(--red);font:inherit;font-size:13px;font-weight:700;text-align:left;cursor:pointer}.mpfx b{white-space:nowrap}
 #adf.aff{grid-template-columns:repeat(2,minmax(0,1fr));padding:0 14px}
 .ahl{display:flex;justify-content:space-between;align-items:center;padding:6px 16px 2px}.ahl b{font-size:15px}.ahl .ahs{color:var(--red);font-weight:700;font-size:14px}
+
+.lcd{scroll-margin-top:76px}.lcx:empty{display:none}.lcx{margin-top:12px;padding-top:12px;border-top:1px solid var(--line)}.lcxh{font-weight:800;font-size:15px;margin:0 0 6px}.lcx .aedf>b{display:none}
