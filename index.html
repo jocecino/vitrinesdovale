@@ -63,14 +63,10 @@ s.addEventListener('animationend',function(e){if(e.target===s)s.remove()});setTi
   <p class="msg">Você recebe a resposta no WhatsApp cadastrado. <button class="lk" onclick="cadV(0)">Já tenho cadastro</button></p>
  </div>
  <div id="painel" style="display:none">
-  <div class="lcard"><div class="lhead"><label class="lgp" for="lgFile" title="Toque para trocar a logo"><span id="lgPrev"></span><em>📷</em></label><input type="file" id="lgFile" accept="image/*" hidden onchange="trocarLogoArq(this)"><div><div class="lnm"><h2 id="lojaNome" style="margin:0"></h2><button class="nmed" onclick="renomear()" aria-label="Alterar nome da loja" title="Alterar nome da loja">✏️</button></div><small class="hint">Toque na logo para trocar</small></div></div><div id="lst"></div></div><div class="ctab" id="ctabP" style="display:none"></div><div id="lgMsg"></div><div id="pnlMsg"></div>
+  <div class="lcard lcc"><label class="lgp" for="lgFile" title="Toque para trocar a logo"><span id="lgPrev"></span><em>📷</em></label><input type="file" id="lgFile" accept="image/*" hidden onchange="trocarLogoArq(this)"><div class="lcn"><h2 id="lojaNome"></h2><div id="lst"></div></div><button class="lcm" type="button" onclick="pnlMais()" aria-label="Mais opções da loja">⋯</button></div><div id="lstX"></div><div class="ctab" id="ctabP" style="display:none"></div><div id="lgMsg"></div><div id="pnlMsg"></div>
   <div id="cepAv"></div><div id="mpAv"></div><div id="msAv"></div><div id="cmpAv"></div><div class="lqk" id="lbar"><button id="qkpi" onclick="sub('pi')"><i>🏠</i>Início</button><button id="qkpd" onclick="sub('pd')"><i>🧾</i>Pedidos<span class="nb" id="qkn" style="display:none"></span></button><button id="qkpp" onclick="sub('pp')"><i>📦</i>Produtos</button><button onclick="dwr(1)" aria-label="Abrir menu"><i>☰</i>Mais<span class="nb" id="lmn" style="display:none"></span></button></div><div id="dwrBg" onclick="dwr(0)"></div><nav id="dwr" class="dwr"><div class="dwh"><b>Menu da loja</b><button onclick="dwr(0)" aria-label="Fechar">✕</button></div>
-<button id="sgpi" onclick="sub('pi');dwr(0)"><i>🏠</i>Início</button><button id="sgpm" onclick="sub('pm');dwr(0)"><i>📬</i>Mensagens<span class="nb" id="msn" style="display:none">0</span></button>
-<div class="dwg">Vendas</div><button id="sgpd" onclick="sub('pd');dwr(0)"><i>🧾</i>Pedidos</button><button id="sgpq" onclick="sub('pq');dwr(0)"><i>💬</i>Perguntas</button><button id="sgrl" onclick="sub('rl');dwr(0)"><i>📊</i>Resultados</button>
-<div class="dwg">Catálogo</div><button id="sgpp" onclick="sub('pp');dwr(0)"><i>📦</i>Meus produtos</button><button id="sgpc" onclick="sub('pc');dwr(0)"><i>🎉</i>Campanhas<span class="nb" id="cpn" style="display:none">0</span></button><button id="sgpn" style="display:none" onclick="sub('pn');dwr(0)"><i>➕</i>Adicionar</button>
-<div class="dwg">Configurações</div><button id="sgcfd" onclick="sub('cfd');dwr(0)"><i>🏪</i>Dados da loja</button><button id="sgcfe" onclick="sub('cfe');dwr(0)"><i>🚚</i>Entrega e frete</button><button id="sgcfp" onclick="sub('cfp');dwr(0)"><i>💳</i>Pagamentos</button><button id="sgcfa" onclick="sub('cfa');dwr(0)"><i>🔔</i>Avisos e preferências</button><button id="sgcfs" onclick="sub('cfs');dwr(0)"><i>🔑</i>Senha</button>
-<div class="dwg">Ajuda</div><button id="sgps" onclick="sub('ps');dwr(0)"><i>🛟</i>Suporte</button><button id="sgpk" onclick="sub('pk');dwr(0)"><i>📄</i>Documentos</button>
-<button class="dwx" onclick="dwr(0);sair()"><i>🚪</i>Sair</button></nav>
+<button id="sgpi" onclick="sub('pi');dwr(0)"><i>🏠</i>Início</button><div class="dwg">Minha loja</div><button id="sgcfd" onclick="sub('cfd');dwr(0)"><i>🏪</i>Dados da loja</button><button id="sgcfe" onclick="sub('cfe');dwr(0)"><i>🚚</i>Entrega e frete</button><button id="sgcfp" onclick="sub('cfp');dwr(0)"><i>💳</i>Pagamentos</button><button id="sgcfa" onclick="sub('cfa');dwr(0)"><i>🔔</i>Avisos e preferências</button><div class="dwg">Vendas</div><button id="sgpd" onclick="sub('pd');dwr(0)"><i>🧾</i>Pedidos</button><button id="sgpq" onclick="sub('pq');dwr(0)"><i>💬</i>Perguntas e avaliações</button><button id="sgrl" onclick="sub('rl');dwr(0)"><i>📊</i>Resultados</button><div class="dwg">Catálogo</div><button id="sgpp" onclick="sub('pp');dwr(0)"><i>📦</i>Meus produtos</button><button id="sgpc" onclick="sub('pc');dwr(0)"><i>🎉</i>Campanhas<span class="nb" id="cpn" style="display:none">0</span></button><button id="sgpn" style="display:none" onclick="sub('pn');dwr(0)"><i>➕</i>Adicionar</button><div class="dwg">Ajuda</div><button id="sgpm" onclick="sub('pm');dwr(0)"><i>📬</i>Mensagens da administração<span class="nb" id="msn" style="display:none">0</span></button><button id="sgps" onclick="sub('ps');dwr(0)"><i>🛟</i>Suporte</button><button id="sgpk" onclick="sub('pk');dwr(0)"><i>📄</i>Documentos</button><div class="dwg"></div><button id="sgcfs" onclick="sub('cfs');dwr(0)"><i>🔑</i>Alterar senha</button>
+<button class="dwx" onclick="dwr(0);sair()"><i>🚪</i>Sair da conta</button></nav>
   <div id="pn" style="display:none">
    <form novalidate onsubmit="return novoProd(event)">
     <div class="tpsw" id="tpsw"><button type="button" class="on" data-t="produto" onclick="tpSet('produto')">📦 Produto</button><button type="button" data-t="servico" onclick="tpSet('servico')">🛠️ Serviço</button></div><input type="hidden" name="tipo" id="ptipo" value="produto">
@@ -124,8 +120,7 @@ s.addEventListener('animationend',function(e){if(e.target===s)s.remove()});setTi
 <div id="plMsg"></div>
 <div class="cfg" data-g="cfs"><h2 class="cfh">🔑 Senha</h2>   <form style="padding:0" onsubmit="return novaSenha(event)"><label>Nova senha (mín. 6 caracteres)<input name="n" type="password" minlength="6" autocomplete="new-password" required></label><label>Confirme a nova senha<input name="n2" type="password" minlength="6" autocomplete="new-password" required></label><button class="btn">Alterar senha</button></form><div id="spMsg"></div></div>
   </div></div>
-  <p style="margin:12px 14px 20px"><button class="btn s" onclick="sair()">Sair</button></p>
- </div>
+</div>
 </main>
 
 <main id="adm" class="v">
@@ -133,7 +128,7 @@ s.addEventListener('animationend',function(e){if(e.target===s)s.remove()});setTi
   <form onsubmit="return admEntrar(event)"><label>E-mail do administrador<input name="e" type="email" autocomplete="username" required></label><label>Senha<input name="s" type="password" autocomplete="current-password" required></label><button class="btn">Entrar</button></form></div>
  <div id="aPainel" style="display:none">
   <div class="atop"><button class="amb" onclick="adr(1)" aria-label="Abrir menu"><span></span><span></span><span></span></button><b id="atit">Início</b></div>
-  <div class="lcard acd"><div><b>Administração</b><small>Eita Vale</small></div><button class="btn s r" onclick="admSair()">Sair</button></div>
+  <div class="ahl"><b>Administração</b><button class="lk ahs" onclick="admSair()">Sair</button></div>
   <div class="lqk" id="abar"><button id="asqi" onclick="asub('i')"><i>🏠</i>Início</button><button id="asqo" onclick="asub('o')"><i>✅</i>Aprovações<span class="nb" id="asqon" style="display:none"></span></button><button id="asqc" onclick="asub('c')"><i>🏪</i>Lojas<span class="nb" id="asqcn" style="display:none"></span></button><button onclick="adr(1)" aria-label="Abrir menu"><i>☰</i>Mais</button></div>
   <div id="adrv" class="adrv" onclick="adr(0)"></div>
   <nav id="adr" class="adr" aria-label="Menu administrativo"><div class="adh"><b>Administração</b><button onclick="adr(0)" aria-label="Fechar">✕</button></div>
@@ -156,7 +151,7 @@ s.addEventListener('animationend',function(e){if(e.target===s)s.remove()});setTi
   <div id="am" style="display:none"></div>
   <div id="ag" style="display:none"></div>
   <div id="ak" style="display:none"></div>
-  <div id="ad" style="display:none"><div class="row" id="adf" style="margin:10px 0"></div><div id="adl"></div></div>
+  <div id="ad" style="display:none"><div class="aff" id="adf" style="margin:10px 0"></div><div id="adl"></div></div>
  </div>
 </main>
 
