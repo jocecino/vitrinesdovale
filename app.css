@@ -284,7 +284,7 @@ body{padding-bottom:calc(84px + env(safe-area-inset-bottom,0px))}
 .vf{color:#00a650;font-size:12px;font-weight:700}
 /* paleta premium: verde-petróleo, dourado, carvão, prata */
 :root{--teal:#16363F;--gold:#C9A85C;--blue:#16363F;--blueD:#0f2830;--navy:#16363F;--head:#E9D08A;--grad:linear-gradient(135deg,#26292D,#16363F 70%,#1d4a56);--yel:#C9A85C;--bg:#ECEBE7;--line:#dcd9d0}
-header,.top{background:radial-gradient(120% 160% at 85% 0%,#C9A85C55 0%,#16363F 45%,#26292D 100%)!important;color:#E9D08A!important;box-shadow:0 2px 0 #0003}
+header,.top{background:#16363F radial-gradient(120% 160% at 85% 0%,#C9A85C55 0%,#16363F 45%,#26292D 100%)!important;color:#E9D08A!important;box-shadow:0 2px 0 #0003}
 .top button,header .loc{color:#E9D08A!important}.tabs button{color:#E9D08Acc}.tabs button.on{color:#E9D08A;border-color:#C9A85C}
 .banner{background:radial-gradient(120% 160% at 90% 0%,#C9A85C66 0%,#16363F 50%,#26292D 100%);box-shadow:0 6px 16px #16363F55}
 .banner:after{background:#C9A85C33}.banner b{color:#E9D08A}
@@ -928,3 +928,12 @@ html.dk .ofrim{background:#ffffff14}
 
 .cmsd{display:block;margin:0 0 12px;border-left:5px solid var(--gold)}.cmsr{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 0;border-top:1px solid var(--line);margin-top:8px}.cmsr span{min-width:0}.cmsr small{display:block;color:var(--mute)}.cmsr .btn{flex:none}
 .cmpi .cmpv{display:flex!important;align-items:center;gap:4px;width:auto;pointer-events:auto;font-weight:800;flex:none}.cmpi .cmpv input{width:64px;text-align:center;pointer-events:auto}
+@media(min-width:768px){
+ /* produto: foto à esquerda acompanha a rolagem; tudo o mais na coluna da direita (nunca fica por baixo da foto) */
+ #prod.on{grid-template-areas:"top top" "gal inf" "gal det";grid-template-rows:auto auto 1fr}
+ #prod>.pgal{grid-row:2/4;align-self:start}
+ #prod>.pdw{padding-left:0;padding-right:14px}
+ #prod>.top{z-index:30}
+ /* caixa de ofertas: cada produto ocupa uma faixa igual */
+ .ofrl{justify-content:flex-start}.ofri{flex:1 1 0;min-height:0}
+}
