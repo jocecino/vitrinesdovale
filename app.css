@@ -898,3 +898,4 @@ html.dk .bar img.icconta{filter:brightness(0) invert(1)!important;opacity:1}
 .lshr{display:grid;grid-template-columns:1fr 1fr;gap:8px}.lshr .btn.s{min-height:42px;white-space:normal;line-height:1.2;font-size:13.5px}
 .lun{margin-top:12px;font-size:14px}.lun div{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:7px 0;border-top:1px dashed var(--line)}.lun small{color:var(--mute)}.lk.r{color:var(--red);font-weight:700}
 #pkl button{display:flex;justify-content:space-between;gap:8px}#pkl small{color:var(--mute)}
+.cpft{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-top:6px}
