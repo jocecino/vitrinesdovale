@@ -967,7 +967,7 @@ function campCidOk(id){const cs=((D&&D.camp_cid)||{})[id];return !cs||!cs.length
 function campAtivas(){const m={};(D.produtos||[]).forEach(p=>{if(cpa(p)&&!m[p.camp.id]&&campCidOk(p.camp.id))m[p.camp.id]=p.camp});return Object.values(m)}
 
 /* ---------- Campanhas: administração ---------- */
-T.adminCampanhas=()=>rpc('admin_campanhas');T.adminCampanhaSalvar=p=>rpc('admin_campanha_salvar',{p:p});T.adminCampanhaExcluir=id=>rpc('admin_campanha_excluir',{p_id:id});T.adminCampanhaItemRemover=(c,p)=>rpc('admin_campanha_item_remover',{p_camp:c,p_prod:p});
+T.adminCampanhas=()=>rpc('admin_campanhas');T.adminCampanhaSaidas=()=>rpc('admin_campanha_saidas');T.adminCampanhaLiberar=(c,p)=>rpc('admin_campanha_liberar',{p_camp:c,p_prod:p});T.adminCampanhaSalvar=p=>rpc('admin_campanha_salvar',{p:p});T.adminCampanhaExcluir=id=>rpc('admin_campanha_excluir',{p_id:id});T.adminCampanhaItemRemover=(c,p)=>rpc('admin_campanha_item_remover',{p_camp:c,p_prod:p});
 T.lojaCampanhas=()=>rpc('loja_campanhas');T.lojaCampanhaItem=(c,p,v,on)=>rpc('loja_campanha_item',{p_camp:c,p_prod:p,p_pct:v,p_on:on});
 var CML=[],CME=null;
 
