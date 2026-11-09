@@ -82,7 +82,7 @@ input,select,textarea{font:inherit;padding:12px;border:1px solid var(--line);bor
 .seg button,.seg label{flex:1;padding:10px 4px;border-radius:9px;font-weight:600;justify-content:center;text-align:center;font-size:14px}
 .seg button.on{background:var(--navy);color:var(--head)}
 .lk{color:var(--teal);text-decoration:underline;font-weight:600}
-#tx{max-height:52vh;overflow:auto;border:1px solid rgba(0,0,0,.12);border-radius:10px;background:#fff8}
+#tx{border:1px solid rgba(0,0,0,.12);border-radius:10px;background:#fff8}
 .tx{display:grid;grid-template-columns:1fr 92px;gap:8px;align-items:center;padding:4px 6px 4px 12px;border-bottom:1px solid rgba(0,0,0,.07);font-size:15px;line-height:1.25}.tx:last-child{border-bottom:0}.tx input{padding:6px 8px;min-height:34px;font-size:16px;margin:0}
 .rs{display:flex;justify-content:space-between;gap:10px;padding:4px 0}.rs.t{font-weight:800;font-size:17px;border-top:1px solid var(--line);margin-top:6px;padding-top:10px}
 .h3{margin:16px 0 8px;font-size:16px;font-weight:800}.pd{padding:0 14px}
@@ -940,7 +940,7 @@ html.dk .ofrim{background:#ffffff14}
 
 .edmt{display:block;margin:6px 0 0;font-size:13.5px;font-weight:700}
 
-.cpr{display:block;margin:0 0 14px;border-left:5px solid var(--gold)}.cprf{display:grid;grid-template-columns:84px minmax(0,1fr);gap:10px}.cprf label{min-width:0}.cprf label{margin:0}
+.cprm{display:block;margin:0 0 14px;border-left:5px solid var(--gold)}.cprf{display:grid;grid-template-columns:84px minmax(0,1fr);gap:10px}.cprf label{min-width:0}.cprf label{margin:0}
 .item>.lca{margin-top:10px}
 
 /* campo de data cabe na largura (Safari do iPhone tem largura mínima própria) */
@@ -950,10 +950,17 @@ input[type=date]::-webkit-date-and-time-value{text-align:left}
 input[type=date]:focus::before,input[type=date].dtv::before{content:none}}
 
 /* Entrega e frete em cartões */
-.ecard{display:block;padding:14px;background:var(--card);border:1px solid var(--line);border-radius:14px;margin:0 14px 12px}.ech{font-weight:800;font-size:16px;margin:0 0 10px}.ecs{display:block;font-size:14.5px;margin:12px 0 2px}
+.ecard{display:block;padding:14px;background:var(--card);border:1px solid var(--line);border-radius:14px;margin:0 0 12px}.ech{font-weight:800;font-size:16px;margin:0 0 10px}.ecs{display:block;font-size:14.5px;margin:12px 0 2px}
 .e2c{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px;margin-top:12px}.e2c label{margin:0;min-width:0}
 #vizL{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:6px 10px}#vizL .ck{margin:0}
 .etg{margin:0}.medet{margin-top:10px;border-top:1px solid var(--line);padding-top:8px}.medet summary{cursor:pointer;font-weight:700;font-size:14px;color:var(--ink);padding:4px 0}
-.esv{position:sticky;bottom:calc(76px + env(safe-area-inset-bottom,0px));z-index:3;padding:10px 0 4px;background:linear-gradient(transparent,var(--bg) 35%)}.esv .btn{width:100%;box-shadow:0 4px 14px #0002}
-@media(min-width:768px){.esv{bottom:12px}}
+.esv{padding:6px 0 4px}.esv .btn{width:100%;margin:0}.esv small{display:none}
+.cfg.dirty .esv{position:sticky;bottom:calc(76px + env(safe-area-inset-bottom,0px));z-index:3;padding:10px 0 4px;background:linear-gradient(transparent,var(--bg) 30%)}.cfg.dirty .esv small{display:block;text-align:center;font-weight:700;color:var(--gold);font-size:13px;margin:0 0 4px}.cfg.dirty .esv .btn{box-shadow:0 4px 14px #0002}
+@media(min-width:768px){.cfg.dirty .esv{bottom:12px}}
+/* pedido do lojista: valores resumidos, cliente em bloco, botões em grade */
+.ocV{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;padding:10px 0 4px;border-top:1px solid var(--line);font-size:14.5px}.ocV b{font-size:16px}.ocV .lk{font-size:13.5px;white-space:nowrap}
+.ocTd{display:none}.ocTd.on{display:block}
+.oc .ocC{background:var(--bg);border-radius:12px;padding:10px 12px;margin:10px 0 0}.oc .ocC>div{margin:3px 0}
+.oc .acts{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px;margin-top:12px}.oc .acts>*{margin:0!important;width:100%;min-width:0;white-space:normal;text-align:center;justify-content:center}
 .ecard .tx{grid-template-columns:minmax(0,1fr) 118px}
+.oc .acts>*:last-child:nth-child(odd){grid-column:1/-1}
