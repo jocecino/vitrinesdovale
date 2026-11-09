@@ -948,3 +948,12 @@ input[type=date]{-webkit-appearance:none;appearance:none;display:block;width:100
 input[type=date]::-webkit-date-and-time-value{text-align:left}
 @supports (-webkit-touch-callout:none){input[type=date]:not(.dtv)::before{content:attr(placeholder);color:var(--mute)}
 input[type=date]:focus::before,input[type=date].dtv::before{content:none}}
+
+/* Entrega e frete em cartões */
+.ecard{display:block;padding:14px;background:var(--card);border:1px solid var(--line);border-radius:14px;margin:0 14px 12px}.ech{font-weight:800;font-size:16px;margin:0 0 10px}.ecs{display:block;font-size:14.5px;margin:12px 0 2px}
+.e2c{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px;margin-top:12px}.e2c label{margin:0;min-width:0}
+#vizL{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:6px 10px}#vizL .ck{margin:0}
+.etg{margin:0}.medet{margin-top:10px;border-top:1px solid var(--line);padding-top:8px}.medet summary{cursor:pointer;font-weight:700;font-size:14px;color:var(--ink);padding:4px 0}
+.esv{position:sticky;bottom:calc(76px + env(safe-area-inset-bottom,0px));z-index:3;padding:10px 0 4px;background:linear-gradient(transparent,var(--bg) 35%)}.esv .btn{width:100%;box-shadow:0 4px 14px #0002}
+@media(min-width:768px){.esv{bottom:12px}}
+.ecard .tx{grid-template-columns:minmax(0,1fr) 118px}
