@@ -965,7 +965,7 @@ input[type=date]:focus::before,input[type=date].dtv::before{content:none}}
 .ecard .tx{grid-template-columns:minmax(0,1fr) 118px}
 .oc .acts>*:last-child:nth-child(odd){grid-column:1/-1}
 /* cacto "Acaba Num Instante" (substitui o raio) */
-.cic{display:inline-block;width:1.25em;height:1.25em;flex:none;vertical-align:-.28em;background:url(/cacto.webp) center/contain no-repeat;margin-right:.18em}
+.cic{display:inline-block;width:1.25em;height:1.25em;flex:none;vertical-align:-.28em;background:url(/oferta.webp) center/contain no-repeat;margin-right:.18em}
 .ofrh b{display:flex;align-items:center;gap:3px}.ofrh b .cic{margin:0;width:1.35em;height:1.35em}
 .fct .cic{width:16px;height:16px;margin:0}
 .flh>span:first-child{display:inline-flex;align-items:center;min-width:0}
@@ -980,3 +980,4 @@ input[type=date]:focus::before,input[type=date].dtv::before{content:none}}
 .cprls{max-height:300px;overflow:auto;border:1px solid var(--line);border-radius:10px;margin-top:8px}
 .cprl{display:flex;gap:10px;align-items:flex-start;padding:9px 10px;border-bottom:1px solid var(--line);margin:0;cursor:pointer}.cprl:last-child{border-bottom:0}.cprl input{flex:none;width:20px;height:20px;margin:1px 0 0}.cprl span{min-width:0;display:flex;flex-direction:column}.cprl b{font-size:14px;overflow-wrap:anywhere}.cprl small{color:var(--mute);font-size:12px}
 .cprs{flex-wrap:wrap;row-gap:4px}.cprs small{width:100%;flex:auto}
+.ofrh b .cic{width:1.55em;height:1.55em}.ofh .cic{width:22px;height:22px}
