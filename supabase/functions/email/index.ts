@@ -1,7 +1,6 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { createClient } from "jsr:@supabase/supabase-js@2";
 import nodemailer from "npm:nodemailer@6.9.16";
-import { Buffer } from "node:buffer";
 
 const CORS = {
   "Access-Control-Allow-Origin": "*",
@@ -17,7 +16,7 @@ const CONTATO = "contato.eitavale@gmail.com";
 const WPP = "(74) 98807-9171";
 const db = createClient(URL_, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!, { auth: { persistSession: false } });
 
-// Documentos enviados à loja que pede cadastro (publicados no site em /docs)
+// Documentos do Eita Vale (publicados no site em /docs); vão como links no e-mail de boas-vindas, sem anexos
 const DOCS = [
   { arq: "politicas-de-pagamento.pdf", nome: "Políticas de Pagamento", desc: "comissão, prazos, frete e devoluções" },
   { arq: "taxas-do-mercado-pago.pdf", nome: "Taxas do Mercado Pago", desc: "quanto o Mercado Pago cobra e quanto sobra para a loja" },
@@ -26,6 +25,9 @@ const DOCS = [
   { arq: "como-funciona-a-vitrine.pdf", nome: "Como funciona a Vitrine", desc: "o caminho do cliente até a compra" },
   { arq: "termos-e-privacidade.pdf", nome: "Termos de Uso e Privacidade", desc: "regras da plataforma e LGPD" },
   { arq: "politica-produtos-adultos.pdf", nome: "Política para Produtos Adultos", desc: "regras para vender produtos para maiores de 18" },
+  { arq: "vitrine-geral-e-da-cidade.pdf", nome: "Vitrine geral e vitrine da cidade", desc: "quem aparece em cada cidade" },
+  { arq: "venda-sob-encomenda.pdf", nome: "Venda sob encomenda", desc: "prazo de produção, personalização e o botão Pronto" },
+  { arq: "ofertas-e-campanhas.pdf", nome: "Ofertas e campanhas", desc: "Acaba Num Instante, selos e campanhas" },
 ];
 
 const esc = (s: string) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]!));
@@ -78,18 +80,10 @@ async function enviarAviso(acao: string, to: string, assunto: string, titulo: st
   }
 }
 
-// e-mail para a loja que acabou de pedir cadastro: confirmação + os documentos (anexos e links)
+// e-mail para a loja que acabou de pedir cadastro: confirmação + links dos documentos (sem anexos)
 async function enviarBoasVindas(to: string, loja: string, responsavel: string) {
   const s = smtp();
   if (!s) { await registrar("loja_boas_vindas", false, "SEM_CONFIG"); throw new Error("SEM_CONFIG"); }
-  const anexos: Array<{ filename: string; content: Buffer; contentType: string }> = [];
-  for (const d of DOCS) {
-    try {
-      const r = await fetch(SITE + "docs/" + d.arq);
-      if (r.ok) anexos.push({ filename: "Eita Vale - " + d.nome + ".pdf", content: Buffer.from(new Uint8Array(await r.arrayBuffer())), contentType: "application/pdf" });
-      else console.error("doc", d.arq, r.status);
-    } catch (e) { console.error("doc", d.arq, String(e)); }
-  }
   const ola = responsavel ? `Olá, ${responsavel}!` : "Olá!";
   const lis = DOCS.map((d) => `<li style="margin:6px 0"><a href="${SITE}docs/${d.arq}" style="color:#16363F;font-weight:bold">${esc(d.nome)}</a> <span style="color:#666">— ${esc(d.desc)}</span></li>`).join("");
   const html = `<div style="font-family:Arial,sans-serif;max-width:520px;margin:auto;padding:20px;color:#1F2A2E">
@@ -98,15 +92,15 @@ async function enviarBoasVindas(to: string, loja: string, responsavel: string) {
 <h2 style="margin:0 0 10px;color:#16363F">Recebemos o cadastro da sua loja!</h2>
 <p>${esc(ola)} O cadastro da loja <b>${esc(loja)}</b> foi enviado e está <b>em análise</b> pela administração do Eita Vale. A resposta chega no WhatsApp informado.</p>
 <p><b>Próximo passo:</b> depois da aprovação, entre no painel da loja e conecte a sua conta do Mercado Pago em <i>Loja › Receber pelo Mercado Pago</i>. A loja só aparece na vitrine depois dessa conexão.</p>
-<p>Para você conhecer como a plataforma funciona, enviamos em anexo os documentos do Eita Vale. Também é possível abrir pelo navegador:</p>
+<p>Para você conhecer como a plataforma funciona, os documentos do Eita Vale ficam no painel da loja, em <i>☰ Mais › 📄 Documentos</i>, e também aqui:</p>
 <ul style="padding-left:18px">${lis}</ul>
 <p style="text-align:center;margin:22px 0"><a href="${SITE}#/minha" style="background:#16363F;color:#E9D08A;text-decoration:none;font-weight:bold;padding:13px 22px;border-radius:8px;display:inline-block">Abrir o painel da loja</a></p>
 <p style="color:#666;font-size:13px">Dúvidas? Fale com a administração pelo WhatsApp ${WPP} ou pelo e-mail ${CONTATO}.</p></div>
 <p style="color:#999;font-size:12px;text-align:center">Eita Vale · ${SITE.replace(/^https:\/\//, "").replace(/\/$/, "")}</p></div>`;
-  const text = `Recebemos o cadastro da sua loja!\n\n${ola} O cadastro da loja ${loja} foi enviado e está em análise pela administração do Eita Vale. A resposta chega no WhatsApp informado.\n\nPróximo passo: depois da aprovação, entre no painel da loja e conecte a sua conta do Mercado Pago em Loja > Receber pelo Mercado Pago.\n\nDocumentos do Eita Vale (também em anexo):\n${DOCS.map((d) => `- ${d.nome}: ${SITE}docs/${d.arq}`).join("\n")}\n\nDúvidas? WhatsApp ${WPP} ou ${CONTATO}.`;
+  const text = `Recebemos o cadastro da sua loja!\n\n${ola} O cadastro da loja ${loja} foi enviado e está em análise pela administração do Eita Vale. A resposta chega no WhatsApp informado.\n\nPróximo passo: depois da aprovação, entre no painel da loja e conecte a sua conta do Mercado Pago em Loja > Receber pelo Mercado Pago.\n\nDocumentos do Eita Vale (também no painel da loja, em Mais > Documentos):\n${DOCS.map((d) => `- ${d.nome}: ${SITE}docs/${d.arq}`).join("\n")}\n\nDúvidas? WhatsApp ${WPP} ou ${CONTATO}.`;
   try {
-    await s.t.sendMail({ from: `Eita Vale <${s.user}>`, to, subject: "Recebemos o cadastro da sua loja – Eita Vale", text, html, attachments: anexos });
-    await registrar("loja_boas_vindas", true, anexos.length < DOCS.length ? `anexos ${anexos.length}/${DOCS.length}` : undefined);
+    await s.t.sendMail({ from: `Eita Vale <${s.user}>`, to, subject: "Recebemos o cadastro da sua loja – Eita Vale", text, html });
+    await registrar("loja_boas_vindas", true);
   } catch (e) {
     await registrar("loja_boas_vindas", false, String(e));
     throw e;
