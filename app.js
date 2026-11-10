@@ -211,7 +211,7 @@ const vb=l=>l&&l.verificada?'<img class="vsel" src="selo.webp" alt="Loja verific
 function vselInfo(){dlg({msg:'Loja verificada pelo Eita Vale\n\nLoja reconhecida pela equipe Eita Vale, com cadastro conferido. Mais segurança na sua compra.',ok:'Entendi',cancel:false})}
 let VF=false;
 const lg=l=>l.logo?imgM(l.logo):ini(l.nome);
-const estB=(p,c,full)=>{const n=p.estoque;if(!(n>=1&&n<=5)||fl(p))return'';return '<span class="est'+(n===1?' u':'')+(c?' '+c:'')+'"><span class="sfg" aria-hidden="true"></span>'+(n===1?'DERRADEIRA':'ÚLTIMAS '+n)+'</span>'};
+const estB=(p,c,full)=>{const n=p.estoque;if(!(n>=1&&n<=5)||fl(p))return'';return '<span class="est'+(n===1?' u':'')+(c?' '+c:'')+'"><span class="sfg" aria-hidden="true"></span>'+(n===1?'ÚLTIMA!':'ÚLTIMAS '+n)+'</span>'};
 const thumb=p=>(p.fotos&&p.fotos[0])?imgM(p.fotos[0]):(ICO[p.categoria]||'🛍️');
 const SITE='https://eitavale.com.br/';
 let OFS=0;const NOW=()=>Date.now()+OFS;
