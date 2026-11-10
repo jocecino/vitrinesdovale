@@ -4,7 +4,9 @@ import { AwsClient } from 'npm:aws4fetch@1.0.20';
 const SU = Deno.env.get('SUPABASE_URL')!, SK = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
 const H = { apikey: SK, Authorization: 'Bearer ' + SK };
 const env = (n: string) => (Deno.env.get(n) || '').trim();
-const PUB = env('R2_PUBLIC_URL').replace(/\/$/, '') + '/';
+// domínio próprio das fotos (cache da Cloudflare); o endereço antigo r2.dev continua aceito ao apagar
+const PUB = 'https://fotos.eitavale.com.br/';
+const OLD = env('R2_PUBLIC_URL').replace(/\/$/, '') + '/';
 const BASE = 'https://' + env('R2_ACCOUNT_ID') + '.r2.cloudflarestorage.com/' + env('R2_BUCKET') + '/';
 const r2 = new AwsClient({ accessKeyId: env('R2_ACCESS_KEY_ID'), secretAccessKey: env('R2_SECRET_ACCESS_KEY'), service: 's3', region: 'auto' });
 const CORS = { 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type', 'Access-Control-Allow-Methods': 'POST, OPTIONS' };
@@ -48,7 +50,8 @@ Deno.serve(async (req) => {
       pref = 'avaliacoes/' + n + '/';
     }
     if (b.acao === 'apagar') {
-      const url = String(b.url || '');
+      let url = String(b.url || '');
+      if (OLD.length > 1 && url.startsWith(OLD)) url = PUB + url.slice(OLD.length);
       const adm = uid && (await db('admins?user_id=eq.' + uid + '&select=user_id')).length;
       // fotos migradas do Supabase ficaram em "migr/<pasta>/<dono>/..."
       if (!url.startsWith(PUB + pref) && !url.startsWith(PUB + 'migr/' + pref) && !(adm && url.startsWith(PUB))) return out({ erro: 'Sem permissão.' }, 403);
