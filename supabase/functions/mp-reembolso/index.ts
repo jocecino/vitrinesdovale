@@ -22,9 +22,10 @@ Deno.serve(async (req) => {
     const b = await req.json().catch(() => ({}));
     const n = parseInt(b.numero, 10);
     if (!n) return out({ erro: 'Pedido inválido.' }, 400);
-    const ped = (await db('pedidos?id=eq.' + n + '&select=id,loja_id,status,pagamento,pg_status,mp_payment_id,total,direto,loja_ok_em,me_etiqueta,me_status'))[0];
+    const ped = (await db('pedidos?id=eq.' + n + '&select=id,loja_id,status,pagamento,pg_status,mp_payment_id,total,direto,loja_ok_em,me_etiqueta,me_status,cli_cancel_em'))[0];
     if (!ped) return out({ erro: 'Pedido não encontrado.' }, 404);
-    if (auto && (!ped.direto || ped.loja_ok_em || ped.status !== 'confirmado')) return out({ erro: 'Pedido não elegível para devolução automática.' }, 400);
+    const atraso = auto && !!b.atraso && !!ped.cli_cancel_em && ped.status === 'confirmado';
+    if (auto && !atraso && (!ped.direto || ped.loja_ok_em || ped.status !== 'confirmado')) return out({ erro: 'Pedido não elegível para devolução automática.' }, 400);
     const adm = auto || (await db('admins?user_id=eq.' + user.id + '&select=user_id')).length > 0;
     const lj = (await db('lojas?id=eq.' + ped.loja_id + '&select=owner_id'))[0];
     const dono = !auto && lj && lj.owner_id === user.id;
@@ -42,7 +43,7 @@ Deno.serve(async (req) => {
       console.error('refund', r.status, JSON.stringify(j).slice(0, 300));
       // 2031 = "Collector hasn't enough available money": a loja não tem saldo disponível no Mercado Pago
       const saldo = /2031|available money|enough|insufficient/i.test(JSON.stringify(j));
-      if (auto) await fetch(SU + '/rest/v1/rpc/alerta_registrar', { method: 'POST', headers: H, body: JSON.stringify({ p_tipo: 'devolução automática', p_texto: 'Não foi possível devolver automaticamente o pedido nº ' + n + ' (a loja não confirmou em 36 h). Motivo: ' + (saldo ? 'conta Mercado Pago da loja sem saldo.' : 'o Mercado Pago recusou agora.') + ' O sistema tenta de novo a cada 6 horas. Se preferir, fale com a loja.' }) }).catch(() => {});
+      if (auto) await fetch(SU + '/rest/v1/rpc/alerta_registrar', { method: 'POST', headers: H, body: JSON.stringify({ p_tipo: 'devolução automática', p_texto: 'Não foi possível devolver automaticamente o pedido nº ' + n + (atraso ? ' (encomenda atrasada, cancelada pelo cliente)' : ' (a loja não confirmou em 36 h)') + '. Motivo: ' + (saldo ? 'conta Mercado Pago da loja sem saldo.' : 'o Mercado Pago recusou agora.') + ' O sistema tenta de novo a cada 6 horas. Se preferir, fale com a loja.' }) }).catch(() => {});
       return out({ erro: saldo ? 'A conta Mercado Pago da loja está sem saldo disponível para devolver. Coloque saldo na conta (por exemplo, por Pix) ou aguarde a liberação do dinheiro das vendas e tente de novo.' : 'O Mercado Pago não aceitou a devolução agora. Tente de novo mais tarde.' }, 502);
     }
     await fetch(SU + '/rest/v1/rpc/mp_reembolso_registrar', { method: 'POST', headers: H, body: JSON.stringify({ p_pedido: n, p_por: auto ? 'auto' : adm && !dono ? 'admin' : 'loja' }) });

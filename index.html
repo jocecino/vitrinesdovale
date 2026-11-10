@@ -82,6 +82,7 @@ s.addEventListener('animationend',function(e){if(e.target===s)s.remove()});setTi
     <label id="pcondl">Condição<select name="condicao" id="pcond" onchange="condChg('pcond','pcdl')"><option value="novo">Novo</option><option value="seminovo">Seminovo</option><option value="usado">Usado</option></select></label>
     <label id="pcdl" style="display:none">Detalhes do estado (opcional)<input name="condicao_det" maxlength="200" placeholder="Ex.: bateria 89%, marcas leves na tampa"></label>
     <div id="tam" style="display:none"><label>Tipo de tamanho<select id="tt" onchange="tamGrid()"></select></label><p class="hint" style="margin:8px 0">Informe a quantidade de cada tamanho. Deixe em branco os que você não tem.</p><div class="tg" id="tg"></div></div>
+    <div id="encw"></div>
     <label id="estl">Quantidade em estoque<input name="estoque" inputmode="numeric" placeholder="Ex.: 10" required></label>
     <label id="marl">Marca (opcional)<input name="marca" maxlength="40"></label>
     <label class="ck"><input type="checkbox" name="parcela" checked><span>Permitir parcelar este produto no cartão <small class="hint" style="display:block;margin:0">Desmarque se ele só pode ser pago à vista.</small></span></label>

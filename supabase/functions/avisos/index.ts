@@ -164,6 +164,22 @@ Deno.serve(async (req: Request) => {
       }
       return json({ ok: true, enviados: n });
     }
+    if (tipo === "encomenda_atraso") {
+      const { data: p } = await db.from("pedidos").select("id,loja_id,cliente,status,pronto_em").eq("id", Number(id)).maybeSingle();
+      if (!p || p.pronto_em || p.status !== "confirmado") return json({ ok: false });
+      const n = await enviarPush(p.loja_id, { title: `⏰ Encomenda nº ${p.id} atrasada`, body: `${p.cliente || "Cliente"}: passou 2 dias da data prevista. Marque "Pronto" ou combine um novo prazo pelo chat.`, url: "/#/minha", tag: "atraso-" + p.id });
+      const { data: l } = await db.from("lojas").select("nome,email").eq("id", p.loja_id).maybeSingle();
+      const s = smtp();
+      if (s && l?.email) {
+        try {
+          await s.t.sendMail({ from: `Eita Vale <${s.user}>`, to: l.email, subject: `⏰ Encomenda nº ${p.id} atrasada - Eita Vale`,
+            text: `A encomenda do pedido nº ${p.id} passou 2 dias da data prevista e ainda não foi marcada como pronta. Marque "Pronto" no painel ou combine um novo prazo com o cliente pelo chat. O cliente já pode pedir o cancelamento. ${SITE}#/minha`,
+            html: moldura("⏰ Encomenda atrasada", `<p>A encomenda do pedido nº <b>${p.id}</b> da loja <b>${esc(l.nome)}</b> passou 2 dias da data prevista e ainda não foi marcada como pronta.</p><p>Marque <b>Pronto</b> no painel assim que terminar, ou combine um novo prazo com o cliente pelo chat do pedido. A partir de agora o cliente pode pedir o cancelamento.</p>`, "Abrir meu painel", SITE + "#/minha", "Este aviso é enviado uma única vez por pedido.") });
+          await logar("encomenda_atraso", true);
+        } catch (e) { await logar("encomenda_atraso", false, String(e)); }
+      }
+      return json({ ok: true, enviados: n });
+    }
     if (tipo === "campanha_nova") {
       const { data: c } = await db.from("campanhas").select("id,nome,tag,ativo,cidades").eq("id", id).maybeSingle();
       if (!c || !c.ativo) return json({ ok: false });
@@ -250,6 +266,8 @@ Deno.serve(async (req: Request) => {
       else if (k === "confirmado") m = { title: `✅ ${p.loja} confirmou seu pedido nº ${n}`, body: "Seu pedido já está sendo preparado." };
       else if (k === "saiu") m = p.rastreio ? { title: `📦 Pedido nº ${n} postado${p.frete_servico ? " (" + p.frete_servico + ")" : ""}`, body: `Código de rastreio ${p.rastreio}. Toque para acompanhar.` } : { title: `🛵 Seu pedido nº ${n} saiu para entrega`, body: `${p.loja} já está a caminho.` };
       else if (k === "entregue") m = { title: sv ? `🛠️ Serviço do pedido nº ${n} realizado` : `📦 Pedido nº ${n} entregue`, body: "Confirme o recebimento e conte como foi.", url: `/#/avaliar/${n}` };
+      else if (k === "pronto") m = { title: `🎁 Sua encomenda nº ${n} ficou pronta`, body: `${p.loja} terminou sua encomenda. Toque para acompanhar.` };
+      else if (k === "atraso") m = { title: `⏰ Encomenda nº ${n} atrasada`, body: "Passou 2 dias da data prevista. Você pode aguardar ou pedir o cancelamento em Meus pedidos." };
       else if (k === "cancelado") m = { title: `Pedido nº ${n} cancelado`, body: "Se você já pagou, o valor volta pelo Mercado Pago." };
       else if (k === "avaliar") m = { title: "⭐ Como foi sua compra?", body: `Avalie o pedido nº ${n} na ${p.loja}. Leva menos de 1 minuto.`, url: `/#/avaliar/${n}` };
       else if (k === "chat" && p.adulto) m = { title: "💬 Nova mensagem no seu pedido", body: `Pedido nº ${n}: toque para ver.` };
