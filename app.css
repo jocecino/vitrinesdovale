@@ -984,3 +984,10 @@ input[type=date]:focus::before,input[type=date].dtv::before{content:none}}
 /* sacola pegando fogo: Oferta arretada e Resta N */
 .sfg{display:inline-block;flex:none;width:16px;height:16px;margin:-2px 0;background:currentColor;-webkit-mask:url(/sacola-fogo-m.webp) center/contain no-repeat;mask:url(/sacola-fogo-m.webp) center/contain no-repeat}
 .bfs .sfg{width:19px;height:19px;margin:-4px 1px -4px -2px}
+/* admin: consumo do plano */
+.cons{margin-top:14px;padding:12px;border:1px solid var(--line);border-radius:12px;background:var(--card)}
+.cnsr{margin-top:10px}.cnsh{display:flex;justify-content:space-between;gap:8px;font-size:14px;font-weight:700}.cnsh span{min-width:0}.cnsh b{flex:none;color:#1a9c5b}.cnsh b.a{color:#c78a00}.cnsh b.r{color:#d64545}
+.cnsb{height:8px;border-radius:99px;background:var(--line);overflow:hidden;margin:5px 0 3px}.cnsb i{display:block;height:100%;border-radius:99px;background:#1a9c5b}.cnsb i.a{background:#e0a100}.cnsb i.r{background:#d64545}
+.cnsr small{display:block;color:var(--mute);font-size:12px;overflow-wrap:anywhere}
+.cnsw{margin:10px 0 0;padding:8px 10px;border-radius:8px;background:#fff4d6;color:#7a5400;font-size:13px;font-weight:600}
+html.dk .cnsw{background:#3a2f12;color:#f2d48a}
