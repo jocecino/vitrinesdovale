@@ -965,7 +965,7 @@ input[type=date]:focus::before,input[type=date].dtv::before{content:none}}
 .ecard .tx{grid-template-columns:minmax(0,1fr) 118px}
 .oc .acts>*:last-child:nth-child(odd){grid-column:1/-1}
 /* cacto "Acaba Num Instante" (substitui o raio) */
-.cic{display:inline-block;width:1.25em;height:1.25em;flex:none;vertical-align:-.28em;background:url(/oferta.webp) center/contain no-repeat;margin-right:.18em}
+.cic{display:inline-block;width:1.25em;height:1.25em;flex:none;vertical-align:-.28em;background:url(/raio-preto.webp) center/contain no-repeat;margin-right:.18em}
 .ofrh b{display:flex;align-items:center;gap:3px}.ofrh b .cic{margin:0;width:1.35em;height:1.35em}
 .fct .cic{width:16px;height:16px;margin:0}
 .flh>span:first-child{display:inline-flex;align-items:center;min-width:0}
@@ -1004,3 +1004,7 @@ html.dk .encp{background:#33280f;border-color:#5c4a1c}html.dk .encp b{color:#f2d
 .encat{margin:10px 0 0;padding:10px 12px;border-radius:10px;background:#fdecec;border:1px solid #f3c2c2}.encat b{display:block;color:#b42323;font-size:14px}.encat small{display:block;color:#6b3a3a;font-size:13px;margin:2px 0 8px}
 html.dk .encat{background:#3a1818;border-color:#5e2a2a}html.dk .encat b{color:#ff9b9b}html.dk .encat small{color:#e7bcbc}
 .encg{margin-top:12px}
+/* Acaba Num Instante: sacola do raio (preta no claro, branca no tema escuro; no fundo dourado sempre preta) */
+.cic{background-image:url(/raio-preto.webp)}
+html.dk .cic{background-image:url(/raio-branco.webp)}
+html.dk .ofrh .cic,html.dk .ofh .cic,html.dk .fct .cic,html.dk .flh .cic{background-image:url(/raio-preto.webp)}
