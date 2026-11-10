@@ -57,8 +57,8 @@ const rpc=async(f,p)=>E(await sb.rpc(f,p||{}));
 const rpcC=async(f,p)=>E(await sbc.rpc(f,p||{}));
 let ML=null;
 async function uidL(o){let u=null;try{u=(await sb.auth.getSession()).data.session}catch(e){}if(!u){try{const r=await sb.auth.refreshSession();u=r.data&&r.data.session}catch(e){}}if(!u||!u.user){if(o)return null;throw new Error('Sua sessão expirou. Toque em Sair, entre de novo na loja e tente outra vez.')}return o?u.user:u.user.id}
-const R2U='https://pub-c1cbf15f15c14757a0192ce3ea39d547.r2.dev/';
-const mini=u=>typeof u==='string'&&u.startsWith(R2U)&&!/-m\.\w+$/.test(u)&&u.indexOf('/banners/')<0?u.replace(/\.(\w+)$/,'-m.$1'):u;
+const R2U='https://fotos.eitavale.com.br/',R2O='https://pub-c1cbf15f15c14757a0192ce3ea39d547.r2.dev/';
+const mini=u=>typeof u==='string'&&(u.startsWith(R2U)||u.startsWith(R2O))&&!/-m\.\w+$/.test(u)&&u.indexOf('/banners/')<0?u.replace(/\.(\w+)$/,'-m.$1'):u;
 const imgM=(u,a)=>{const m=mini(u);return '<img loading="lazy" decoding="async" src="'+esc(m)+'"'+(m!==u?' onerror="this.onerror=null;this.src=\''+esc(u)+'\'"':'')+' alt="'+(a||'')+'">'};
 function encDU(du,max,q){return new Promise((ok,no)=>{const i=new Image();i.onload=()=>{const k=Math.min(1,max/Math.max(i.width,i.height)),c=document.createElement('canvas');c.width=Math.round(i.width*k);c.height=Math.round(i.height*k);c.getContext('2d').drawImage(i,0,0,c.width,c.height);let d=c.toDataURL('image/webp',q);if(!/^data:image\/webp/.test(d))d=c.toDataURL('image/jpeg',q);ok(d)};i.onerror=()=>no(new Error('Imagem inválida.'));i.src=du})}
 async function upR2(pasta,du,ex){let s=null;try{s=(await sb.auth.getSession()).data.session}catch(e){}
