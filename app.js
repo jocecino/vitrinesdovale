@@ -211,7 +211,7 @@ const vb=l=>l&&l.verificada?'<img class="vsel" src="selo.webp" alt="Loja verific
 function vselInfo(){dlg({msg:'Loja verificada pelo Eita Vale\n\nLoja reconhecida pela equipe Eita Vale, com cadastro conferido. Mais segurança na sua compra.',ok:'Entendi',cancel:false})}
 let VF=false;
 const lg=l=>l.logo?imgM(l.logo):ini(l.nome);
-const estB=(p,c,full)=>{const n=p.estoque;if(!(n>=1&&n<=5)||fl(p))return'';return '<span class="est'+(n===1?' u':'')+(c?' '+c:'')+'"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12.5 2c.6 3-.9 4.6-2.2 6.2C9 9.8 7.5 11.4 7.5 14a5 5 0 0010 0c0-1.8-.8-3.2-1.7-4.3-.3 1.2-.9 1.9-1.9 2.2.7-3.2.1-6.700-1.400-9.900z"/></svg>'+(full?(n===1?'ÚLTIMA UNIDADE':'ÚLTIMAS '+n+' UNIDADES'):(n===1?'ÚLTIMA!':'ÚLTIMAS '+n))+'</span>'};
+const estB=(p,c,full)=>{const n=p.estoque;if(!(n>=1&&n<=5)||fl(p))return'';return '<span class="est'+(n===1?' u':'')+(c?' '+c:'')+'"><span class="sfg" aria-hidden="true"></span>'+(n===1?'DERRADEIRA':'RESTA '+n)+'</span>'};
 const thumb=p=>(p.fotos&&p.fotos[0])?imgM(p.fotos[0]):(ICO[p.categoria]||'🛍️');
 const SITE='https://eitavale.com.br/';
 let OFS=0;const NOW=()=>Date.now()+OFS;
@@ -230,7 +230,7 @@ const mvB=p=>p.vendidos>=5?'<span class="est mv">MAIS VENDIDO</span>':'';
 const fctB=p=>fl(p)?'<span class="fct"><span class="cic" aria-hidden="true"></span><span class="cd cdb" data-ate="'+p.oferta.ate+'"></span></span>':'';
 const corEsc=h=>{const n=parseInt(String(h).slice(1),16);return (0.299*(n>>16&255)+0.587*(n>>8&255)+0.114*(n&255))<70};const SVGP='<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="#fff" stroke-width="1.7" stroke-linejoin="miter" stroke-linecap="round"><polygon points="12.00,1.00 14.17,3.89 17.50,2.47 17.94,6.06 21.53,6.50 20.11,9.83 23.00,12.00 20.11,14.17 21.53,17.50 17.94,17.94 17.50,21.53 14.17,20.11 12.00,23.00 9.83,20.11 6.50,21.53 6.06,17.94 2.47,17.50 3.89,14.17 1.00,12.00 3.89,9.83 2.47,6.50 6.06,6.06 6.50,2.47 9.83,3.89"/><circle cx="9.2" cy="9.4" r="1.5"/><circle cx="14.8" cy="14.6" r="1.5"/><path d="M15.3 8.7L8.7 15.3"/></svg>';const cbase=p=>cpa(p)&&p.camp.pos==='base';
 const ctB=p=>cbase(p)?'<span class="bfs" style="background:'+esc(/^#[0-9a-f]{6}$/i.test(p.camp.cor)?p.camp.cor:'#141414')+'">'+(p.camp.ico?SVGP:'')+esc(String(p.camp.tag).toUpperCase())+'</span>':'';
-const oiB=(p,c)=>!svc(p)&&pct(p)>=10?'<span class="bfs oi'+(c?' '+c:'')+'">'+SVGP+'OFERTA IMPERDÍVEL</span>':'';
+const oiB=(p,c)=>!svc(p)&&pct(p)>=10?'<span class="bfs oi'+(c?' '+c:'')+'">'+'<span class="sfg" aria-hidden="true"></span>OFERTA ARRETADA</span>':'';
 const svB=p=>svc(p)?'<span class="bfs sv"><img src="/ic/servico.webp" alt="" width="16" height="16">SERVIÇO</span>':'';
 const bdgs=p=>{const h=ctB(p)||fctB(p)||svB(p)||oiB(p)||estB(p)||mvB(p);return h?'<div class="pbd">'+h+'</div>':''};
 const ofBox=(p,o)=>{const k=bf(p);return '<div class="ofx'+(k?' bfx':'')+'"><div class="ofh"><span>'+(k?'BLACK FRIDAY':'<span class="cic" aria-hidden="true"></span>ACABA NUM INSTANTE')+'</span><span class="ofe">Encerra em <span class="cd cdb" data-ate="'+p.oferta.ate+'"></span></span></div><div class="ofb">'+(po(p)?'<div class="old">'+brl(po(p))+'</div>':'')+'<div class="pr" style="margin:0">'+brs(pe(p))+(o?'<span class="off">'+o+'% OFF</span>':'')+'</div></div></div>'};

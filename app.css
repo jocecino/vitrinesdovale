@@ -981,3 +981,6 @@ input[type=date]:focus::before,input[type=date].dtv::before{content:none}}
 .cprl{display:flex;gap:10px;align-items:flex-start;padding:9px 10px;border-bottom:1px solid var(--line);margin:0;cursor:pointer}.cprl:last-child{border-bottom:0}.cprl input{flex:none;width:20px;height:20px;margin:1px 0 0}.cprl span{min-width:0;display:flex;flex-direction:column}.cprl b{font-size:14px;overflow-wrap:anywhere}.cprl small{color:var(--mute);font-size:12px}
 .cprs{flex-wrap:wrap;row-gap:4px}.cprs small{width:100%;flex:auto}
 .ofrh b .cic{width:1.55em;height:1.55em}.ofh .cic{width:22px;height:22px}
+/* sacola pegando fogo: Oferta arretada e Resta N */
+.sfg{display:inline-block;flex:none;width:18px;height:18px;margin:-3px 0;background:url(/sacola-fogo.webp) center/contain no-repeat}
+.bfs .sfg{width:19px;height:19px;margin:-4px 1px -4px -2px}
