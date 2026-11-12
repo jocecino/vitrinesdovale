@@ -280,6 +280,70 @@ Deno.serve(async (req: Request) => {
       }
       return json({ ok: true, enviados: n });
     }
+    // indicação: a loja indicada fez a 1ª venda -> bônus para quem indicou
+    if (tipo === "indic") {
+      const { data: l } = await db.from("lojas").select("id,nome,email,bonus_ate").eq("id", id).maybeSingle();
+      if (!l) return json({ ok: false });
+      const ind = String(b.nome || "uma loja indicada por você"), ate = l.bonus_ate ? new Date(l.bonus_ate).toLocaleDateString("pt-BR", { timeZone: "America/Sao_Paulo" }) : "";
+      const t = "🎁 Você ganhou comissão de 2%", tx = `${ind} fez a primeira venda. Sua comissão fica em 2%${ate ? " até " + ate : " por 30 dias"}.`;
+      const n = await enviarPush(l.id, { title: t, body: tx, url: "/#/minha", tag: "indic" });
+      const s = smtp();
+      if (s && l.email) {
+        try {
+          await s.t.sendMail({ from: `Eita Vale <${s.user}>`, to: l.email, subject: `${t} - Eita Vale`, text: `${tx} Obrigado por indicar! ${SITE}#/minha`,
+            html: moldura(t, `<p>A loja <b>${esc(ind)}</b>, que você indicou, fez a primeira venda no Eita Vale.</p><p>Como prêmio, a comissão da loja <b>${esc(l.nome)}</b> fica em <b>2%</b>${ate ? " até <b>" + ate + "</b>" : " por 30 dias"}. Cada nova loja indicada que vender soma mais 30 dias.</p>`, "Abrir meu painel", SITE + "#/minha", "Continue indicando: seu link está no painel, em Indique uma loja.") });
+          await logar("indic", true);
+        } catch (e) { await logar("indic", false, String(e)); }
+      }
+      return json({ ok: true, enviados: n });
+    }
+    // favorito baixou de preço ou voltou ao estoque (push; sem push, e-mail)
+    if (tipo === "fav") {
+      const { data: p } = await db.from("produtos").select("id,titulo,fotos,loja_id,adulto").eq("id", String(b.p || "")).maybeSingle();
+      if (!p || p.adulto) return json({ ok: false });
+      const { data: l } = await db.from("lojas").select("nome").eq("id", p.loja_id).maybeSingle();
+      const k = String(b.k || ""), de = Number(b.de || 0), por = Number(b.por || 0), tit = String(p.titulo || "Produto").slice(0, 70), loja = l?.nome || "a loja";
+      const m = k === "estoque"
+        ? { title: "✅ Voltou ao estoque", body: `${tit} · ${loja}. Garanta o seu antes que acabe.` }
+        : { title: `🔻 Baixou de preço: ${brl(por)}`, body: `${tit} · antes ${brl(de)}. Toque para ver.` };
+      const env = await enviarPushCli(id, { ...m, url: "/#/produto/" + p.id, tag: "fav-" + p.id });
+      if (env > 0) return json({ ok: true, enviados: env });
+      const { data: c } = await db.from("cliente_contas").select("email,nome").eq("user_id", id).maybeSingle();
+      const s = smtp();
+      if (!s || !c?.email) return json({ ok: true, enviados: 0 });
+      const nome = String(c.nome || "").trim().split(" ")[0], link = SITE + "p/" + p.id, foto = Array.isArray(p.fotos) && p.fotos[0] ? String(p.fotos[0]) : "";
+      try {
+        await s.t.sendMail({ from: `Eita Vale <${s.user}>`, to: c.email, subject: `${m.title} · ${tit}`,
+          text: `Olá${nome ? ", " + nome : ""}! Um produto dos seus favoritos ${k === "estoque" ? "voltou ao estoque" : "baixou de " + brl(de) + " para " + brl(por)}: ${tit} (${loja}). ${link}`,
+          html: moldura(m.title, `<p>Olá${nome ? ", " + esc(nome) : ""}!</p><p>Um produto dos seus favoritos ${k === "estoque" ? "<b>voltou ao estoque</b>" : "baixou de <s>" + brl(de) + "</s> para <b>" + brl(por) + "</b>"}:</p>${foto ? `<p style="text-align:center"><img src="${esc(foto)}" alt="" width="220" style="border-radius:12px;max-width:100%"></p>` : ""}<p style="text-align:center"><b>${esc(tit)}</b><br>${esc(loja)}</p>`, "Ver produto", link, "Você recebe este aviso porque favoritou o produto. Para parar, é só tirar dos favoritos.") });
+        await logar("fav_" + k, true);
+      } catch (e) { await logar("fav_" + k, false, String(e)); }
+      return json({ ok: true, enviados: 0, email: true });
+    }
+    // sacolinha esquecida (3h sem mexer, no máximo 1 por dia)
+    if (tipo === "sacola") {
+      const { data: sc } = await db.from("cli_sacola").select("n,loja_id,itens").eq("cliente_uid", id).maybeSingle();
+      if (!sc || !sc.n) return json({ ok: false });
+      const { data: l } = sc.loja_id ? await db.from("lojas").select("nome").eq("id", sc.loja_id).maybeSingle() : { data: null };
+      const its = (Array.isArray(sc.itens) ? sc.itens : []) as Array<{ id: string }>;
+      const { data: ps } = its.length ? await db.from("produtos").select("titulo,adulto").in("id", its.map((x) => x.id).slice(0, 20)) : { data: [] };
+      const disc = (ps || []).some((x: { adulto: boolean }) => x.adulto), t1 = !disc && ps && ps[0] ? String(ps[0].titulo).slice(0, 60) : "";
+      const qt = sc.n + (sc.n > 1 ? " itens" : " item"), loja = !disc && l?.nome ? " da " + l.nome : "";
+      const m = { title: "🛍️ Sua sacolinha está esperando", body: `${qt}${loja}${t1 ? ": " + t1 + (its.length > 1 ? " e mais" : "") : ""}. Finalize antes que acabe.` };
+      const env = await enviarPushCli(id, { ...m, url: "/#/carrinho", tag: "sacola" });
+      if (env > 0) return json({ ok: true, enviados: env });
+      const { data: c } = await db.from("cliente_contas").select("email,nome").eq("user_id", id).maybeSingle();
+      const s = smtp();
+      if (!s || !c?.email) return json({ ok: true, enviados: 0 });
+      const nome = String(c.nome || "").trim().split(" ")[0];
+      try {
+        await s.t.sendMail({ from: `Eita Vale <${s.user}>`, to: c.email, subject: "🛍️ Você esqueceu algo na sacolinha - Eita Vale",
+          text: `Olá${nome ? ", " + nome : ""}! Você deixou ${qt} na sacolinha${loja}. Finalize sua compra: ${SITE}#/carrinho`,
+          html: moldura("🛍️ Sua sacolinha está esperando", `<p>Olá${nome ? ", " + esc(nome) : ""}!</p><p>Você deixou <b>${qt}</b> na sacolinha${esc(loja)}${t1 ? ", como <b>" + esc(t1) + "</b>" : ""}.</p><p>Os produtos podem acabar. Finalize enquanto ainda tem.</p>`, "Ver minha sacolinha", SITE + "#/carrinho", "Entre na sua conta para ver a sacolinha em qualquer aparelho.") });
+        await logar("sacola", true);
+      } catch (e) { await logar("sacola", false, String(e)); }
+      return json({ ok: true, enviados: 0, email: true });
+    }
     if (tipo === "cli") {
       const { data: p } = await db.from("pedidos").select("id,loja,loja_id,cliente_uid,total,frete,servico,adulto,rastreio,frete_servico,sinal_valor").eq("id", Number(id)).maybeSingle();
       if (!p || !p.cliente_uid) return json({ ok: false });
