@@ -1103,3 +1103,5 @@ html.dk .plt .bad{background:#3a2220}
 .pgq{margin:4px 0 8px}
 .tb small.tbl{display:inline;font-size:12px}
 #prod .relw{grid-column:1/-1}
+.vpl{display:flex;align-items:center;gap:8px;padding:14px 0 12px}.vpl span{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.vpl b{color:var(--ink);font-weight:700}.vpl em{font-style:normal;color:var(--mute);font-size:20px;line-height:1}
+.ljm{margin-top:14px}
