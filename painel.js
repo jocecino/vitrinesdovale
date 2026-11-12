@@ -1195,7 +1195,7 @@ function sflBar(){return SFL&&SFN[SFL]?'<div class="sfl">Mostrando só: <b>'+SFN
 // ===== Cartaz da loja com QR Code =====
 let QRP=null;
 function qrLib(){return QRP||(QRP=new Promise((ok,no)=>{const s=document.createElement('script');s.src='/vendor/qr-1.0.min.js';s.onload=()=>ok();s.onerror=()=>{QRP=null;no(new Error('Sem conexão. Tente de novo.'))};document.head.appendChild(s)}))}
-const imgL=src=>new Promise(ok=>{if(!src)return ok(null);const i=new Image();i.onload=()=>ok(i);i.onerror=()=>ok(null);i.src=/^https:\/\/(fotos\.eitavale|pub-c1cbf15f15c14757a0192ce3ea39d547\.r2\.dev)/.test(src)?'/api/img?u='+encodeURIComponent(src):src});
+const imgL=src=>new Promise(ok=>{if(!src)return ok(null);const i=new Image(),px=/^https:\/\/(fotos\.eitavale|pub-c1cbf15f15c14757a0192ce3ea39d547\.r2\.dev)/.test(src);if(!px&&/^https?:/.test(src))i.crossOrigin='anonymous';i.onload=()=>ok(i);i.onerror=()=>ok(null);i.src=px?'/api/img?u='+encodeURIComponent(src):src});
 function qrDraw(c,txt,x,y,w){const m=window.vvQR(txt,'M'),n=m.length,q=4,s=w/(n+2*q);c.fillStyle='#fff';c.fillRect(x,y,w,w);c.fillStyle='#111';for(let r=0;r<n;r++)for(let k=0;k<n;k++)if(m[r][k])c.fillRect(Math.floor(x+(k+q)*s),Math.floor(y+(r+q)*s),Math.ceil(s),Math.ceil(s))}
 function rr(c,x,y,w,h,r){c.beginPath();c.moveTo(x+r,y);c.arcTo(x+w,y,x+w,y+h,r);c.arcTo(x+w,y+h,x,y+h,r);c.arcTo(x,y+h,x,y,r);c.arcTo(x,y,x+w,y,r);c.closePath()}
 function txtW(c,t,x,y,mw,lh,max){const ws=String(t).split(' ');let ln='',L=[];ws.forEach(w=>{const tt=ln?ln+' '+w:w;if(c.measureText(tt).width>mw&&ln){L.push(ln);ln=w}else ln=tt});if(ln)L.push(ln);L=L.slice(0,max||3);L.forEach((l,i)=>c.fillText(l,x,y+i*lh));return L.length}
