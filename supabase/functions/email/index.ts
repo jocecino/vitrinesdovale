@@ -282,6 +282,17 @@ async function notificar(tipo: string, id: string) {
     await enviarAviso("frete_definido", c.email, `🚚 Frete definido - pague seu pedido nº ${p.id}`, `Olá${c.nome ? ", " + String(c.nome).split(" ")[0] : ""}! A loja definiu o frete`,
       [`A loja${lojaCli ? " " + lojaCli : ""} definiu o frete do pedido nº ${p.id}: ${brl(Number(p.frete))}.`, `Total a pagar: ${brl(Number(p.total))}.`, "Pague pelo Mercado Pago (Pix, cartão ou saldo) em até 24 horas para garantir os produtos."],
       "Pagar agora", `${SITE}#/pedidos`, "Dúvidas? Converse com a loja pelo chat do pedido.");
+  } else if (tipo === "restante") {
+    // pedido em 2 partes: ficou pronto, falta pagar o restante
+    if (!p.cliente_uid) return;
+    const { data: x } = await db.from("pedidos").select("rest_status,rest_ate,sinal_pct,sinal_valor,total").eq("id", pid).maybeSingle();
+    if (!x || x.rest_status !== "aguardando") return;
+    const { data: c } = await db.from("cliente_contas").select("email,nome").eq("user_id", p.cliente_uid).maybeSingle();
+    if (!c || !c.email) return;
+    const ate = new Date(x.rest_ate).toLocaleString("pt-BR", { timeZone: "America/Bahia", day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" });
+    await enviarAviso("restante", c.email, p.servico ? `✅ Serviço concluído - pague o restante do pedido nº ${p.id}` : `🎁 Sua encomenda ficou pronta - pague o restante do pedido nº ${p.id}`, `Olá${c.nome ? ", " + String(c.nome).split(" ")[0] : ""}! ${p.servico ? "Seu serviço foi concluído" : "Sua encomenda ficou pronta"}`,
+      [`A loja${lojaCli ? " " + lojaCli : ""} avisou que o pedido nº ${p.id} ${p.servico ? "foi concluído" : "ficou pronto"}.`, `Falta pagar o restante: ${brl(Number(x.total) - Number(x.sinal_valor || 0))}${Number(p.frete) > 0 ? " (inclui o frete)" : ""}.`, `Pague até ${ate} pelo Mercado Pago (Pix, cartão ou saldo).`, "Se o restante não for pago no prazo, o pedido é cancelado e o sinal fica com a loja, conforme a regra aceita na compra."],
+      "Pagar o restante", `${SITE}#/pedidos`, "Dúvidas? Converse com a loja pelo chat do pedido.");
   } else if (tipo === "enviado") {
     if (!p.rastreio || !p.cliente_uid) return;
     const { data: c } = await db.from("cliente_contas").select("email,nome").eq("user_id", p.cliente_uid).maybeSingle();
@@ -316,7 +327,7 @@ Deno.serve(async (req: Request) => {
       const id = String(b.id || "");
       const tp = String(b.tipo);
       const uu = (tp === "loja_nova" || tp === "aviso_produto" || tp === "campanha_nova" || tp === "campanha_teste" || tp === "admin_otp" || tp === "admin_alerta" || tp === "email_troca");
-      if (!id || !["pedido_novo", "entregue", "frete_definido", "admin_otp", "admin_alerta", "loja_nova", "aviso_produto", "campanha_nova", "campanha_teste", "email_troca", "enviado"].includes(tp) || (!uu && !Number(id)) || (uu && !/^[0-9a-f-]{36}$/i.test(id))) return json({ erro: "Pedido inválido." }, 400);
+      if (!id || !["pedido_novo", "entregue", "frete_definido", "admin_otp", "admin_alerta", "loja_nova", "aviso_produto", "campanha_nova", "campanha_teste", "email_troca", "enviado", "restante"].includes(tp) || (!uu && !Number(id)) || (uu && !/^[0-9a-f-]{36}$/i.test(id))) return json({ erro: "Pedido inválido." }, 400);
       try { await notificar(tp, id); } catch (e) { console.error("notificar", String(e)); return json({ ok: false }, 200); }
       return json({ ok: true });
     }

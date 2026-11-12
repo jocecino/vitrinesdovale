@@ -22,7 +22,7 @@ Deno.serve(async (req) => {
     const b = await req.json().catch(() => ({}));
     const n = parseInt(b.numero, 10);
     if (!n) return out({ erro: 'Pedido inválido.' }, 400);
-    const ped = (await db('pedidos?id=eq.' + n + '&select=id,loja_id,status,pagamento,pg_status,mp_payment_id,total,direto,loja_ok_em,me_etiqueta,me_status,cli_cancel_em'))[0];
+    const ped = (await db('pedidos?id=eq.' + n + '&select=id,loja_id,status,pagamento,pg_status,mp_payment_id,total,direto,loja_ok_em,me_etiqueta,me_status,cli_cancel_em,mp_payment_id2'))[0];
     if (!ped) return out({ erro: 'Pedido não encontrado.' }, 404);
     const atraso = auto && !!b.atraso && !!ped.cli_cancel_em && ped.status === 'confirmado';
     if (auto && !atraso && (!ped.direto || ped.loja_ok_em || ped.status !== 'confirmado')) return out({ erro: 'Pedido não elegível para devolução automática.' }, 400);
@@ -36,7 +36,13 @@ Deno.serve(async (req) => {
     if (!adm && !['confirmado', 'saiu'].includes(ped.status)) return out({ erro: 'Pedido entregue: para devolver, fale com o suporte.' }, 400);
     const ct = (await db('mp_contas?loja_id=eq.' + ped.loja_id + '&select=access_token'))[0];
     if (!ct) return out({ erro: 'A loja não está conectada ao Mercado Pago.' }, 400);
-    const r = await fetch('https://api.mercadopago.com/v1/payments/' + ped.mp_payment_id + '/refunds', {
+    // pedido em 2 partes: devolve também o pagamento do restante
+    let r: Response | null = null;
+    if (ped.mp_payment_id2) {
+      r = await fetch('https://api.mercadopago.com/v1/payments/' + ped.mp_payment_id2 + '/refunds', {
+        method: 'POST', headers: { Authorization: 'Bearer ' + ct.access_token, 'Content-Type': 'application/json', 'X-Idempotency-Key': 'vv-refund-' + n + '-r' }, body: '{}' });
+    }
+    if (!r || r.ok) r = await fetch('https://api.mercadopago.com/v1/payments/' + ped.mp_payment_id + '/refunds', {
       method: 'POST', headers: { Authorization: 'Bearer ' + ct.access_token, 'Content-Type': 'application/json', 'X-Idempotency-Key': 'vv-refund-' + n }, body: '{}' });
     const j = await r.json().catch(() => ({}));
     if (!r.ok) {

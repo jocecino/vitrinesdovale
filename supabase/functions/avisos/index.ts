@@ -256,8 +256,32 @@ Deno.serve(async (req: Request) => {
       } catch (e) { await logar("avaliar_lembrete", false, String(e)); }
       return json({ ok: true });
     }
+    // pedido em 2 partes (sinal): avisos para a loja
+    if (tipo === "loja_ped") {
+      const { data: p } = await db.from("pedidos").select("id,loja_id,cliente,total,sinal_valor,sinal_pct,tipo,frete_servico,servico").eq("id", Number(id)).maybeSingle();
+      if (!p) return json({ ok: false });
+      const k = String(b.k || ""), cl = p.cliente || "Cliente";
+      const M: Record<string, [string, string, string]> = {
+        restante_pago: [`💰 Restante pago · pedido nº ${p.id}`, `${cl} pagou o restante. ${p.servico ? "O pedido está quitado." : p.tipo === "retirada" ? "Combine a retirada." : p.frete_servico ? "Já pode postar." : "Já pode entregar."}`, "O cliente pagou o restante do pedido pelo Mercado Pago. Agora o pedido está quitado e você já pode entregar (ou postar, ou combinar a retirada)."],
+        desistiu: [`❌ Cliente desistiu · pedido nº ${p.id}`, `${cl} desistiu. O sinal (${brl(Number(p.sinal_valor))}) fica com você.`, `O cliente desistiu do pedido. Conforme a regra aceita na compra, o sinal de ${brl(Number(p.sinal_valor))} fica com você para cobrir os custos de produção. Não é preciso devolver nada.`],
+        rest_expirou: [`⌛ Prazo do restante terminou · pedido nº ${p.id}`, `${cl} não pagou o restante em 3 dias. O pedido foi cancelado e o sinal fica com você.`, `O cliente não pagou o restante em até 3 dias depois do aviso de pronto. O pedido foi cancelado e, conforme a regra aceita na compra, o sinal de ${brl(Number(p.sinal_valor))} fica com você.`],
+      };
+      const m = M[k];
+      if (!m) return json({ ok: false });
+      const n = await enviarPush(p.loja_id, { title: m[0], body: m[1], url: "/#/minha", tag: "lp-" + p.id + "-" + k });
+      const { data: l } = await db.from("lojas").select("nome,email").eq("id", p.loja_id).maybeSingle();
+      const s = smtp();
+      if (s && l?.email) {
+        try {
+          await s.t.sendMail({ from: `Eita Vale <${s.user}>`, to: l.email, subject: `${m[0]} - Eita Vale`, text: `${m[2]} ${SITE}#/minha`,
+            html: moldura(m[0], `<p>Pedido nº <b>${p.id}</b> da loja <b>${esc(l.nome)}</b>.</p><p>${esc(m[2])}</p>`, "Abrir meu painel", SITE + "#/minha", "Aviso automático do Eita Vale.") });
+          await logar("loja_ped_" + k, true);
+        } catch (e) { await logar("loja_ped_" + k, false, String(e)); }
+      }
+      return json({ ok: true, enviados: n });
+    }
     if (tipo === "cli") {
-      const { data: p } = await db.from("pedidos").select("id,loja,loja_id,cliente_uid,total,frete,servico,adulto,rastreio,frete_servico").eq("id", Number(id)).maybeSingle();
+      const { data: p } = await db.from("pedidos").select("id,loja,loja_id,cliente_uid,total,frete,servico,adulto,rastreio,frete_servico,sinal_valor").eq("id", Number(id)).maybeSingle();
       if (!p || !p.cliente_uid) return json({ ok: false });
       const k = String(b.k || ""), n = p.id, sv = !!p.servico;
       if (p.adulto) p.loja = "A loja"; // pedido discreto: sem nome da loja nos avisos
@@ -267,6 +291,9 @@ Deno.serve(async (req: Request) => {
       else if (k === "saiu") m = p.rastreio ? { title: `📦 Pedido nº ${n} postado${p.frete_servico ? " (" + p.frete_servico + ")" : ""}`, body: `Código de rastreio ${p.rastreio}. Toque para acompanhar.` } : { title: `🛵 Seu pedido nº ${n} saiu para entrega`, body: `${p.loja} já está a caminho.` };
       else if (k === "entregue") m = { title: sv ? `🛠️ Serviço do pedido nº ${n} realizado` : `📦 Pedido nº ${n} entregue`, body: "Confirme o recebimento e conte como foi.", url: `/#/avaliar/${n}` };
       else if (k === "pronto") m = { title: `🎁 Sua encomenda nº ${n} ficou pronta`, body: `${p.loja} terminou sua encomenda. Toque para acompanhar.` };
+      else if (k === "restante") m = { title: sv ? `✅ Serviço do pedido nº ${n} concluído` : `🎁 Sua encomenda nº ${n} ficou pronta`, body: `Pague o restante (${brl(Number(p.total) - Number(p.sinal_valor || 0))}) em até 3 dias para receber. Toque para pagar.` };
+      else if (k === "restante_lembrete") m = { title: `⏰ Falta 1 dia · pedido nº ${n}`, body: `Pague o restante (${brl(Number(p.total) - Number(p.sinal_valor || 0))}) até amanhã. Sem o pagamento, o pedido é cancelado e o sinal não é devolvido.` };
+      else if (k === "rest_expirou") m = { title: `Pedido nº ${n} cancelado`, body: "O prazo para pagar o restante terminou. Conforme a regra aceita na compra, o sinal ficou com a loja." };
       else if (k === "atraso") m = { title: `⏰ Encomenda nº ${n} atrasada`, body: "Passou 2 dias da data prevista. Você pode aguardar ou pedir o cancelamento em Meus pedidos." };
       else if (k === "cancelado") m = { title: `Pedido nº ${n} cancelado`, body: "Se você já pagou, o valor volta pelo Mercado Pago." };
       else if (k === "avaliar") m = { title: "⭐ Como foi sua compra?", body: `Avalie o pedido nº ${n} na ${p.loja}. Leva menos de 1 minuto.`, url: `/#/avaliar/${n}` };
