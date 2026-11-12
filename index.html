@@ -49,6 +49,7 @@ s.addEventListener('animationend',function(e){if(e.target===s)s.remove()});setTi
    <label>Sobrenome do responsável<input name="sobrenome" required></label>
    <label>WhatsApp (com DDD)<input name="whatsapp" type="tel" inputmode="numeric" placeholder="(74) 99999-9999" maxlength="15" oninput="telM(this)" required></label>
    <div class="adrg" id="cadAdr"></div>
+   <label>Você é<select name="perfil" required><option value="">Escolha…</option><option value="loja">🏪 Loja (ponto físico ou CNPJ)</option><option value="autonomo">🙋 Vendedor autônomo (vende por conta própria, de casa)</option></select><small class="hint" style="display:block;font-weight:400;margin:2px 0 0">Aparece na vitrine junto ao nome: 🏪 loja ou 🙋 autônomo.</small></label>
    <label>Categoria<select name="categoria" class="csel"></select></label>
    <label>E-mail principal<small class="hint" style="display:block;font-weight:400;margin:2px 0 6px">Seu e-mail principal é usado para recuperar a senha. Digite com atenção.</small><input name="email" type="email" required autocomplete="email" maxlength="120" oninput="emReset(this)" onchange="emChk(this,'loja')"></label><small class="evm hint" style="display:block;margin:-6px 0 4px"></small>
    <label>Logo da loja (obrigatório)<input name="arq" type="file" accept="image/*" required onchange="logoEsc(this)"></label><div id="lgCad" style="margin:-4px 0 4px"></div>
@@ -74,7 +75,7 @@ s.addEventListener('animationend',function(e){if(e.target===s)s.remove()});setTi
     <label>Título<input name="titulo" required></label>
     <div id="svf" style="display:none"><label>Como é o preço<select name="preco_modo" id="psm" onchange="psmChg()"><option value="fixo">Preço fixo</option><option value="apartir">A partir de (valor final ao aceitar)</option><option value="orcamento">Sob orçamento (valor ao aceitar)</option></select></label>
     <label>Duração aproximada<select name="duracao" id="psd"></select></label>
-    <label>Onde é feito<select name="local" id="psl"><option value="loja">📍 No local da loja</option><option value="domicilio">🏠 A domicílio (taxa de deslocamento = sua taxa de entrega por bairro)</option><option value="ambos">📍 No local ou 🏠 a domicílio (o cliente escolhe)</option></select></label></div>
+    <label>Onde é feito<select name="local" id="psl"><option value="loja">📍 No local da loja</option><option value="domicilio">🏠 A domicílio (taxa de deslocamento = sua taxa de entrega por bairro)</option><option value="ambos">📍 No local ou 🏠 a domicílio (o cliente escolhe)</option></select></label><div id="svpag"></div></div>
     <label id="precl"><span id="precT">Preço (R$)</span><input name="preco" inputmode="numeric" data-rs required oninput="pvw(this)"><small class="hint" style="margin:0"></small></label>
     <label id="pol">Preço antigo, se estiver em promoção<input name="precoOriginal" inputmode="numeric" data-rs oninput="pvw(this)"><small class="hint" style="margin:0"></small><small class="hint" style="margin:2px 0 0;display:block">Produto novo não pode ter preço antigo. Use só um preço que o produto realmente teve nos últimos 15 dias (Código de Defesa do Consumidor).</small></label>
     <label id="pcatl">Categoria<select name="categoria" class="csel" id="pcat" onchange="catChg()"></select></label>

@@ -1008,3 +1008,20 @@ html.dk .encat{background:#3a1818;border-color:#5e2a2a}html.dk .encat b{color:#f
 .cic{background-image:url(/raio-preto.webp)}
 html.dk .cic{background-image:url(/raio-branco.webp)}
 html.dk .ofrh .cic,html.dk .ofh .cic,html.dk .fct .cic,html.dk .flh .cic{background-image:url(/raio-preto.webp)}
+/* pagamento em 2 partes (sinal) */
+.sinp{background:#eaf4f6;border-color:#bcdbe2}.sinp b{color:#1b4f5c}.sinp small{color:#335e69}
+html.dk .sinp{background:#14303a;border-color:#24515d}html.dk .sinp b{color:#9fd3e0}html.dk .sinp small{color:#b9d6dd}
+.sinck{margin:12px 0 0;padding:12px;border-radius:12px;background:#eaf4f6;border:1px solid #bcdbe2}.sinck>b{display:block;color:#1b4f5c;margin-bottom:6px}
+.sinck .rs{font-size:14px}.sinck .sinok{margin:10px 0 0;padding:9px;border-radius:9px;background:#fdeeee;border:1px solid #f0c4c0;font-size:13px;line-height:1.4}
+html.dk .sinck{background:#14303a;border-color:#24515d}html.dk .sinck>b{color:#9fd3e0}html.dk .sinck .sinok{background:#3a1d1d;border-color:#6b3030}
+.pagg{margin-top:10px}.pagg>b{display:block;font-size:14px;margin-bottom:6px}
+.pago{display:flex!important;align-items:center;gap:8px;border:1px solid var(--line);border-radius:9px;padding:8px 10px;margin:5px 0!important;font-size:14px;font-weight:500}
+.pago input{width:auto!important;margin:0!important;flex:none}.pago:has(input:checked){border-color:var(--teal);background:#eaf4f6}html.dk .pago:has(input:checked){background:#14303a}
+.pagrc{font-style:normal;font-size:10px;font-weight:800;background:var(--ok);color:#fff;border-radius:4px;padding:1px 5px;margin-left:4px;white-space:nowrap}
+.pagrec{display:block;margin-top:8px;padding:8px 10px;border-radius:9px;background:#fff7e0;border:1px solid #e9cf8f;font-size:12.5px;line-height:1.4;color:#5b4a1f}
+html.dk .pagrec{background:#33280f;border-color:#5c4a1c;color:#e2d1a6}
+.dsl{display:block;margin:8px auto 0;color:var(--red);font-size:13px}
+/* loja ou vendedor autônomo */
+.pfl{display:inline-block;font-size:11.5px;font-weight:700;border-radius:20px;padding:1px 8px;margin:2px 0 1px;background:#eef0f2;color:#4a5560}.pfl.au{background:#e3f1f4;color:#1b5a68}
+html.dk .pfl{background:#2a3440;color:#c8d0d8}html.dk .pfl.au{background:#163844;color:#9fd3e0}
+.lpf{display:flex;gap:0;flex-wrap:wrap;margin:4px 14px 8px}
