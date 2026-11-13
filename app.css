@@ -400,7 +400,7 @@ header,.top{background:#16363F radial-gradient(120% 160% at 85% 0%,#C9A85C55 0%,
  .bar{max-width:none}
  .bn{max-width:860px;width:calc(100% - 28px);margin:12px auto 4px}
  #ll{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;padding:0 14px 14px}
- #ll>.vfl,#ll>.cdbar,#ll>.lpf,#ll>.empty,#ll>p,#ll>h2{grid-column:1/-1}
+ #ll>.vfl,#ll>.cdbar,#ll>.lpf,#ll>.empty,#ll>p,#ll>h2,#ll>h3{grid-column:1/-1}
  #ll>.cdbar{margin:0 0 4px;max-width:520px}#ll>.lpf{margin:0 0 6px}#ll>.vfl{margin:0}
  #ll>.item{width:auto!important;margin:0!important}
  #cart,#co,#ped,#doc,#av,#ns,#pnl>#login,#pnl>#cadv,#adm>#aLogin{max-width:720px;margin-left:auto;margin-right:auto}
@@ -1117,3 +1117,28 @@ html.dk .plt .bad{background:#3a2220}
  #prod>.pi1{grid-row:2/4;position:static;align-self:start;padding-right:14px}
  #prod>.pdw{padding-left:14px;padding-right:0}
 }
+/* vitrine: atalhos, faixa de confiança, cartões alinhados */
+.atl{display:flex;gap:12px;overflow-x:auto;padding:12px 14px 4px;scrollbar-width:none}.atl::-webkit-scrollbar{display:none}.atl:empty{display:none}
+.atl button{flex:none;width:72px;display:flex;flex-direction:column;align-items:center;gap:6px;background:none;border:0;padding:0;cursor:pointer;font:inherit;color:var(--ink)}
+.atl i{font-style:normal;width:58px;height:58px;border-radius:50%;display:grid;place-items:center;font-size:26px;background:var(--card);box-shadow:0 1px 4px #0000001f;border:1px solid var(--line)}
+.atl span{font-size:11.5px;font-weight:600;line-height:1.2;text-align:center;max-width:72px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.cfz{display:flex;justify-content:center;flex-wrap:wrap;gap:4px 14px;margin:8px 14px 2px;padding:7px 10px;border-radius:10px;background:var(--card);border:1px solid var(--line);font-size:12px;font-weight:600;color:var(--mute)}.cfz:empty{display:none}
+.card{display:flex;flex-direction:column}.card .ct{flex:1;display:flex;flex-direction:column}
+
+.card .avz{min-height:14px}
+.card .ct small.clj{margin-top:auto;padding-top:3px;color:var(--ink);opacity:.82;font-weight:600}
+.card .ct small.cmt{color:var(--mute)}
+@media(min-width:1100px){.atl{justify-content:center}}
+/* produto: aviso de loja fechada discreto */
+.fchl{margin:0 0 10px;font-size:13px;color:var(--mute);line-height:1.4}
+/* lojas: em breve agrupadas; capa padrão; loja nova */
+.ebh{grid-column:1/-1;margin:14px 14px 6px;font-size:15px;color:var(--mute)}
+#ll>.ebh{margin:10px 0 0}
+.lcn{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;padding:0 24px 30px 110px;color:#F6F3EC}
+.lcn b{font-size:24px;line-height:1.15;font-weight:800;text-shadow:0 2px 8px #0005}.lcn span{font-size:13px;color:#E9D08A;margin-top:4px;font-weight:600}
+.lhd .lc0{position:relative;background:radial-gradient(circle at 85% 20%,#C9A85C55,transparent 45%),radial-gradient(circle at 10% 110%,#2f7d6b88,transparent 50%),linear-gradient(135deg,#16363F,#0F2830 60%,#1d4a56)}
+.lnv{display:inline-block;margin-top:6px;font-size:12.5px;font-weight:600;color:#2f7d4f;background:#2f7d4f14;border-radius:8px;padding:2px 8px}
+html.dk .lnv{color:#8fe0ac;background:#8fe0ac1a}
+/* checkout: confiança */
+.cotr{display:flex;flex-direction:column;gap:6px;margin-top:12px;padding:10px 12px;border-radius:10px;background:#2f7d4f10;border:1px solid #2f7d4f33;font-size:13px;color:var(--ink);line-height:1.4}
+.fdica{display:block;margin:4px 0 0;color:#8a5a00}

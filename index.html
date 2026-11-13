@@ -24,6 +24,7 @@ s.addEventListener('animationend',function(e){if(e.target===s)s.remove()});setTi
 
 <main id="home" class="v on">
  <div id="bnr"></div>
+ <div id="atl" class="atl"></div><div id="cfz" class="cfz"></div>
  <div id="fls"></div>
  <div id="lj" style="display:none"></div>
  <div id="cmf"></div><h2 id="gt">🔥 Mais vendidos e procurados</h2><div class="grid" id="grid"></div><div id="mais" style="text-align:center;padding:0 14px 14px"></div>
@@ -73,7 +74,7 @@ s.addEventListener('animationend',function(e){if(e.target===s)s.remove()});setTi
   <div id="pn" style="display:none">
    <form novalidate onsubmit="return novoProd(event)">
     <div class="tpsw" id="tpsw"><button type="button" class="on" data-t="produto" onclick="tpSet('produto')">📦 Produto</button><button type="button" data-t="servico" onclick="tpSet('servico')">🛠️ Serviço</button></div><input type="hidden" name="tipo" id="ptipo" value="produto">
-    <div class="fgrp"><b id="pfT">Fotos do produto (até 6)</b><input id="pfIn" type="file" accept="image/*" multiple hidden onchange="pfAdd(this)"><div id="pfG" class="pfg"></div><small class="hint" style="margin:6px 0 0">A primeira foto é a capa. Use ◀ ▶ para mudar a ordem e ✕ para remover.</small></div>
+    <div class="fgrp"><b id="pfT">Fotos do produto (até 6)</b><input id="pfIn" type="file" accept="image/*" multiple hidden onchange="pfAdd(this)"><div id="pfG" class="pfg"></div><small class="hint" style="margin:6px 0 0">A primeira foto é a capa. Use ◀ ▶ para mudar a ordem e ✕ para remover.</small><small class="hint fdica">📸 Dica: produtos com 3 fotos ou mais vendem mais. Mostre de frente, de perto e em uso.</small></div>
     <label>Título<input name="titulo" required></label>
     <div id="svf" style="display:none"><label>Como é o preço<select name="preco_modo" id="psm" onchange="psmChg()"><option value="fixo">Preço fixo</option><option value="apartir">A partir de (valor final ao aceitar)</option><option value="orcamento">Sob orçamento (valor ao aceitar)</option></select></label>
     <label>Duração aproximada<select name="duracao" id="psd"></select></label>
