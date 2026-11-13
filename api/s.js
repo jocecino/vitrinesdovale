@@ -11,7 +11,7 @@ async function rpc(f, body) {
 module.exports = async (req, res) => {
   const t = req.query.t === 'p' ? 'p' : 'l', id = String(req.query.id || '');
   let title = 'Eita Vale', desc = 'Compre no comércio do Vale do São Francisco com pagamento seguro pelo Mercado Pago. Receba em casa ou retire na loja.';
-  let img = 'https://' + req.headers.host + '/og-eitavale.png';
+  let img = 'https://' + req.headers.host + '/og-eitavale-v2.png';
   try {
     if (UUID.test(id)) {
       if (t === 'p') {
@@ -26,7 +26,7 @@ module.exports = async (req, res) => {
       } else {
         const l = await rpc('get_loja', { p_id: id });
         if (l && l.adulta && !l.nome) { title = 'Loja para maiores de 18 - Eita Vale'; desc = 'Conteúdo para maiores de 18 anos. Entre na sua conta para ver.'; }
-        else if (l && l.id) { title = l.nome + ' - Eita Vale'; desc = (l.categoria || 'Loja') + ' em ' + (l.bairro || 'Sobradinho') + '. Veja os produtos e compre com pagamento seguro.'; img = l.logo || img; }
+        else if (l && l.id) { title = l.nome + ' - Eita Vale'; desc = (l.categoria || 'Loja') + ' em ' + (l.bairro ? l.bairro + (l.cidade ? ', ' + l.cidade : '') : (l.cidade || 'Vale do São Francisco')) + '. Veja os produtos e compre com pagamento seguro.'; img = l.logo || img; }
       }
     }
   } catch (e) {}
