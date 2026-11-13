@@ -788,11 +788,13 @@ async function restaurarCli(){try{const s=(await sbc.auth.getSession()).data.ses
 setInterval(()=>{if(!document.hidden&&!CH)cliBadge()},60000);
 
 /* ---------- Chat do pedido ---------- */
+const RPRT=['Pedido aceito! Já estamos preparando 😊','Seu pedido saiu para entrega 🛵','Seu pedido está pronto para retirar 🏪','Obrigado pela compra! Volte sempre 💛','Qualquer dúvida, é só chamar aqui 😉'];
+function chatRp(i){const f=$('chf');if(!f)return;f.t.value=RPRT[i];f.t.focus()}
 function chatAbrir(mode,num,tel,loja){chatFechar();let tit='Pedido nº '+num;
  if(mode==='loja'){const p=(PL||[]).find(x=>String(x.numero)===String(num));if(p)tit+=' · '+p.cliente}
  else{const o=OL.find(x=>String(x.n)===String(num))||ld('vv_ped',[]).find(x=>String(x.n)===String(num));if(!tel&&o)tel=o.t;if(!loja&&o)loja=o.lj;if(loja)tit+=' · '+loja}
  const z=document.createElement('div');z.id='chat';
- z.innerHTML='<div class="chh"><button class="chx" onclick="chatFechar()" aria-label="Voltar">←</button><b>'+esc(tit)+'</b></div><div id="chpay"></div><div class="chm" id="chm"><p class="hint" style="text-align:center">Carregando…</p></div><form id="chf" onsubmit="return chatEnv(event)"><input name="t" maxlength="500" autocomplete="off" placeholder="Escreva sua mensagem" required><button class="btn">Enviar</button></form><p class="chn">🔒 Telefone, endereço e links não são entregues no chat.</p>';
+ z.innerHTML='<div class="chh"><button class="chx" onclick="chatFechar()" aria-label="Voltar">←</button><b>'+esc(tit)+'</b></div><div id="chpay"></div><div class="chm" id="chm"><p class="hint" style="text-align:center">Carregando…</p></div>'+(mode==='loja'?'<div class="chq">'+RPRT.map((t,i)=>'<button type="button" onclick="chatRp('+i+')">'+esc(t)+'</button>').join('')+'</div>':'')+'<form id="chf" onsubmit="return chatEnv(event)"><input name="t" maxlength="500" autocomplete="off" placeholder="Escreva sua mensagem" required><button class="btn">Enviar</button></form><p class="chn">🔒 Telefone, endereço e links não são entregues no chat.</p>';
  document.body.appendChild(z);document.body.style.overflow='hidden';
  CH={mode:mode,num:num,tel:tel||'',last:0};chatPull(true);CH.tm=setInterval(()=>{if(!document.hidden)chatPull()},5000)}
 function chatPull(first){const c=CH;if(!c)return;(c.mode==='loja'?run('chatListarLoja',A,c.num,c.last):run('chatListarCli',c.num,c.tel,c.last)).then(r=>{if(CH!==c)return;const m=$('chm');if(!m)return;if(first)m.innerHTML='';

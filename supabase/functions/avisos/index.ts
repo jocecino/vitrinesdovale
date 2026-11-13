@@ -280,6 +280,35 @@ Deno.serve(async (req: Request) => {
       }
       return json({ ok: true, enviados: n });
     }
+    // teste de aviso pedido pelo lojista no painel
+    if (tipo === "loja_teste") {
+      const n = await enviarPush(id, { title: "🔔 Teste de aviso do Eita Vale", body: "Tudo certo! É assim que os pedidos novos vão chegar neste aparelho.", url: "/#/minha", tag: "teste" });
+      return json({ ok: true, enviados: n });
+    }
+    // loja parada: falta conectar o Mercado Pago e/ou cadastrar produtos (a cada 3 dias, até 10 vezes)
+    if (tipo === "loja_parada") {
+      const { data: l } = await db.from("lojas").select("id,nome,email,responsavel,status").eq("id", id).maybeSingle();
+      if (!l || l.status !== "ativa") return json({ ok: false });
+      const f = (Array.isArray((b as unknown as { falta: string[] }).falta) ? (b as unknown as { falta: string[] }).falta : []) as string[];
+      const mp = f.includes("mp"), pr = f.includes("produto");
+      if (!mp && !pr) return json({ ok: false });
+      const falta = mp && pr ? "conectar o Mercado Pago e cadastrar seus produtos" : mp ? "conectar o Mercado Pago" : "cadastrar seus produtos";
+      const t = "Sua loja está quase no ar", tx = `Falta só ${falta} para a ${l.nome} aparecer na vitrine do Eita Vale.`;
+      const n = await enviarPush(l.id, { title: "🏪 " + t, body: tx, url: "/#/minha", tag: "parada" });
+      const s = smtp();
+      if (s && l.email) {
+        const nome = String(l.responsavel || "").trim().split(" ")[0];
+        const passos = (mp ? `<li><b>Conectar o Mercado Pago:</b> no painel, Menu da loja › Pagamentos › Conectar. É por ele que o dinheiro das vendas cai na sua conta.</li>` : "") +
+          (pr ? `<li><b>Cadastrar os produtos:</b> no painel, Meus produtos › Adicionar. Também dá para cadastrar vários de uma vez pela planilha.</li>` : "");
+        try {
+          await s.t.sendMail({ from: `Eita Vale <${s.user}>`, to: l.email, subject: `🏪 ${t} - ${l.nome}`,
+            text: `Olá${nome ? ", " + nome : ""}! ${tx} Enquanto isso, ela aparece como "Em breve" para os clientes. Abra o painel: ${SITE}#/minha`,
+            html: moldura("🏪 " + t, `<p>Olá${nome ? ", " + esc(nome) : ""}!</p><p>A loja <b>${esc(l.nome)}</b> já está cadastrada, mas ainda aparece como <b>"Em breve"</b> para os clientes. Falta pouco:</p><ul>${passos}</ul><p>Precisa de ajuda? Responda este e-mail ou chame no WhatsApp (74) 98807-9171.</p>`, "Abrir meu painel", SITE + "#/minha", "Este lembrete para assim que a loja estiver completa.") });
+          await logar("loja_parada", true);
+        } catch (e) { await logar("loja_parada", false, String(e)); }
+      }
+      return json({ ok: true, enviados: n });
+    }
     // indicação: a loja indicada fez a 1ª venda -> bônus para quem indicou
     if (tipo === "indic") {
       const { data: l } = await db.from("lojas").select("id,nome,email,bonus_ate").eq("id", id).maybeSingle();
