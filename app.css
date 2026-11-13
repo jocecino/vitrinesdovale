@@ -1173,3 +1173,19 @@ html.dk .rxg>div.bad{background:#3a2a17}
 @media(min-width:700px){.rxg{grid-template-columns:repeat(3,1fr)}}
 #adl .item.achou{outline:2.5px solid var(--gold);outline-offset:-2px}
 .adr .nb{margin-left:auto;background:#e5484d;color:#fff;border-radius:10px;font-size:11px;font-weight:800;min-width:20px;padding:1px 6px;text-align:center}
+
+/* ===== Black Friday Eita Vale ===== */
+#bfz:empty{display:none}
+.bfz{margin:10px 12px 4px;border-radius:16px;background:linear-gradient(120deg,#0b0b0b,#1c1c1c 60%,#2a2410);color:#fff;padding:12px 14px 12px 8px;display:flex;align-items:center;gap:10px;box-shadow:0 4px 14px #0003}
+.bfz>img{width:74px;height:74px;flex:none;object-fit:contain;margin:-6px -2px}
+.bfz .bft{min-width:0;flex:1}
+.bfz b{display:block;font-size:15px;letter-spacing:.04em;line-height:1.2}.bfz b em{font-style:normal;color:#E9D08A}
+.bfz small{display:block;color:#ddd;font-size:12px;margin-top:2px}
+.bfz .bfl{margin-top:6px;color:#E9D08A;font-weight:700;font-size:11px;letter-spacing:.05em;text-transform:uppercase}
+.bfz .ct{display:flex;gap:6px;margin-top:3px}
+.bfz .ct span{background:#ffffff14;border:1px solid #E9D08A55;border-radius:8px;padding:3px 7px;font-weight:800;font-size:14px;color:#E9D08A;text-align:center;min-width:34px}
+.bfz .ct span i{font-style:normal;font-size:10px;color:#ccc;display:block;font-weight:600}
+.bfz button{flex:none;background:#E9D08A;color:#111;border:0;border-radius:10px;padding:10px 12px;font-weight:800;font-size:13px;white-space:nowrap;cursor:pointer}
+.bfz.pg{margin:10px 12px}
+@media(min-width:700px){.bfz{max-width:760px;margin:12px auto 4px}}
+.co-seg.g3{grid-auto-flow:row;grid-auto-columns:auto}.co-seg.g3 label{text-align:left;padding:9px 12px}
