@@ -416,7 +416,7 @@ function lSobre(l){const h=J(l.horario),K=[['seg','Segunda'],['ter','Terça'],['
  const it=(i,t,d)=>'<div class="lsi"><i>'+i+'</i><div><b>'+t+'</b>'+(d?'<small>'+d+'</small>':'')+'</div></div>';
  return it(pfI(l),l.perfil==='autonomo'?'Vendedor autônomo':'Loja',l.verificada?'✔ Verificada pela equipe Eita Vale':'')+
   (lAd(l)?it('📍','Endereço',esc(lAd(l))):'')+
-  it('🕒','Horário',Object.keys(h).length?'<span class="lsh">'+K.map(k=>'<span>'+k[1]+'</span><span>'+(h[k[0]]?esc(h[k[0]][0])+' às '+esc(h[k[0]][1]):'Fechado')+'</span>').join('')+'</span>':'Não informado')+
+  it('🕒','Horário',Object.keys(h).length?'<span class="lhr">'+K.map(k=>'<span>'+k[1]+'</span><span>'+(h[k[0]]?esc(h[k[0]][0])+' às '+esc(h[k[0]][1]):'Fechado')+'</span>').join('')+'</span>':'Não informado')+
   it('🚚','Entrega',l.so_retirada?'Só retirada na loja':(l.entrega==='fora'?'Entrega na cidade e envia para outras cidades':'Entrega em '+esc(l.cidade||'Sobradinho'))+(l.retirada==='sim'&&!l.so_retirada?' · também tem retirada':'')+(fg?' · frete grátis acima de '+brl(fg):''))+
   it('💳','Pagamento','Pix'+(pm>1?' · cartão em até '+pm+'x':' · cartão')+' · saldo do Mercado Pago')+
   '<small class="hint" style="display:block;margin-top:10px">Dúvidas? Use "Pergunte à loja" na página do produto, ou faça o pedido e converse pelo chat.</small>'}
