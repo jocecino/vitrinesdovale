@@ -964,7 +964,7 @@ let POPV=0;function popChk(){if(POPV||location.hash.replace(/^#\/?/,''))return;P
  const fx=()=>m.remove();m.onclick=ev=>{if(ev.target===m)fx()};m.querySelector('.popx').onclick=fx;const b=m.querySelector('.popt .btn'),im=m.querySelector('img'),gt=()=>{rpc('comunicado_vitrine_evento',{p_id:c.id,p_k:'c'}).catch(()=>{});fx();cmGo(c.acao_t,c.acao_v)};if(b)b.onclick=gt;if(c.acao_t!=='none')im.onclick=gt;
  document.body.appendChild(m);rpc('comunicado_vitrine_evento',{p_id:c.id,p_k:'v'}).catch(()=>{})}).catch(()=>{})}
 
-const ATIT={y:'Atividades',t:'Topo da vitrine',n:'Comunicados',w:'Reputação das lojas',i:'Início',x:'Campanhas',p:'Relatórios',c:'Lojas',r:'Produtos',d:'Pedidos',o:'Aprovações',u:'Cupons',f:'Ofertas',b:'Banners',s:'Suporte',m:'Comissão',g:'Pagamentos',k:'Cópia de segurança'};
+const ATIT={z:'Clientes',y:'Atividades',t:'Topo da vitrine',n:'Comunicados',w:'Reputação das lojas',i:'Início',x:'Campanhas',p:'Relatórios',c:'Lojas',r:'Produtos',d:'Pedidos',o:'Aprovações',u:'Cupons',f:'Ofertas',b:'Banners',s:'Suporte',m:'Comissão',g:'Pagamentos',k:'Cópia de segurança'};
 let APL=[];
 const MOT=['Produto proibido pela plataforma','Foto imprópria ou que não é do produto','Preço enganoso','Descrição enganosa','Falsificação ou cópia de marca','Conteúdo ofensivo ou impróprio','Outro motivo'];
 

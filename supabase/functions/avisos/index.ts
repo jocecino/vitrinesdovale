@@ -419,6 +419,27 @@ Deno.serve(async (req: Request) => {
       }
       return json({ ok: true, enviados: n });
     }
+    // resumo semanal para o administrador (segunda às 8h)
+    if (tipo === "resumo_admin") {
+      const s = smtp();
+      if (!s) return json({ ok: false });
+      const { data: d } = await db.rpc("resumo_admin_dados");
+      if (!d) return json({ ok: false });
+      const L = (a: unknown) => (Array.isArray(a) ? a : []) as string[];
+      const caixa = (n: string, t: string) => `<td style="background:#f3f1ea;border-radius:10px;padding:12px 4px;text-align:center;width:33%"><div style="font-size:18px;font-weight:bold;color:#16363F;white-space:nowrap">${esc(n)}</div><div style="font-size:12px;color:#666">${esc(t)}</div></td>`;
+      const lista = (t: string, a: string[], vazio: string) => `<p style="margin:14px 0 4px;font-weight:bold">${t}</p>` + (a.length ? `<ul style="margin:0;padding-left:18px;color:#333">${a.map((x) => `<li>${esc(x)}</li>`).join("")}</ul>` : `<p style="margin:0;color:#666">${vazio}</p>`);
+      const corpo = `<p style="margin:6px 0">Bom dia! Assim foi a última semana no Eita Vale:</p>
+<table role="presentation" style="width:100%;border-spacing:8px;margin:8px -8px"><tr>${caixa(String(d.pedidos), d.pedidos === 1 ? "pedido pago" : "pedidos pagos")}${caixa(brl(Number(d.vendido)), "vendido")}${caixa(String(d.visitas), "visitantes")}</tr></table>
+<p style="margin:6px 0">👥 Clientes novos com conta: <b>${d.clientes_novos}</b> · 🚨 Pedidos parados há mais de 1 dia: <b>${d.atencao}</b></p>
+${lista("🏪 Lojas novas", L(d.lojas_novas), "Nenhuma loja nova nesta semana.")}${lista("⏳ Lojas paradas (Em breve)", L(d.paradas), "Nenhuma loja parada. 🎉")}${lista("🔎 O que os clientes mais buscaram", L(d.buscas), "Nenhuma busca registrada.")}`;
+      try {
+        await s.t.sendMail({ from: `Eita Vale <${s.user}>`, to: s.user, subject: `📊 Resumo da semana do Eita Vale · ${d.pedidos} pedido(s) · ${brl(Number(d.vendido))}`,
+          text: `Resumo da semana: ${d.pedidos} pedidos pagos, ${brl(Number(d.vendido))} vendido, ${d.visitas} visitantes, ${d.clientes_novos} clientes novos, ${d.atencao} pedidos parados. Lojas paradas: ${L(d.paradas).join(", ") || "nenhuma"}. Buscas: ${L(d.buscas).join(", ") || "nenhuma"}. ${SITE}#/admin`,
+          html: moldura("📊 Resumo da semana", corpo, "Abrir o painel", SITE + "#/admin", "Enviado toda segunda-feira às 8h.") });
+        await logar("resumo_admin", true);
+      } catch (e) { await logar("resumo_admin", false, String(e)); }
+      return json({ ok: true });
+    }
     if (tipo === "resumo") return json({ ok: true, ...(await resumoSemanal()) });
     if (tipo === "resumo_teste") return json({ ok: true, ...(await resumoSemanal(id, String(b.para || ""))) });
     return json({ erro: "Tipo inválido." }, 400);

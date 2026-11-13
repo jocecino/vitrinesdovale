@@ -1160,3 +1160,21 @@ html.dk .pwb{background:#4a1f1f;color:#ffc9c9}
 .f1b{color:#8a5a00!important;font-weight:700}
 .chq{display:flex;gap:6px;overflow-x:auto;padding:6px 10px;scrollbar-width:none}.chq::-webkit-scrollbar{display:none}
 .chq button{flex:none;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:16px;padding:6px 11px;font:inherit;font-size:12.5px;cursor:pointer;white-space:nowrap}
+/* admin: busca única, período, funil, raio-x */
+.abq{position:relative}.abq input{width:100%}
+.abqd{position:absolute;left:0;right:0;top:calc(100% + 4px);z-index:20;background:var(--card);border:1px solid var(--line);border-radius:12px;box-shadow:0 8px 24px #0002;max-height:60vh;overflow:auto;padding:4px}
+.abqd button{display:flex;gap:10px;align-items:center;width:100%;text-align:left;background:none;border:0;border-radius:8px;padding:8px;font:inherit;color:var(--ink);cursor:pointer}.abqd button:hover{background:var(--bg)}
+.abqd i{font-style:normal;font-size:18px}.abqd b{display:block;font-size:14px}.abqd small{display:block;color:var(--mute);font-size:12px}
+.dlt{display:block;font-style:normal;font-size:11.5px;font-weight:700;color:var(--mute)}.dlt.up{color:#17803f}.dlt.dn{color:#c0392b}
+.fnl{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;margin-top:10px}
+.fnl>div{background:var(--bg);border-radius:10px;padding:8px 2px;text-align:center}.fnl b{display:block;font-size:17px}.fnl span{display:block;font-size:10.5px;color:var(--mute);line-height:1.15}.fnl small{display:block;font-size:11px;font-weight:700;color:var(--mute);margin-top:2px}
+.fnl>div.bad{background:#fdecea;outline:1.5px solid #e5484d}.fnl>div.bad small{color:#c0392b}
+html.dk .fnl>div.bad{background:#4a1f1f}
+.rxg{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;margin-top:8px}
+.rxg>div{display:grid;grid-template-columns:auto 1fr;column-gap:8px;align-items:center;background:var(--bg);border-radius:10px;padding:8px 10px}
+.rxg i{font-style:normal;font-size:18px;grid-row:span 2}.rxg b{font-size:15px}.rxg span{font-size:11.5px;color:var(--mute);line-height:1.2}
+.rxg>div.bad{background:#fff3e6;outline:1px solid #f0b46a}
+html.dk .rxg>div.bad{background:#3a2a17}
+@media(min-width:700px){.rxg{grid-template-columns:repeat(3,1fr)}}
+#adl .item.achou{outline:2.5px solid var(--gold);outline-offset:-2px}
+.adr .nb{margin-left:auto;background:#e5484d;color:#fff;border-radius:10px;font-size:11px;font-weight:800;min-width:20px;padding:1px 6px;text-align:center}
