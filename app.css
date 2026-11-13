@@ -1115,10 +1115,10 @@ html.dk .plt .bad{background:#3a2220}
  #prod>.pdw{padding-left:14px;padding-right:0}
 }
 /* vitrine: atalhos, faixa de confiança, cartões alinhados */
-.atl{display:flex;gap:12px;overflow-x:auto;padding:12px 14px 4px;scrollbar-width:none}.atl::-webkit-scrollbar{display:none}.atl:empty{display:none}
-.atl button{flex:none;width:72px;display:flex;flex-direction:column;align-items:center;gap:6px;background:none;border:0;padding:0;cursor:pointer;font:inherit;color:var(--ink)}
-.atl i{font-style:normal;width:58px;height:58px;border-radius:50%;display:grid;place-items:center;font-size:26px;background:var(--card);box-shadow:0 1px 4px #0000001f;border:1px solid var(--line)}
-.atl span{font-size:11.5px;font-weight:600;line-height:1.2;text-align:center;max-width:72px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.atl{display:flex;gap:6px;overflow-x:auto;padding:10px 10px 2px;scrollbar-width:none}.atl::-webkit-scrollbar{display:none}.atl:empty{display:none}
+.atl button{flex:none;width:76px;display:flex;flex-direction:column;align-items:center;gap:4px;background:none;border:0;padding:0;cursor:pointer;font:inherit;color:var(--ink)}
+.atl i{font-style:normal;width:64px;height:60px;display:grid;place-items:center;font-size:44px;line-height:1}.atl i .ati{width:56px;height:56px;object-fit:contain;filter:drop-shadow(0 3px 4px #0002)}
+.atl span{font-size:12px;font-weight:600;line-height:1.2;text-align:center;max-width:72px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
 .cfz{display:flex;justify-content:center;flex-wrap:wrap;gap:4px 14px;margin:8px 14px 2px;padding:7px 10px;border-radius:10px;background:var(--card);border:1px solid var(--line);font-size:12px;font-weight:600;color:var(--mute)}.cfz:empty{display:none}
 .card{display:flex;flex-direction:column}.card .ct{flex:1;display:flex;flex-direction:column}
 
