@@ -1189,3 +1189,7 @@ html.dk .rxg>div.bad{background:#3a2a17}
 .bfz.pg{margin:10px 12px}
 @media(min-width:700px){.bfz{max-width:760px;margin:12px auto 4px}}
 .co-seg.g3{grid-auto-flow:row;grid-auto-columns:auto}.co-seg.g3 label{text-align:left;padding:9px 12px}
+.bfz{display:grid;grid-template-columns:auto 1fr auto;align-items:center;column-gap:10px;row-gap:4px;padding:12px 14px}
+.bfz .bfn{grid-column:1/-1;white-space:nowrap;font-size:clamp(14px,4.6vw,19px);text-align:center;letter-spacing:.05em}
+.bfz>img{width:70px;height:70px;margin:-4px 0}
+.bfz .bft small:first-child{margin-top:0}
