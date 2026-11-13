@@ -522,7 +522,7 @@ function viewCart(){if(!loading)cleanCart();const l=LJ(C.l);let s=0;
  $('cart').innerHTML='<div class="top"><button onclick="history.back()" aria-label="Voltar">←</button>Sacolinha</div>'+(C.i.length?'<div class="info"><div class="box" style="margin-top:0"><div class="av"><i>'+lg(l)+'</i></div><div><b>'+esc(l.nome)+vb(l)+'</b><small>'+C.i.length+' produto(s) · '+stTxt(l)+'</small></div></div></div>'+rows+'<div class="info"><div class="rs t"><span>Subtotal</span><span>'+brl(s)+'</span></div>'+fgFalta(l,s)+encPrevH()+(snMx()?'<div class="encp sinp"><b>💳 Pagamento em 2 partes</b><small>Você paga '+snMx()+'% agora (sinal) e o restante, com o frete, quando a encomenda ficar pronta.</small></div>':'')+'<p class="hint">O frete é calculado na próxima etapa.</p><button class="buy" onclick="if(persFalta())return;go(\'checkout\')">Continuar</button><button class="lk" style="margin-top:12px" onclick="go(\'loja/'+C.l+'\')">Adicionar mais produtos desta loja</button></div>':'<p class="msg">'+(loading?'Carregando…':'Sua sacolinha está vazia.')+'</p>');
  show('cart')}
 /* Comprar sem conta: liga depois de confirmar no banco que criar_pedido aceita pedido sem login */
-const GUEST=false;
+const GUEST=true;
 const CPI='<img class="cpi" src="/cupom.webp" alt="">';
 let CP=null;
 function checkout(){if(!C.i.length||!D.lojas.length)return viewCart();CP=null;const l=LJ(C.l);let c=ld('vv_cli',{});if(CU){c=Object.assign({},c,{nome:c.nome||CU.nome,tel:c.tel||CU.tel,cep:c.cep||CU.cep,uf:c.uf||CU.uf,cidade:c.cidade||CU.cidade,bairro:c.bairro||CU.bairro,rua:c.rua||CU.rua,num:c.num||CU.num,comp:c.comp||CU.comp,ref:c.ref||CU.ref})}
