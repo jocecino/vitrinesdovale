@@ -930,10 +930,6 @@ html.dk .ofrim{background:#ffffff14}
 .cmsd{display:block;margin:0 0 12px;border-left:5px solid var(--gold)}.cmsr{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 0;border-top:1px solid var(--line);margin-top:8px}.cmsr span{min-width:0}.cmsr small{display:block;color:var(--mute)}.cmsr .btn{flex:none}
 .cmpi .cmpv{display:flex!important;align-items:center;gap:4px;width:auto;pointer-events:auto;font-weight:800;flex:none}.cmpi .cmpv input{width:64px;text-align:center;pointer-events:auto}
 @media(min-width:768px){
- /* produto: foto à esquerda acompanha a rolagem; tudo o mais na coluna da direita (nunca fica por baixo da foto) */
- #prod.on{grid-template-areas:"top top" "gal inf" "gal det";grid-template-rows:auto auto 1fr}
- #prod>.pgal{grid-row:2/4;align-self:start}
- #prod>.pdw{padding-left:0;padding-right:14px}
  #prod>.top{z-index:30}
  /* caixa de ofertas: cada produto ocupa uma faixa igual */
  .ofrl{justify-content:flex-start}.ofri{flex:1 1 0;min-height:0}
@@ -1106,3 +1102,18 @@ html.dk .plt .bad{background:#3a2220}
 #prod .relw{grid-column:1/-1}
 .vpl{display:flex;align-items:center;gap:8px;padding:14px 0 12px}.vpl span{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.vpl b{color:var(--ink);font-weight:700}.vpl em{font-style:normal;color:var(--mute);font-size:20px;line-height:1}
 .ljm{margin-top:14px}
+
+/* produto no tablet (768–1099px): uma coluna, como no celular, com a foto centralizada */
+@media(min-width:768px) and (max-width:1099px){
+ #prod.on{display:block}
+ #prod>.pgal{position:static;max-width:600px;margin:0 auto;padding:16px 14px 0}
+ #prod>.pi1,#prod>.pdw{max-width:760px;margin:0 auto;padding-left:18px;padding-right:18px}
+}
+/* produto no computador: foto e detalhes à esquerda, compra à direita (como o Mercado Livre) */
+@media(min-width:1100px){
+ #prod.on{grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);grid-template-areas:"top top" "gal inf" "det inf";grid-template-rows:auto auto 1fr}
+ #prod .relw{grid-row:4}
+ #prod>.pgal{position:static;grid-row:auto}
+ #prod>.pi1{grid-row:2/4;position:static;align-self:start;padding-right:14px}
+ #prod>.pdw{padding-left:14px;padding-right:0}
+}
