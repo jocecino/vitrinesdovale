@@ -400,7 +400,8 @@ header,.top{background:#16363F radial-gradient(120% 160% at 85% 0%,#C9A85C55 0%,
  .bar{max-width:none}
  .bn{max-width:860px;width:calc(100% - 28px);margin:12px auto 4px}
  #ll{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;padding:0 14px 14px}
- #ll>.vfl{grid-column:1/-1}
+ #ll>.vfl,#ll>.cdbar,#ll>.lpf,#ll>.empty,#ll>p,#ll>h2{grid-column:1/-1}
+ #ll>.cdbar{margin:0 0 4px;max-width:520px}#ll>.lpf{margin:0 0 6px}#ll>.vfl{margin:0}
  #ll>.item{width:auto!important;margin:0!important}
  #cart,#co,#ped,#doc,#av,#ns,#pnl>#login,#pnl>#cadv,#adm>#aLogin{max-width:720px;margin-left:auto;margin-right:auto}
  .co-bar{max-width:720px}
