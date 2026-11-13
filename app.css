@@ -1134,8 +1134,8 @@ html.dk .plt .bad{background:#3a2220}
 /* lojas: em breve agrupadas; capa padrão; loja nova */
 .ebh{grid-column:1/-1;margin:14px 14px 6px;font-size:15px;color:var(--mute)}
 #ll>.ebh{margin:10px 0 0}
-.lcn{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;padding:0 24px 30px 110px;color:#F6F3EC}
-.lcn b{font-size:24px;line-height:1.15;font-weight:800;text-shadow:0 2px 8px #0005}.lcn span{font-size:13px;color:#E9D08A;margin-top:4px;font-weight:600}
+.lcv{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;padding:0 24px 30px 110px;color:#F6F3EC}
+.lcv b{font-size:24px;line-height:1.15;font-weight:800;text-shadow:0 2px 8px #0005}.lcv span{font-size:13px;color:#E9D08A;margin-top:4px;font-weight:600}
 .lhd .lc0{position:relative;background:radial-gradient(circle at 85% 20%,#C9A85C55,transparent 45%),radial-gradient(circle at 10% 110%,#2f7d6b88,transparent 50%),linear-gradient(135deg,#16363F,#0F2830 60%,#1d4a56)}
 .lnv{display:inline-block;margin-top:6px;font-size:12.5px;font-weight:600;color:#2f7d4f;background:#2f7d4f14;border-radius:8px;padding:2px 8px}
 html.dk .lnv{color:#8fe0ac;background:#8fe0ac1a}
